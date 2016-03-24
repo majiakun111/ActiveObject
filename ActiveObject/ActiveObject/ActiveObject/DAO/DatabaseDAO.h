@@ -7,18 +7,35 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "Database.h"
-
-#define DATABASE [DatabaseDAO sharedInstance].database
 
 @interface DatabaseDAO : NSObject
-
-@property (nonatomic, strong) Database *database;
 
 + (instancetype)sharedInstance;
 
 - (void)configDatabasePath:(NSString*)databasePath;
 
 - (void)configDatabasePath:(NSString*)databasePath flags:(int)flags;
+
+- (BOOL)executeUpdate:(NSString*)sql;
+
+//select
+- (NSArray<NSDictionary *> *)executeQuery:(NSString*)sql;
+
+//transaction
+- (BOOL)beginDeferredTransaction;
+
+- (BOOL)beginImmediateTransaction;
+
+- (BOOL)beginExclusiveTransaction;
+
+- (BOOL)startSavePointWithName:(NSString*)name;
+
+- (BOOL)releaseSavePointWithName:(NSString*)name;
+
+- (BOOL)rollbackToSavePointWithName:(NSString*)name;
+
+- (BOOL)rollback;
+
+- (BOOL)commit;
 
 @end

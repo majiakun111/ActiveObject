@@ -14,7 +14,7 @@
 - (NSArray *)getColumns
 {
     NSString *sql = [NSString stringWithFormat:@"pragma table_info('%@')" , [self tableName]];
-    NSArray <NSDictionary *> *tableInfos = [DATABASE executeQuery:sql];
+    NSArray <NSDictionary *> *tableInfos = [[DatabaseDAO sharedInstance] executeQuery:sql];
     
     NSMutableArray *columns = [[NSMutableArray alloc] init];
     for (NSDictionary *tableInfo in tableInfos) {

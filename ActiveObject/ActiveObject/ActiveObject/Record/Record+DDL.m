@@ -57,7 +57,7 @@
     }
     
     NSString *sql = [NSString stringWithFormat:@"create table if not exists %@ (rowId integer primary key autoincrement, %@)", [(Record *)class tableName], [propertyAndTypeList componentsJoinedByString:@","]];
-    BOOL result = [DATABASE executeUpdate:sql];
+    BOOL result = [[DatabaseDAO sharedInstance] executeUpdate:sql];
     if (result) {
         [self.tableBuiltFlags setObject:@(YES) forKey:[(Record *)class tableName]];
     }
@@ -104,7 +104,7 @@
 - (BOOL)dropTable
 {
     NSString *sql = [NSString stringWithFormat:@"drop table %@", [self tableName]];
-    return [DATABASE executeUpdate:sql];
+    return [[DatabaseDAO sharedInstance] executeUpdate:sql];
 }
 
 - (BOOL)createIndex:(NSString *)indexName onColumn:(id)column isUnique:(BOOL )isUnique
@@ -123,21 +123,21 @@
     
     NSString *sql = [NSString stringWithFormat:@"create %@ index if not exists %@ on %@ (%@)", unique, indexName, [self tableName], indexColumn];
     
-    return [DATABASE executeUpdate:sql];
+    return [[DatabaseDAO sharedInstance] executeUpdate:sql];
 }
 
 - (BOOL)dropIndex:(NSString *)indexName
 {
     NSString *sql = [NSString stringWithFormat:@"drop index %@", indexName];
     
-    return [DATABASE executeUpdate:sql];
+    return [[DatabaseDAO sharedInstance] executeUpdate:sql];
 }
 
 - (BOOL)renameToNewName:(NSString *)tableNewName
 {
     NSString *sql = [NSString stringWithFormat:@"alter table %@ RENAME TO %@", [self tableName], tableNewName];
 
-    return [DATABASE executeUpdate:sql];
+    return [[DatabaseDAO sharedInstance] executeUpdate:sql];
 }
 
 - (BOOL)addColumn:(NSString *)column type:(NSString *)type
@@ -152,7 +152,7 @@
         sql = [sql stringByAppendingString:constraint];
     }
     
-    return [DATABASE executeUpdate:sql];
+    return [[DatabaseDAO sharedInstance] executeUpdate:sql];
 }
 
 @end

@@ -33,7 +33,7 @@
     
     NSString *sql = [NSString stringWithFormat:@"delete from %@ %@", [self tableName], self.where];
 
-    BOOL result = [DATABASE executeUpdate:sql];
+    BOOL result = [[DatabaseDAO sharedInstance] executeUpdate:sql];
     
     [self deleteAfter];
     
@@ -42,7 +42,7 @@
 + (BOOL)deleteAll
 {
     NSString *sql = [NSString stringWithFormat:@"delete from %@", [self tableName]];
-    return [DATABASE executeUpdate:sql];
+    return [[DatabaseDAO sharedInstance] executeUpdate:sql];
 }
 
 - (BOOL)update
@@ -50,7 +50,7 @@
     [self updateBefore];
     
     NSString *sql = [NSString stringWithFormat:@"update %@ set %@ %@", [self tableName], self.updateField, self.where];
-    BOOL result = [DATABASE executeUpdate:sql];
+    BOOL result = [[DatabaseDAO sharedInstance] executeUpdate:sql];
 
     [self updateAfter];
     
@@ -94,7 +94,7 @@
         }
     }
     
-    return [DATABASE executeUpdate:sql];
+    return [[DatabaseDAO sharedInstance] executeUpdate:sql];
 }
 
 @end

@@ -18,9 +18,9 @@
 
 @interface Record (DQL)
 
-- (NSArray <Record *> *)query;
+- (NSArray <__kindof Record *> *)query;
 
-- (NSArray <Record *> *)queryAll;
+- (NSArray <__kindof Record *> *)queryAll;
 
 /*
  * 返回的不是 Record的数据结构 

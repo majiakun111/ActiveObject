@@ -1,15 +1,16 @@
 //
-//  Database+Transaction.h
-//  Database
+//  Record+Transaction.h
+//  ActiveObject
 //
-//  Created by Ansel on 16/3/22.
+//  Created by Ansel on 16/3/24.
 //  Copyright © 2016年 PingAn. All rights reserved.
 //
 
-#import "Database.h"
+#import "Record.h"
 
-@interface Database (Transaction)
+@interface Record (Transaction)
 
+//transaction
 - (BOOL)beginDeferredTransaction;
 
 - (BOOL)beginImmediateTransaction;

@@ -46,22 +46,22 @@
 
 @implementation Record (DQL)
 
-- (NSArray <Record *> *)query
+- (NSArray <__kindof Record *> *)query
 {
     NSString *sql = [NSString stringWithFormat:@"select %@ from %@ %@ %@ %@", self.field, [self tableName], self.where, self.orderBy, self.limit];
     
-    NSArray<NSDictionary *> *results = [DATABASE executeQuery:sql];
+    NSArray<NSDictionary *> *results = [[DatabaseDAO sharedInstance] executeQuery:sql];
     NSArray<Record *> *records = [Converter modelsOfClass:[self class] fromArray:results];
     
     return records;
 }
 
-- (NSArray <Record *> *)queryAll
+- (NSArray <__kindof Record *> *)queryAll
 {
     NSArray *columns = [self getColumns];
     NSString *sql = [NSString stringWithFormat:@"select %@ from %@", [columns componentsJoinedByString:@", "], [self tableName]];
 
-    NSArray <NSDictionary *> *results = [DATABASE executeQuery:sql];
+    NSArray <NSDictionary *> *results = [[DatabaseDAO sharedInstance] executeQuery:sql];
     
     NSArray <Record *> *records = [Converter modelsOfClass:[self class] fromArray:results];
     
@@ -72,7 +72,7 @@
 {
     NSString *sql = [NSString stringWithFormat:@"select %@ from %@ %@ %@ %@ %@ %@",self.field, [self tableName], self.where, self.groupBy, self.having, self.orderBy, self.limit];
     
-    NSArray<NSDictionary *> *results = [DATABASE executeQuery:sql];
+    NSArray<NSDictionary *> *results = [[DatabaseDAO sharedInstance] executeQuery:sql];
     
     return results;
 }
