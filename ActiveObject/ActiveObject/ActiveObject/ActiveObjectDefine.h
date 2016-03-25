@@ -1,13 +1,13 @@
 //
-//  RecordDefine.h
+//  ActiveObjectDefine.h
 //  ActiveObject
 //
 //  Created by Ansel on 16/3/25.
 //  Copyright © 2016年 PingAn. All rights reserved.
 //
 
-#ifndef RecordDefine_h
-#define RecordDefine_h
+#ifndef ActiveObjectDefine_h
+#define ActiveObjectDefine_h
 
 //database primary key
 #define ROW_ID @"rowId"
@@ -16,5 +16,4 @@
 #define PROPERTY_TYPE @"propertyType"
 #define DATABASE_TYPE @"databaseType"
 
-
-#endif /* RecordDefine_h */
+#endif /* ActiveObjectDefine_h */

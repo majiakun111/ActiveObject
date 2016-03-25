@@ -10,7 +10,6 @@
 
 @interface Record (Transaction)
 
-//transaction
 - (BOOL)beginDeferredTransaction;
 
 - (BOOL)beginImmediateTransaction;

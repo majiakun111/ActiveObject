@@ -138,7 +138,8 @@
                 }
                 case SQLITE_TEXT: {
                     const char *value = (const char*)sqlite3_column_text(pStmt, index);
-                    [result setObject:[NSString stringWithCString:value encoding:NSUTF8StringEncoding] forKey:columnName];
+                    NSString *valueString = [NSString stringWithCString:value encoding:NSUTF8StringEncoding];
+                    [result setObject:valueString ? valueString : @"" forKey:columnName];
                     break;
                 }
                 case SQLITE_BLOB: {
@@ -157,7 +158,8 @@
                 }
                 default: {
                     const char *value = (const char *)sqlite3_column_text(pStmt, index);
-                    [result setObject:[NSString stringWithCString:value encoding:NSUTF8StringEncoding] forKey:columnName];
+                    NSString *valueString = [NSString stringWithCString:value encoding:NSUTF8StringEncoding];
+                    [result setObject:valueString ? valueString : @"" forKey:columnName];
                     break;
                 }
             }

@@ -11,7 +11,7 @@
 @interface NSObject (Record)
 
 /**
-*   return [{propertyName : propertyName,   PROPERTY_TYPE: @"NSString", DATABASE_TYPE: @"text"}, ...]; //以propertyName 作为key
+*   return [{propertyName : @"age", PROPERTY_TYPE: @"NSString", DATABASE_TYPE: @"text"}, ...]; //以propertyName 作为key
 */
 - (NSArray *)getPropertyInfoListUntilRootClass:(Class)rootClass;
 

@@ -9,7 +9,7 @@
 #import "Record+Additions.h"
 #import "DatabaseDAO.h"
 #import "DatabaseDAO+Additions.h"
-#import "RecordDefine.h"
+#import "ActiveObjectDefine.h"
 
 @implementation Record (Additions)
 

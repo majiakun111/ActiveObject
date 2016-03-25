@@ -10,7 +10,7 @@
 #import <objc/runtime.h>
 #import "Record.h"
 #import "NSArray+JSON.h"
-#import "RecordDefine.h"
+#import "ActiveObjectDefine.h"
 
 @implementation NSObject (Record)
 
@@ -54,34 +54,29 @@
 
 - (NSArray *)getValueListWithPropertyList:(NSArray *)propertyList
 {
-    //修改
     NSMutableArray *valueList = [[NSMutableArray alloc] init];
-    for (NSString *property in propertyList) {
-        id value = [self valueForKey:property];
-        if (value) {
-            if ([value isKindOfClass:[NSArray class]]) {
-                Class class = [(Record *)self getArrayTransformerModelClassWithKeyPath:property];
-                if ([class isSubclassOfClass:[Record class]]) {
-                    [valueList addObject:value];  //直接添加数组
-                }
-                else {
-                    NSString *jsonString = [value JSONString];
-                    [valueList addObject:jsonString ? jsonString : @""];
-                }
-            } else if ([value isKindOfClass:[NSDictionary class]]) {
-                NSString *jsonString = [value JSONString];
-                [valueList addObject:jsonString ? jsonString : @""];
-            }
-            else {
-                [valueList addObject:value];
-            }
-        } else {
+    for (NSString *propertyName in propertyList) {
+        id value = [self valueForKey:propertyName];
+        if (!value) {
             [valueList addObject:@""];
+            continue;
+        }
+        
+        if ([value isKindOfClass:[NSArray class]]) {
+            [valueList addObject: [self getValuesWithArrayValue:value propertyName:propertyName]];
+        } else if ([value isKindOfClass:[NSDictionary class]]) {
+            NSString *jsonString = [value JSONString];
+            [valueList addObject:jsonString ? jsonString : @""];
+        }
+        else {
+            [valueList addObject:value];
         }
     }
     
     return valueList;
 }
+
+#pragma mark - PrivateMethod
 
 + (NSDictionary *)getTypeMapWithProperty:(objc_property_t)property
 {
@@ -141,6 +136,21 @@
     }
     
     return typeMap;
+}
+
+- (id)getValuesWithArrayValue:(NSArray *)arrayValue propertyName:(NSString *)propertyName
+{
+    id  value = nil;
+    Class class = [(Record *)self getArrayTransformerModelClassWithKeyPath:propertyName];
+    if ([class isSubclassOfClass:[Record class]]) {
+        value = arrayValue; //直接返回数组
+    }
+    else {
+        NSString *jsonString = [arrayValue JSONString];
+        value = jsonString;
+    }
+    
+    return value ? value : @"";
 }
 
 @end

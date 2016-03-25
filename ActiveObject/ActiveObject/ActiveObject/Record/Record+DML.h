@@ -14,7 +14,7 @@
 
 - (BOOL)delete;
 
-+ (BOOL)deleteAll;
+- (BOOL)deleteAll;
 
 - (BOOL)update;
 

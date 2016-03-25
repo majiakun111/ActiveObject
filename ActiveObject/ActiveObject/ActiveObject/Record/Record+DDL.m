@@ -8,142 +8,33 @@
 
 #import "Record+DDL.h"
 #import "DatabaseDAO.h"
-#import "NSObject+Record.h"
-#import "RecordDefine.h"
-
-@interface TableBuilder : NSObject
-
-@property (nonatomic, strong) NSMutableDictionary *tableBuiltFlags;
-
-+ (instancetype)sharedInstance;
-
-- (BOOL)buildTableForClass:(Class)class;
-
-- (BOOL)buildTableForClass:(Class)class untilRootClass:(Class)rootClass;
-
-@end
-
-@implementation TableBuilder
-
-+ (instancetype)sharedInstance
-{
-    static TableBuilder *instance = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        if (nil == instance) {
-            instance = [[TableBuilder alloc] init];
-        }
-    });
-    
-    return instance;
-}
-
-
-- (BOOL)buildTableForClass:(Class)class
-{
-    return [self buildTableForClass:class untilRootClass:nil];
-}
-
-- (BOOL)buildTableForClass:(Class)class untilRootClass:(Class)rootClass
-{
-    BOOL buildFlag = [self isTableBuiltForClass:class];
-    if (buildFlag) {
-        return YES;
-    }
-
-    NSArray *propertyInfoList = [class getPropertyInfoListUntilRootClass:rootClass];
-    if (!propertyInfoList || [propertyInfoList count] <= 0) {
-        NSLog(@"Could not create not field table");
-        return NO;
-    }
-    
-    NSMutableArray *propertyAndTypeList = [[NSMutableArray alloc] init];
-    [propertyInfoList enumerateObjectsUsingBlock:^(NSDictionary*  _Nonnull propertyInfo, NSUInteger idx, BOOL * _Nonnull stop) {
-        [propertyAndTypeList addObject:[NSString stringWithFormat:@"%@ %@", propertyInfo[PROPERTY_NAME], propertyInfo[DATABASE_TYPE]]];
-    }];
-    
-    NSString *sql = [NSString stringWithFormat:@"create table if not exists %@ (%@ integer primary key autoincrement, %@)", [(Record *)class tableName], ROW_ID, [propertyAndTypeList componentsJoinedByString:@","]];
-    BOOL result = [[DatabaseDAO sharedInstance] executeUpdate:sql];
-    if (result) {
-        [self.tableBuiltFlags setObject:@(YES) forKey:[(Record *)class tableName]];
-    }
-    
-    return result;
-}
-
-#pragma mark - PrivateMethod
-
-- (BOOL)isTableBuiltForClass:(Class)class
-{
-    BOOL result = NO;
-    
-    NSString * tableName = [(Record *)class tableName];
-    NSNumber * builtFlag = [self.tableBuiltFlags objectForKey:tableName];
-    if ( builtFlag && builtFlag.boolValue ) {
-        result = YES;
-    }
-    
-    return result;
-}
-
-#pragma mark - property
-
-- (NSMutableDictionary *)tableBuiltFlags
-{
-    if (nil == _tableBuiltFlags) {
-        _tableBuiltFlags = [[NSMutableDictionary alloc] init];
-    }
-    
-    return _tableBuiltFlags;
-}
-
-@end
-
+#import "DatabaseDAO+DDL.h"
 
 @implementation Record (DDL)
 
 - (BOOL)createTable
 {
-    return [[TableBuilder sharedInstance] buildTableForClass:[self class] untilRootClass:[Record class]];
+    return [[DatabaseDAO sharedInstance] createTable:[self tableName] forClass:[self class] untilRootClass:[Record class]];
 }
 
 - (BOOL)dropTable
 {
-    NSString *sql = [NSString stringWithFormat:@"drop table %@", [self tableName]];
-    return [[DatabaseDAO sharedInstance] executeUpdate:sql];
+    return [[DatabaseDAO sharedInstance] dropTable:[self tableName]];
 }
 
 - (BOOL)createIndex:(NSString *)indexName onColumn:(id)column isUnique:(BOOL )isUnique
 {
-    NSString *unique = @"";
-    NSString *indexColumn = nil;
-    if (isUnique) {
-        unique = @"UNIQUE";
-    }
-    
-    if ([column isKindOfClass:[NSString class]]) {
-        indexColumn = column;
-    } else if ([column isKindOfClass:[NSArray class]]) {
-        indexColumn = [column componentsJoinedByString:@", "];
-    }
-    
-    NSString *sql = [NSString stringWithFormat:@"create %@ index if not exists %@ on %@ (%@)", unique, indexName, [self tableName], indexColumn];
-    
-    return [[DatabaseDAO sharedInstance] executeUpdate:sql];
+    return [[DatabaseDAO sharedInstance] createIndex:indexName onColumn:column isUnique:isUnique forTable:[self tableName]];
 }
 
 - (BOOL)dropIndex:(NSString *)indexName
 {
-    NSString *sql = [NSString stringWithFormat:@"drop index %@", indexName];
-    
-    return [[DatabaseDAO sharedInstance] executeUpdate:sql];
+    return [[DatabaseDAO sharedInstance] dropIndex:indexName];
 }
 
-- (BOOL)renameToNewName:(NSString *)tableNewName
+- (BOOL)renameTable:(NSString *)tableName toTableNewName:(NSString *)tableNewName
 {
-    NSString *sql = [NSString stringWithFormat:@"alter table %@ RENAME TO %@", [self tableName], tableNewName];
-
-    return [[DatabaseDAO sharedInstance] executeUpdate:sql];
+    return [[DatabaseDAO sharedInstance] renameTable:tableName toTableNewName:tableNewName];
 }
 
 - (BOOL)addColumn:(NSString *)column type:(NSString *)type
@@ -153,12 +44,7 @@
 
 - (BOOL)addColumn:(NSString *)column type:(NSString *)type constraint:(NSString *)constraint
 {
-    NSString *sql = [NSString stringWithFormat:@"alter table %@ add column %@ %@ ", [self tableName], column, type];
-    if (constraint) {
-        sql = [sql stringByAppendingString:constraint];
-    }
-    
-    return [[DatabaseDAO sharedInstance] executeUpdate:sql];
+    return [[DatabaseDAO sharedInstance] addColumn:column type:type constraint:constraint forTable:[self tableName]];
 }
 
 @end

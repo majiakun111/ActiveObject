@@ -57,4 +57,20 @@
     return _arrayTransformerModelClassMap;
 }
 
+#pragma mark -Overrride 避免崩溃
+
+- (void)setNilValueForKey:(NSString *)key
+{
+#ifdef DEBUG
+    NSLog(@"%@", NSStringFromSelector(_cmd));
+#endif
+}
+
+- (void)setValue:(id)value forUndefinedKey:(NSString *)key
+{
+#ifdef DEBUG
+    NSLog(@"%@", NSStringFromSelector(_cmd));
+#endif
+}
+
 @end

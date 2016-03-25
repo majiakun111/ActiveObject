@@ -8,6 +8,7 @@
 
 #import "Record+DML.h"
 #import "DatabaseDAO.h"
+#import "DatabaseDAO+DML.h"
 #import "DatabaseDAO+Additions.h"
 #import "Record+Additions.h"
 #import "NSObject+Record.h"
@@ -30,28 +31,31 @@
 
 - (BOOL)delete
 {
-    [self deleteAllBefore];
+    [self deleteBefore];
     
-    NSString *sql = [NSString stringWithFormat:@"delete from %@ %@", [self tableName], self.where];
-
-    BOOL result = [[DatabaseDAO sharedInstance] executeUpdate:sql];
+    BOOL result = [[DatabaseDAO sharedInstance] deleteWithWhere:self.where forTable:[self tableName]];
     
     [self deleteAfter];
     
     return result;
 }
-+ (BOOL)deleteAll
+
+- (BOOL)deleteAll
 {
-    NSString *sql = [NSString stringWithFormat:@"delete from %@", [self tableName]];
-    return [[DatabaseDAO sharedInstance] executeUpdate:sql];
+    [self deleteAllBefore];
+    
+    BOOL result = [[DatabaseDAO sharedInstance] deleteAllForTable:[self tableName]];
+    
+    [self deleteAllAfter];
+    
+    return result;
 }
 
 - (BOOL)update
 {
     [self updateBefore];
     
-    NSString *sql = [NSString stringWithFormat:@"update %@ set %@ %@", [self tableName], self.updateField, self.where];
-    BOOL result = [[DatabaseDAO sharedInstance] executeUpdate:sql];
+    BOOL result = [[DatabaseDAO sharedInstance] updateWithUpdateField:self.updateField where:self.where forTable:[self tableName]];
 
     [self updateAfter];
     
@@ -83,40 +87,37 @@
     NSArray *propertyList = [self getColumns];
     NSArray *valueList = [self getValueListWithPropertyList:propertyList];
     
-    NSMutableString *sql = [NSMutableString stringWithFormat:@"replace into %@ (%@) values (", [self tableName], [propertyList componentsJoinedByString:@", "]];
-    
+    NSMutableString *valuesSql = [NSMutableString string];
     NSInteger count = [valueList count];
     for (NSInteger index = 0; index < count; index++) {
         id value = valueList[index];
         
         if ([value isKindOfClass:[Record class]]) {
-            [value insert];
+            [value save];
             
             long long lastRowId = [[DatabaseDAO sharedInstance] lastInsertRowId];
-            [sql appendFormat:@"'%lld'", lastRowId];
+            [valuesSql appendFormat:@"'%lld'", lastRowId];
         } else if ([value isKindOfClass:[NSArray class]]) {
             NSMutableArray *rowIds = [NSMutableArray array];
             for (Record *record in value) {
-                BOOL result =  [record insert];
+                BOOL result =  [record save];
                 if (result) {
                     long long rowId = [[DatabaseDAO sharedInstance] lastInsertRowId];
                     [rowIds addObject: @(rowId)];
                 }
             }
             
-            [sql appendFormat:@"'%@'", [rowIds componentsJoinedByString:@","]];
+            [valuesSql appendFormat:@"'%@'", [rowIds componentsJoinedByString:@","]];
         } else {
-            [sql appendFormat:@"'%@'", value];
+            [valuesSql appendFormat:@"'%@'", value];
         }
         
-        if (index == count - 1) {
-            [sql appendString:@")"];
-        } else {
-            [sql appendString:@", "];
+        if (index != count - 1) {
+            [valuesSql appendString:@", "];
         }
     }
     
-    return [[DatabaseDAO sharedInstance] executeUpdate:sql];
+    return [[DatabaseDAO sharedInstance] insertWithFields:[propertyList componentsJoinedByString:@", "] values:valuesSql forTable:[self tableName]];
 }
 
 @end

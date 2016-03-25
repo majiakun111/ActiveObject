@@ -25,7 +25,8 @@
 
 - (BOOL)dropIndex:(NSString *)indexName;
 
-- (BOOL)renameToNewName:(NSString *)tableNewName;
+//就这么设计
+- (BOOL)renameTable:(NSString *)tableName toTableNewName:(NSString *)tableNewName;
 
 - (BOOL)addColumn:(NSString *)column type:(NSString *)type;
 

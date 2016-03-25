@@ -23,11 +23,12 @@
     // Do any additional setup after loading the view, typically from a nib.
     
     Person *person = [[Person alloc] init];
-    [person arrayTransformerWithModelClass:[BankCard class] forKeyPath:@"bankCards"];
     
+    [person arrayTransformerWithModelClass:[BankCard class] forKeyPath:@"bankCards"];
+    [person setValue:nil forUndefinedKey:@"age3"];
     person.age = 35;
     person.height = 170.5;
-    person.name = @"Ansel";
+//    person.name = @"Ansel";
     person.telphones = @[@"138", @"135"];
     person.info = @{@"hello" : @"world"};
     
@@ -48,7 +49,7 @@
     
     [person save];
     
-    NSArray <Person *> *persons = [person query];
+    NSArray <Person *> *persons = [person queryAll];
   
 //   NSArray<Person *> *persons =  [person queryAll];
 //    
