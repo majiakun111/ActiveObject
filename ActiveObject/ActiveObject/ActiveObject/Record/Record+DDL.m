@@ -50,13 +50,18 @@
         return YES;
     }
 
-    NSArray *propertyAndTypeList = [class getPropertyAndTypeListUntilRootClass:rootClass];
-    if (!propertyAndTypeList || [propertyAndTypeList count] <= 0) {
+    NSDictionary *propertyInfoMap = [class getPropertyInfoMapUntilRootClass:rootClass];
+    if (!propertyInfoMap || [propertyInfoMap count] <= 0) {
         NSLog(@"Could not create not field table");
         return NO;
     }
     
-    NSString *sql = [NSString stringWithFormat:@"create table if not exists %@ (rowId integer primary key autoincrement, %@)", [(Record *)class tableName], [propertyAndTypeList componentsJoinedByString:@","]];
+    NSMutableArray *propertyAndTypeList = [[NSMutableArray alloc] init];
+    [propertyInfoMap enumerateKeysAndObjectsUsingBlock:^(NSString*  _Nonnull propertyName, NSDictionary*  _Nonnull typeMap, BOOL * _Nonnull stop) {
+        [propertyAndTypeList addObject:[NSString stringWithFormat:@"%@ %@", propertyName, typeMap[@"dbType"]]];
+    }];
+    
+    NSString *sql = [NSString stringWithFormat:@"create table if not exists %@ (%@ integer primary key autoincrement, %@)", [(Record *)class tableName], ROW_ID, [propertyAndTypeList componentsJoinedByString:@","]];
     BOOL result = [[DatabaseDAO sharedInstance] executeUpdate:sql];
     if (result) {
         [self.tableBuiltFlags setObject:@(YES) forKey:[(Record *)class tableName]];

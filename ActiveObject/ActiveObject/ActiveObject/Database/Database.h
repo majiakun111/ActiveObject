@@ -25,4 +25,7 @@
 //select
 - (NSArray<NSDictionary *> *)executeQuery:(NSString*)sql;
 
+//获取最后插入的rowId
+- (sqlite_int64)lastInsertRowId;
+
 @end

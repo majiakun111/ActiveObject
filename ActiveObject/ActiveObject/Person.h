@@ -7,12 +7,20 @@
 //
 
 #import "Record.h"
+#import <UIKit/UIKit.h>
+
+@class BankCard;
 
 @interface Person : Record
 
-@property (nonatomic, assign) float height;
-@property (nonatomic, assign) int age;
+@property (nonatomic, assign) NSInteger age;
+@property (nonatomic, assign) CGFloat height;
 @property (nonatomic, copy) NSString *name;
-@property (nonatomic, copy) NSString *cid;
+@property (nonatomic, strong) NSArray *telphones;
+@property (nonatomic, strong) NSDictionary *info;
+
+@property (nonatomic, strong) BankCard *mainBankCard;
+
+@property (nonatomic, strong) NSArray<BankCard *> *bankCards; //副卡
 
 @end

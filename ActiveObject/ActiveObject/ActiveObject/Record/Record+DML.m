@@ -79,14 +79,35 @@
 
 - (BOOL)insert
 {
-    NSArray *columns = [self getColumns];
-    NSArray *values = [self getValuesWithPropertyList:columns];
+    NSArray *propertyList = [self getColumns];
+    NSArray *valueList = [self getValueListWithPropertyList:propertyList];
     
-    NSMutableString *sql = [NSMutableString stringWithFormat:@"replace into %@ (%@) values (", [self tableName], [columns componentsJoinedByString:@", "]];
+    NSMutableString *sql = [NSMutableString stringWithFormat:@"replace into %@ (%@) values (", [self tableName], [propertyList componentsJoinedByString:@", "]];
     
-    NSInteger count = [columns count];
+    NSInteger count = [valueList count];
     for (NSInteger index = 0; index < count; index++) {
-        [sql appendFormat:@"'%@'", values[index]];
+        id value = valueList[index];
+        
+        if ([value isKindOfClass:[Record class]]) {
+            [value insert];
+            
+            long long lastRowId = [[DatabaseDAO sharedInstance] lastInsertRowId];
+            [sql appendFormat:@"'%lld'", lastRowId];
+        } else if ([value isKindOfClass:[NSArray class]]) {
+            NSMutableArray *rowIds = [NSMutableArray array];
+            for (Record *record in value) {
+                BOOL result =  [record insert];
+                if (result) {
+                    long long rowId = [[DatabaseDAO sharedInstance] lastInsertRowId];
+                    [rowIds addObject: @(rowId)];
+                }
+            }
+            
+            [sql appendFormat:@"'%@'", [rowIds componentsJoinedByString:@","]];
+        } else {
+            [sql appendFormat:@"'%@'", value];
+        }
+        
         if (index == count - 1) {
             [sql appendString:@")"];
         } else {

@@ -10,6 +10,13 @@
 #import "Record+DDL.h"
 #import "Record+Condition.h"
 
+@interface Record ()
+{
+    NSMutableDictionary<NSString *, Class> *_arrayTransformerModelClassMap;
+}
+
+@end
+
 @implementation Record
 
 - (instancetype)init
@@ -18,6 +25,8 @@
     if (self) {
         [self createTable];
         [self resetAll];
+        
+        _arrayTransformerModelClassMap = [[NSMutableDictionary alloc] init];
     }
     
     return self;
@@ -31,6 +40,21 @@
 + (NSString *)tableName
 {
     return NSStringFromClass([self class]);
+}
+
+- (void)arrayTransformerWithModelClass:(Class)class forKeyPath:(NSString *)keyPath
+{
+    [_arrayTransformerModelClassMap setObject:class forKey:keyPath];
+}
+
+- (Class)getArrayTransformerModelClassWithKeyPath:(NSString *)keyPath
+{
+    return [_arrayTransformerModelClassMap objectForKey:keyPath];
+}
+
+- (NSDictionary<NSString *, Class> *)getArrayTransformerModelClassMap
+{
+    return _arrayTransformerModelClassMap;
 }
 
 @end

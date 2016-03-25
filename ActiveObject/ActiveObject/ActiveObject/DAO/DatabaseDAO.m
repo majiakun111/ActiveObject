@@ -56,6 +56,11 @@
     return [self.database executeQuery:sql];
 }
 
+- (long long)lastInsertRowId
+{
+    return [self.database lastInsertRowId];
+}
+
 //transaction
 - (BOOL)beginDeferredTransaction
 {

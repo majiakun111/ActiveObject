@@ -14,7 +14,7 @@
 #import "Record+DQL.h"
 #import "Record+Condition.h"
 #import "Record+Transaction.h"
-#import "DatabaseQueue.h"
+#import "AsyncQueue.h"
 #import "DatabaseDAO.h"
 
 #endif /* ActiveObject_h */

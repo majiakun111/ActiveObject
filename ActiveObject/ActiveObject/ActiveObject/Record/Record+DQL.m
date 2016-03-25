@@ -10,50 +10,24 @@
 #import "DatabaseDAO.h"
 #import "Record+Additions.h"
 #import "Record+Condition.h"
-
-@interface Converter : NSObject
-
-+ (NSArray <Record *> *)modelsOfClass:(Class )classs fromArray:(NSArray <NSDictionary *> *)array;
-
-@end
-
-@implementation Converter
-
-+ (NSArray <Record *> *)modelsOfClass:(Class )classs fromArray:(NSArray <NSDictionary *> *)array
-{
-    if (!array) {
-        return nil;
-    }
-    
-    NSMutableArray <Record *> *records = [[NSMutableArray alloc] init];
-    for (NSDictionary *dictionary in array) {
-        Record *record = [[classs alloc] init];
-        for (NSString *key in dictionary) {
-            if ([key isEqual:@"rowId"]) { //remove primary key
-                continue;
-            }
-            
-            [record setValue:dictionary[key] forKeyPath:key];
-        }
-        
-        [records addObject:record];
-    }
-    
-    return records;
-}
-
-@end
+#import "NSObject+Record.h"
+#import "NSString+JSON.h"
 
 @implementation Record (DQL)
 
 - (NSArray <__kindof Record *> *)query
 {
-    NSString *sql = [NSString stringWithFormat:@"select %@ from %@ %@ %@ %@", self.field, [self tableName], self.where, self.orderBy, self.limit];
+    NSString *sql = nil;
+    NSString *field = [self.field stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    if ([field isEqual:@"*"]) {
+        NSArray *columns = [self getColumns];
+        sql = [NSString stringWithFormat:@"select %@ from %@ %@ %@ %@", [columns componentsJoinedByString:@", "], [self tableName], self.where, self.orderBy, self.limit];
+    }
+    else {
+        sql = [NSString stringWithFormat:@"select %@ from %@ %@ %@ %@", self.field, [self tableName], self.where, self.orderBy, self.limit];
+    }
     
-    NSArray<NSDictionary *> *results = [[DatabaseDAO sharedInstance] executeQuery:sql];
-    NSArray<Record *> *records = [Converter modelsOfClass:[self class] fromArray:results];
-    
-    return records;
+    return [self queryWithSql:sql];
 }
 
 - (NSArray <__kindof Record *> *)queryAll
@@ -61,11 +35,7 @@
     NSArray *columns = [self getColumns];
     NSString *sql = [NSString stringWithFormat:@"select %@ from %@", [columns componentsJoinedByString:@", "], [self tableName]];
 
-    NSArray <NSDictionary *> *results = [[DatabaseDAO sharedInstance] executeQuery:sql];
-    
-    NSArray <Record *> *records = [Converter modelsOfClass:[self class] fromArray:results];
-    
-    return records;
+    return [self queryWithSql:sql];
 }
 
 - (NSArray <NSDictionary *> *)queryDictionary
@@ -75,6 +45,84 @@
     NSArray<NSDictionary *> *results = [[DatabaseDAO sharedInstance] executeQuery:sql];
     
     return results;
+}
+
+#pragma mark - PrivateMethod
+
+- (NSArray <__kindof Record *> *)queryWithSql:(NSString *)sql
+{
+    NSArray <NSMutableDictionary *> *results = (NSArray <NSMutableDictionary *> *)[[DatabaseDAO sharedInstance] executeQuery:sql];
+    
+    NSArray <Record *> *records = [self getModelsfromArray:results];
+    
+    return records;
+}
+
+- (NSArray <Record *> *)getModelsfromArray:(NSArray <NSDictionary *> *)array
+{
+    if (!array) {
+        return nil;
+    }
+    
+    NSDictionary *propertyInfoMap = [self getPropertyInfoMapUntilRootClass:[Record class]];
+    NSMutableArray <Record *> *records = [[NSMutableArray alloc] init];
+    
+    for (NSDictionary *dictionary in array) {
+        Record *record = [[[self class] alloc] init];
+        [propertyInfoMap enumerateKeysAndObjectsUsingBlock:^(NSString*  _Nonnull propertyName, NSDictionary* _Nonnull typeMap, BOOL * _Nonnull stop) {
+            
+            NSString *propertyType = typeMap[@"propertyType"];
+            if ([NSClassFromString(propertyType) isSubclassOfClass:[Record class]]) {
+                
+                NSNumber *rowId = dictionary[propertyName];
+                
+                Record *rd = [[NSClassFromString(propertyType) alloc] init];
+                [rd setWhere:@{ROW_ID : rowId}];
+                NSArray<Record *> *result = [rd query];
+                
+                [record setValue:[result firstObject] forKeyPath:propertyName];
+                
+            } else if ([propertyType isEqual:@"NSArray"]) {
+                
+                NSString *value = dictionary[propertyName];
+
+                Class class = [self getArrayTransformerModelClassWithKeyPath:propertyName];
+                if (class && [class isSubclassOfClass:[Record class]]) {
+                    NSArray *rowIds = [value componentsSeparatedByString:@","];
+                    NSMutableArray *rds = [[NSMutableArray alloc] init];
+                    for (NSString *rowId in rowIds) {
+                        Record *rd = [[class alloc] init];
+                        [rd setWhere:@{ROW_ID : @([rowId longLongValue])}];
+                        
+                        NSArray<Record *> *result = [rd query];
+                        [rds addObject:[result firstObject]];
+                    }
+                    
+                    [record setValue:rds forKeyPath:propertyName];
+                    
+                }
+                else {
+                    
+                    NSString *value = dictionary[propertyName];
+                    id JSONObject = [value JSONObject];
+                    
+                    [record setValue:JSONObject forKeyPath:propertyName];
+                    
+                }
+                
+            } else if ([propertyType isEqual:@"NSDictionary"]) {
+                NSString *value = dictionary[propertyName];
+                id JSONObject = [value JSONObject];
+                [record setValue:JSONObject forKeyPath:propertyName];
+            } else {
+                [record setValue:dictionary[propertyName] forKeyPath:propertyName];
+            }
+        }];
+        
+        [records addObject:record];
+    }
+    
+    return records;
 }
 
 @end

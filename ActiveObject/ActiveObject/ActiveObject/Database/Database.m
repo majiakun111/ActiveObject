@@ -169,6 +169,13 @@
     return results;
 }
 
+- (sqlite_int64)lastInsertRowId
+{
+    sqlite_int64 rowId = sqlite3_last_insert_rowid(_db);
+    
+    return rowId;
+}
+
 #pragma mark - PrivateMethod
 
 - (const char*)cdatabasePath

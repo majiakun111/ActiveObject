@@ -7,19 +7,12 @@
 //
 
 #import "ViewController.h"
-#import "DatabaseQueue.h"
-#import "Database.h"
-#import "Database+Transaction.h"
+#import "ActiveObject.h"
 
 #import "Person.h"
-#import "Record+DDL.h"
-#import "Record+DML.h"
-#import "Record+DQL.h"
-#import "Record+Condition.h"
+#import "BankCard.h"
 
 @interface ViewController ()
-
-@property (nonatomic, strong) DatabaseQueue *databaseQueue;
 
 @end
 
@@ -30,23 +23,53 @@
     // Do any additional setup after loading the view, typically from a nib.
     
     Person *person = [[Person alloc] init];
-    person.height = 78;
+    [person arrayTransformerWithModelClass:[BankCard class] forKeyPath:@"bankCards"];
+    
     person.age = 35;
-    person.name = @"wqr";
-    person.cid  = @"3";
+    person.height = 170.5;
+    person.name = @"Ansel";
+    person.telphones = @[@"138", @"135"];
+    person.info = @{@"hello" : @"world"};
+    
+    BankCard *mainBankCard = [[BankCard alloc] init];
+    mainBankCard.cardId = @"1234567890";
+    mainBankCard.money = @"1300000000";
+    person.mainBankCard = mainBankCard;
+    
+    BankCard *bankCard1 = [[BankCard alloc] init];
+    bankCard1.cardId = @"54567683421";
+    bankCard1.money = @"213456578900";
+    
+    BankCard *bankCard2 = [[BankCard alloc] init];
+    bankCard2.cardId = @"987654321";
+    bankCard2.money = @"54657875643";
+
+    person.bankCards =@[bankCard1, bankCard2];
     
     [person save];
     
-    person.height = 17;
-    person.age = 35;
-    person.name = @"dff";
-    person.cid  = @"4";
-    [person save];
+    NSArray <Person *> *persons = [person query];
+  
+//   NSArray<Person *> *persons =  [person queryAll];
+//    
+//    for (NSInteger index = 0; index < 1000; index++) {
+//        [[AsyncQueue sharedInstance] inDatabase:^{
+//            [person save];
+//        }];
+//    }
     
-    [person setUpdateField:@{@"name" : @"Ansel"}];
-    [person setWhere:@{@"cid" : @"4"}];
-    
-    BOOL result = [person update];
+
+//    
+//    person.height = 17;
+//    person.age = 35;
+//    person.name = @"dff";
+//    person.cid  = @"4";
+//    [person save];
+//    
+//    [person setUpdateField:@{@"name" : @"Ansel"}];
+//    [person setWhere:@{@"cid" : @"4"}];
+//    
+//    BOOL result = [person update];
 }
 
 - (void)didReceiveMemoryWarning {

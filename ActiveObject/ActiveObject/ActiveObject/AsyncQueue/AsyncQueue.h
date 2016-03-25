@@ -10,7 +10,7 @@
 
 @class Database;
 
-@interface DatabaseQueue : NSObject
+@interface AsyncQueue : NSObject
 
 + (instancetype)sharedInstance;
 

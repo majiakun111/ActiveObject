@@ -21,6 +21,8 @@
 //select
 - (NSArray<NSDictionary *> *)executeQuery:(NSString*)sql;
 
+- (long long)lastInsertRowId;
+
 //transaction
 - (BOOL)beginDeferredTransaction;
 

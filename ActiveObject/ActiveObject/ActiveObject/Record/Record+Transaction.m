@@ -13,50 +13,41 @@
 
 - (BOOL)beginDeferredTransaction
 {
-    return [[DatabaseDAO sharedInstance] executeUpdate:@"begin deferred transaction"];
+    return [[DatabaseDAO sharedInstance] beginDeferredTransaction];
 }
 
 - (BOOL)beginImmediateTransaction
 {
-    return [[DatabaseDAO sharedInstance] executeUpdate:@"begin immediate transaction"];
+    return [[DatabaseDAO sharedInstance] beginImmediateTransaction];
 }
 
 - (BOOL)beginExclusiveTransaction
 {
-    return [[DatabaseDAO sharedInstance] executeUpdate:@"begin exclusive transaction"];
+    return [[DatabaseDAO sharedInstance] beginExclusiveTransaction];
 }
 
 - (BOOL)startSavePointWithName:(NSString*)name
-{
-    NSAssert(name, @"savepoint name can not nil");
-    
-    NSString *sql = [NSString stringWithFormat:@"savepoint '%@';", name];
-    return [[DatabaseDAO sharedInstance] executeUpdate:sql];
+{    
+    return [[DatabaseDAO sharedInstance] startSavePointWithName:name];
 }
 
 - (BOOL)releaseSavePointWithName:(NSString*)name
 {
-    NSAssert(name, @"savepoint name can not nil");
-    
-    NSString *sql = [NSString stringWithFormat:@"release savepoint '%@';", name];
-    return [[DatabaseDAO sharedInstance] executeUpdate:sql];
+    return [[DatabaseDAO sharedInstance] releaseSavePointWithName:name];
 }
 
 - (BOOL)rollbackToSavePointWithName:(NSString*)name
 {
-    NSAssert(name, @"savepoint name can not nil");
-    
-    NSString *sql = [NSString stringWithFormat:@"rollback transaction to savepoint '%@';", name];
-    return [[DatabaseDAO sharedInstance] executeUpdate:sql];
+    return [[DatabaseDAO sharedInstance] rollbackToSavePointWithName:name];
 }
 
 - (BOOL)rollback
 {
-    return [[DatabaseDAO sharedInstance] executeUpdate:@"rollback transaction"];
+    return [[DatabaseDAO sharedInstance] rollback];
 }
 
 - (BOOL)commit
 {
-    return [[DatabaseDAO sharedInstance] executeUpdate:@"commit transaction"];
+    return [[DatabaseDAO sharedInstance] commit];
 }
 @end

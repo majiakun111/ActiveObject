@@ -6,7 +6,7 @@
 //  Copyright © 2016年 PingAn. All rights reserved.
 //
 
-#import "DatabaseQueue.h"
+#import "AsyncQueue.h"
 #import "Database.h"
 #import "DatabaseDAO.h"
 
@@ -17,21 +17,21 @@ typedef NS_ENUM(NSInteger, TransactionType) {
 };
 
 
-@interface DatabaseQueue ()
+@interface AsyncQueue ()
 
 @property (nonatomic, strong) NSOperationQueue *operationQueue;
 
 @end
 
-@implementation DatabaseQueue
+@implementation AsyncQueue
 
 + (instancetype)sharedInstance
 {
-    static DatabaseQueue *instance = nil;
+    static AsyncQueue *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         if (nil == instance) {
-            instance = [[DatabaseQueue alloc] init];
+            instance = [[AsyncQueue alloc] init];
         }
     });
     

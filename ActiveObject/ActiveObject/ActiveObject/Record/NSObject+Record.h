@@ -10,8 +10,13 @@
 
 @interface NSObject (Record)
 
-+ (NSArray *)getPropertyAndTypeListUntilRootClass:(Class)rootClass;
+/**
+*   return {@"name" : {@"propertyType": @"NSString", @"dbType": @"text"}}; //以propertyName 作为key
+*/
+- (NSDictionary *)getPropertyInfoMapUntilRootClass:(Class)rootClass;
 
-- (NSArray *)getValuesWithPropertyList:(NSArray *)propertyList;
++ (NSDictionary *)getPropertyInfoMapUntilRootClass:(Class)rootClass;
+
+- (NSArray *)getValueListWithPropertyList:(NSArray *)propertyList;
 
 @end

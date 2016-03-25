@@ -15,9 +15,7 @@
 		5B2554301CA3B5E5004A5D74 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5B25542E1CA3B5E5004A5D74 /* LaunchScreen.storyboard */; };
 		5B25545E1CA3B612004A5D74 /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B25545D1CA3B612004A5D74 /* Person.m */; };
 		5B25547A1CA3B9E7004A5D74 /* DatabaseDAO.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2554621CA3B9E7004A5D74 /* DatabaseDAO.m */; };
-		5B25547B1CA3B9E7004A5D74 /* Database+Transaction.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2554651CA3B9E7004A5D74 /* Database+Transaction.m */; };
 		5B25547C1CA3B9E7004A5D74 /* Database.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2554671CA3B9E7004A5D74 /* Database.m */; };
-		5B25547D1CA3B9E7004A5D74 /* DatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2554691CA3B9E7004A5D74 /* DatabaseQueue.m */; };
 		5B25547E1CA3B9E7004A5D74 /* NSObject+Record.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B25546C1CA3B9E7004A5D74 /* NSObject+Record.m */; };
 		5B25547F1CA3B9E7004A5D74 /* Record+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B25546E1CA3B9E7004A5D74 /* Record+Additions.m */; };
 		5B2554801CA3B9E7004A5D74 /* Record+Condition.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2554701CA3B9E7004A5D74 /* Record+Condition.m */; };
@@ -26,6 +24,12 @@
 		5B2554831CA3B9E7004A5D74 /* Record+DQL.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2554761CA3B9E7004A5D74 /* Record+DQL.m */; };
 		5B2554841CA3B9E7004A5D74 /* Record.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2554781CA3B9E7004A5D74 /* Record.m */; };
 		5B2554861CA3BA81004A5D74 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B2554851CA3BA81004A5D74 /* libsqlite3.0.tbd */; };
+		5B384EC31CA3C2C6001E2956 /* Record+Transaction.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B384EC21CA3C2C6001E2956 /* Record+Transaction.m */; };
+		5B384EC81CA3C5EC001E2956 /* AsyncQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B384EC71CA3C5EC001E2956 /* AsyncQueue.m */; };
+		5B384ED01CA3DE5C001E2956 /* NSArray+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B384ECF1CA3DE5C001E2956 /* NSArray+JSON.m */; };
+		5B4CF55C1CA3F6F1006BD555 /* NSString+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B4CF55B1CA3F6F1006BD555 /* NSString+JSON.m */; };
+		5B65D6131CA401BD001D3975 /* NSDictionary+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B65D6121CA401BD001D3975 /* NSDictionary+JSON.m */; };
+		5B65D6161CA431B9001D3975 /* BankCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B65D6151CA431B9001D3975 /* BankCard.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,12 +47,8 @@
 		5B25545D1CA3B612004A5D74 /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
 		5B2554611CA3B9E7004A5D74 /* DatabaseDAO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatabaseDAO.h; sourceTree = "<group>"; };
 		5B2554621CA3B9E7004A5D74 /* DatabaseDAO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatabaseDAO.m; sourceTree = "<group>"; };
-		5B2554641CA3B9E7004A5D74 /* Database+Transaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Database+Transaction.h"; sourceTree = "<group>"; };
-		5B2554651CA3B9E7004A5D74 /* Database+Transaction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Database+Transaction.m"; sourceTree = "<group>"; };
 		5B2554661CA3B9E7004A5D74 /* Database.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Database.h; sourceTree = "<group>"; };
 		5B2554671CA3B9E7004A5D74 /* Database.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Database.m; sourceTree = "<group>"; };
-		5B2554681CA3B9E7004A5D74 /* DatabaseQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatabaseQueue.h; sourceTree = "<group>"; };
-		5B2554691CA3B9E7004A5D74 /* DatabaseQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatabaseQueue.m; sourceTree = "<group>"; };
 		5B25546B1CA3B9E7004A5D74 /* NSObject+Record.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+Record.h"; sourceTree = "<group>"; };
 		5B25546C1CA3B9E7004A5D74 /* NSObject+Record.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+Record.m"; sourceTree = "<group>"; };
 		5B25546D1CA3B9E7004A5D74 /* Record+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Record+Additions.h"; sourceTree = "<group>"; };
@@ -63,8 +63,20 @@
 		5B2554761CA3B9E7004A5D74 /* Record+DQL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Record+DQL.m"; sourceTree = "<group>"; };
 		5B2554771CA3B9E7004A5D74 /* Record.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Record.h; sourceTree = "<group>"; };
 		5B2554781CA3B9E7004A5D74 /* Record.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Record.m; sourceTree = "<group>"; };
-		5B2554791CA3B9E7004A5D74 /* RecordHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecordHeader.h; sourceTree = "<group>"; };
 		5B2554851CA3BA81004A5D74 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
+		5B384EC11CA3C2C6001E2956 /* Record+Transaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Record+Transaction.h"; sourceTree = "<group>"; };
+		5B384EC21CA3C2C6001E2956 /* Record+Transaction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Record+Transaction.m"; sourceTree = "<group>"; };
+		5B384EC41CA3C370001E2956 /* ActiveObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ActiveObject.h; sourceTree = "<group>"; };
+		5B384EC61CA3C5EC001E2956 /* AsyncQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncQueue.h; sourceTree = "<group>"; };
+		5B384EC71CA3C5EC001E2956 /* AsyncQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncQueue.m; sourceTree = "<group>"; };
+		5B384ECE1CA3DE5C001E2956 /* NSArray+JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+JSON.h"; sourceTree = "<group>"; };
+		5B384ECF1CA3DE5C001E2956 /* NSArray+JSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+JSON.m"; sourceTree = "<group>"; };
+		5B4CF55A1CA3F6F1006BD555 /* NSString+JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+JSON.h"; sourceTree = "<group>"; };
+		5B4CF55B1CA3F6F1006BD555 /* NSString+JSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+JSON.m"; sourceTree = "<group>"; };
+		5B65D6111CA401BD001D3975 /* NSDictionary+JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+JSON.h"; sourceTree = "<group>"; };
+		5B65D6121CA401BD001D3975 /* NSDictionary+JSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+JSON.m"; sourceTree = "<group>"; };
+		5B65D6141CA431B9001D3975 /* BankCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BankCard.h; sourceTree = "<group>"; };
+		5B65D6151CA431B9001D3975 /* BankCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BankCard.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +111,7 @@
 		5B25541F1CA3B5E5004A5D74 /* ActiveObject */ = {
 			isa = PBXGroup;
 			children = (
+				5B384ECC1CA3DE13001E2956 /* Foundation */,
 				5B25545F1CA3B9E7004A5D74 /* ActiveObject */,
 				5B2554231CA3B5E5004A5D74 /* AppDelegate.h */,
 				5B2554241CA3B5E5004A5D74 /* AppDelegate.m */,
@@ -106,6 +119,8 @@
 				5B2554271CA3B5E5004A5D74 /* ViewController.m */,
 				5B25545C1CA3B612004A5D74 /* Person.h */,
 				5B25545D1CA3B612004A5D74 /* Person.m */,
+				5B65D6141CA431B9001D3975 /* BankCard.h */,
+				5B65D6151CA431B9001D3975 /* BankCard.m */,
 				5B2554291CA3B5E5004A5D74 /* Main.storyboard */,
 				5B25542C1CA3B5E5004A5D74 /* Assets.xcassets */,
 				5B25542E1CA3B5E5004A5D74 /* LaunchScreen.storyboard */,
@@ -126,8 +141,10 @@
 		5B25545F1CA3B9E7004A5D74 /* ActiveObject */ = {
 			isa = PBXGroup;
 			children = (
+				5B384EC41CA3C370001E2956 /* ActiveObject.h */,
 				5B2554631CA3B9E7004A5D74 /* Database */,
 				5B2554601CA3B9E7004A5D74 /* DAO */,
+				5B384EC51CA3C5EC001E2956 /* AsyncQueue */,
 				5B25546A1CA3B9E7004A5D74 /* Record */,
 			);
 			path = ActiveObject;
@@ -145,12 +162,8 @@
 		5B2554631CA3B9E7004A5D74 /* Database */ = {
 			isa = PBXGroup;
 			children = (
-				5B2554641CA3B9E7004A5D74 /* Database+Transaction.h */,
-				5B2554651CA3B9E7004A5D74 /* Database+Transaction.m */,
 				5B2554661CA3B9E7004A5D74 /* Database.h */,
 				5B2554671CA3B9E7004A5D74 /* Database.m */,
-				5B2554681CA3B9E7004A5D74 /* DatabaseQueue.h */,
-				5B2554691CA3B9E7004A5D74 /* DatabaseQueue.m */,
 			);
 			path = Database;
 			sourceTree = "<group>";
@@ -158,23 +171,54 @@
 		5B25546A1CA3B9E7004A5D74 /* Record */ = {
 			isa = PBXGroup;
 			children = (
-				5B25546B1CA3B9E7004A5D74 /* NSObject+Record.h */,
-				5B25546C1CA3B9E7004A5D74 /* NSObject+Record.m */,
-				5B25546D1CA3B9E7004A5D74 /* Record+Additions.h */,
-				5B25546E1CA3B9E7004A5D74 /* Record+Additions.m */,
-				5B25546F1CA3B9E7004A5D74 /* Record+Condition.h */,
-				5B2554701CA3B9E7004A5D74 /* Record+Condition.m */,
+				5B2554771CA3B9E7004A5D74 /* Record.h */,
+				5B2554781CA3B9E7004A5D74 /* Record.m */,
 				5B2554711CA3B9E7004A5D74 /* Record+DDL.h */,
 				5B2554721CA3B9E7004A5D74 /* Record+DDL.m */,
 				5B2554731CA3B9E7004A5D74 /* Record+DML.h */,
 				5B2554741CA3B9E7004A5D74 /* Record+DML.m */,
 				5B2554751CA3B9E7004A5D74 /* Record+DQL.h */,
 				5B2554761CA3B9E7004A5D74 /* Record+DQL.m */,
-				5B2554771CA3B9E7004A5D74 /* Record.h */,
-				5B2554781CA3B9E7004A5D74 /* Record.m */,
-				5B2554791CA3B9E7004A5D74 /* RecordHeader.h */,
+				5B384EC11CA3C2C6001E2956 /* Record+Transaction.h */,
+				5B384EC21CA3C2C6001E2956 /* Record+Transaction.m */,
+				5B25546D1CA3B9E7004A5D74 /* Record+Additions.h */,
+				5B25546E1CA3B9E7004A5D74 /* Record+Additions.m */,
+				5B25546F1CA3B9E7004A5D74 /* Record+Condition.h */,
+				5B2554701CA3B9E7004A5D74 /* Record+Condition.m */,
+				5B25546B1CA3B9E7004A5D74 /* NSObject+Record.h */,
+				5B25546C1CA3B9E7004A5D74 /* NSObject+Record.m */,
 			);
 			path = Record;
+			sourceTree = "<group>";
+		};
+		5B384EC51CA3C5EC001E2956 /* AsyncQueue */ = {
+			isa = PBXGroup;
+			children = (
+				5B384EC61CA3C5EC001E2956 /* AsyncQueue.h */,
+				5B384EC71CA3C5EC001E2956 /* AsyncQueue.m */,
+			);
+			path = AsyncQueue;
+			sourceTree = "<group>";
+		};
+		5B384ECC1CA3DE13001E2956 /* Foundation */ = {
+			isa = PBXGroup;
+			children = (
+				5B384ECD1CA3DE2B001E2956 /* Extension */,
+			);
+			path = Foundation;
+			sourceTree = "<group>";
+		};
+		5B384ECD1CA3DE2B001E2956 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				5B384ECE1CA3DE5C001E2956 /* NSArray+JSON.h */,
+				5B384ECF1CA3DE5C001E2956 /* NSArray+JSON.m */,
+				5B65D6111CA401BD001D3975 /* NSDictionary+JSON.h */,
+				5B65D6121CA401BD001D3975 /* NSDictionary+JSON.m */,
+				5B4CF55A1CA3F6F1006BD555 /* NSString+JSON.h */,
+				5B4CF55B1CA3F6F1006BD555 /* NSString+JSON.m */,
+			);
+			path = Extension;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -248,19 +292,23 @@
 			buildActionMask = 2147483647;
 			files = (
 				5B25547A1CA3B9E7004A5D74 /* DatabaseDAO.m in Sources */,
+				5B384EC81CA3C5EC001E2956 /* AsyncQueue.m in Sources */,
 				5B2554281CA3B5E5004A5D74 /* ViewController.m in Sources */,
+				5B65D6161CA431B9001D3975 /* BankCard.m in Sources */,
 				5B25547F1CA3B9E7004A5D74 /* Record+Additions.m in Sources */,
 				5B25547C1CA3B9E7004A5D74 /* Database.m in Sources */,
 				5B2554801CA3B9E7004A5D74 /* Record+Condition.m in Sources */,
 				5B2554251CA3B5E5004A5D74 /* AppDelegate.m in Sources */,
-				5B25547D1CA3B9E7004A5D74 /* DatabaseQueue.m in Sources */,
-				5B25547B1CA3B9E7004A5D74 /* Database+Transaction.m in Sources */,
 				5B2554221CA3B5E5004A5D74 /* main.m in Sources */,
+				5B65D6131CA401BD001D3975 /* NSDictionary+JSON.m in Sources */,
 				5B2554821CA3B9E7004A5D74 /* Record+DML.m in Sources */,
 				5B2554841CA3B9E7004A5D74 /* Record.m in Sources */,
+				5B384EC31CA3C2C6001E2956 /* Record+Transaction.m in Sources */,
+				5B4CF55C1CA3F6F1006BD555 /* NSString+JSON.m in Sources */,
 				5B2554811CA3B9E7004A5D74 /* Record+DDL.m in Sources */,
 				5B25545E1CA3B612004A5D74 /* Person.m in Sources */,
 				5B2554831CA3B9E7004A5D74 /* Record+DQL.m in Sources */,
+				5B384ED01CA3DE5C001E2956 /* NSArray+JSON.m in Sources */,
 				5B25547E1CA3B9E7004A5D74 /* NSObject+Record.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
