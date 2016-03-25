@@ -7,13 +7,11 @@
 //
 
 #import "DatabaseDAO.h"
-#import "Database.h"
 
 #define DEFAULT_DATABASE_NAME  @"Ansel.db"
 
 @interface DatabaseDAO ()
 
-@property (nonatomic, strong) Database *database;
 @property (nonatomic, copy) NSString *databasePath;
 @property (nonatomic, assign) int flags;
 
@@ -54,61 +52,6 @@
 - (NSArray<NSDictionary *> *)executeQuery:(NSString*)sql
 {
     return [self.database executeQuery:sql];
-}
-
-- (long long)lastInsertRowId
-{
-    return [self.database lastInsertRowId];
-}
-
-//transaction
-- (BOOL)beginDeferredTransaction
-{
-    return [self executeUpdate:@"begin deferred transaction"];
-}
-
-- (BOOL)beginImmediateTransaction
-{
-    return [self executeUpdate:@"begin immediate transaction"];
-}
-
-- (BOOL)beginExclusiveTransaction
-{
-    return [self executeUpdate:@"begin exclusive transaction"];
-}
-
-- (BOOL)startSavePointWithName:(NSString*)name
-{
-    NSAssert(name, @"savepoint name can not nil");
-    
-    NSString *sql = [NSString stringWithFormat:@"savepoint '%@';", name];
-    return [self executeUpdate:sql];
-}
-
-- (BOOL)releaseSavePointWithName:(NSString*)name
-{
-    NSAssert(name, @"savepoint name can not nil");
-    
-    NSString *sql = [NSString stringWithFormat:@"release savepoint '%@';", name];
-    return [self executeUpdate:sql];
-}
-
-- (BOOL)rollbackToSavePointWithName:(NSString*)name
-{
-    NSAssert(name, @"savepoint name can not nil");
-    
-    NSString *sql = [NSString stringWithFormat:@"rollback transaction to savepoint '%@';", name];
-    return [self executeUpdate:sql];
-}
-
-- (BOOL)rollback
-{
-    return [self executeUpdate:@"rollback transaction"];
-}
-
-- (BOOL)commit
-{
-    return [self executeUpdate:@"commit transaction"];
 }
 
 #pragma mark - property

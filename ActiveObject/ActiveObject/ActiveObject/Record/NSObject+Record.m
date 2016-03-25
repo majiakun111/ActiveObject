@@ -10,25 +10,26 @@
 #import <objc/runtime.h>
 #import "Record.h"
 #import "NSArray+JSON.h"
+#import "RecordDefine.h"
 
 @implementation NSObject (Record)
 
-- (NSDictionary *)getPropertyInfoMapUntilRootClass:(Class)rootClass
+- (NSArray *)getPropertyInfoListUntilRootClass:(Class)rootClass
 {
-    return [[self class] getPropertyInfoMapUntilRootClass:rootClass];
+    return [[self class] getPropertyInfoListUntilRootClass:rootClass];
 }
 
-+ (NSDictionary *)getPropertyInfoMapUntilRootClass:(Class)rootClass
++ (NSArray *)getPropertyInfoListUntilRootClass:(Class)rootClass
 {
-    NSMutableDictionary *propertyInfoMap = [NSMutableDictionary dictionary];
+    NSMutableArray *propertyInfoList = [NSMutableArray array];
     
     NSString *currentClassName = NSStringFromClass([self class]);
     NSString *rootClassName = NSStringFromClass(rootClass);
     
     if ([[self class] superclass] && rootClass && ![currentClassName isEqual:rootClassName]) {
-        NSDictionary *superPropertyInfoMap = [[self superclass] getPropertyInfoMapUntilRootClass:rootClass];
-        if ([superPropertyInfoMap count] > 0) {
-            [propertyInfoMap addEntriesFromDictionary:superPropertyInfoMap];
+        NSArray *superPropertyInfoList = [[self superclass] getPropertyInfoListUntilRootClass:rootClass];
+        if ([superPropertyInfoList count] > 0) {
+            [propertyInfoList addObjectsFromArray:superPropertyInfoList];
         }
     }
     
@@ -37,13 +38,18 @@
     for (unsigned int index = 0; index < propertyCount; ++index) {
         objc_property_t property = properties[index];
         const char * propertyName = property_getName(property);
-        NSDictionary * typeMap = [self getTypeMapWithProperty:property];
-        [propertyInfoMap setObject:typeMap forKey:[NSString stringWithUTF8String:propertyName]];
+        
+        NSMutableDictionary *propertyInfo = [NSMutableDictionary dictionary];
+        [propertyInfo setObject:[NSString stringWithUTF8String:propertyName] forKey:PROPERTY_NAME];
+         NSDictionary * typeMap = [self getTypeMapWithProperty:property];
+        [propertyInfo addEntriesFromDictionary:typeMap];
+        
+        [propertyInfoList addObject:propertyInfo];
     }
     
     free(properties);
     
-    return propertyInfoMap;
+    return propertyInfoList;
 }
 
 - (NSArray *)getValueListWithPropertyList:(NSArray *)propertyList
@@ -84,8 +90,8 @@
     switch(type[0]) {
         case 'f' : //float
         case 'd' : {//double
-            [typeMap setObject:@"CGFloat" forKey:@"propertyType"];
-            [typeMap setObject:@"float" forKey:@"dbType"];
+            [typeMap setObject:@"CGFloat" forKey:PROPERTY_TYPE];
+            [typeMap setObject:@"float" forKey:DATABASE_TYPE];
             break;
         }
         case 'c':   // char
@@ -98,8 +104,8 @@
         case 'L': // unsigned long
         case 'Q' :  // unsigned long long
         case 'B': {// BOOL
-            [typeMap setObject:@"NSInteger" forKey:@"propertyType"];
-            [typeMap setObject:@"integer" forKey:@"dbType"];
+            [typeMap setObject:@"NSInteger" forKey:PROPERTY_TYPE];
+            [typeMap setObject:@"integer" forKey:DATABASE_TYPE];
             break;
         }
         case '@' : {//ObjC object
@@ -110,27 +116,27 @@
             cls = [cls stringByReplacingOccurrencesOfString:@"\"" withString:@""];
             
             if ([NSClassFromString(cls) isSubclassOfClass:[NSString class]]) {
-                [typeMap setObject:@"NSString" forKey:@"propertyType"];
+                [typeMap setObject:@"NSString" forKey:PROPERTY_TYPE];
             }
             else if ([NSClassFromString(cls) isSubclassOfClass:[NSNumber class]]) {
-                [typeMap setObject:@"NSNumber" forKey:@"propertyType"];
+                [typeMap setObject:@"NSNumber" forKey:PROPERTY_TYPE];
             }
             else if ([NSClassFromString(cls) isSubclassOfClass:[NSArray class]]) {
-                [typeMap setObject:@"NSArray" forKey:@"propertyType"];
+                [typeMap setObject:@"NSArray" forKey:PROPERTY_TYPE];
             }
             else if ([NSClassFromString(cls) isSubclassOfClass:[NSDictionary class]]) {
-                [typeMap setObject:@"NSDictionary" forKey:@"propertyType"];
+                [typeMap setObject:@"NSDictionary" forKey:PROPERTY_TYPE];
             }
             else if ([NSClassFromString(cls) isSubclassOfClass:[Record class]]) {
-                [typeMap setObject:cls forKey:@"propertyType"];
+                [typeMap setObject:cls forKey:PROPERTY_TYPE];
             }
             
-            [typeMap setObject:@"text" forKey:@"dbType"];
+            [typeMap setObject:@"text" forKey:DATABASE_TYPE];
             break;
         }
         default: {
-            [typeMap setObject:@"NSString" forKey:@"propertyType"];
-            [typeMap setObject:@"text" forKey:@"dbType"];
+            [typeMap setObject:@"NSString" forKey:PROPERTY_TYPE];
+            [typeMap setObject:@"text" forKey:DATABASE_TYPE];
         }
     }
     

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5B2030651CA52B360050023A /* DatabaseDAO+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2030641CA52B360050023A /* DatabaseDAO+Additions.m */; };
+		5B2030681CA52CF30050023A /* DatabaseDAO+Transaction.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2030671CA52CF30050023A /* DatabaseDAO+Transaction.m */; };
 		5B2554221CA3B5E5004A5D74 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2554211CA3B5E5004A5D74 /* main.m */; };
 		5B2554251CA3B5E5004A5D74 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2554241CA3B5E5004A5D74 /* AppDelegate.m */; };
 		5B2554281CA3B5E5004A5D74 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2554271CA3B5E5004A5D74 /* ViewController.m */; };
@@ -33,6 +35,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5B2030621CA521F20050023A /* RecordDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RecordDefine.h; sourceTree = "<group>"; };
+		5B2030631CA52B360050023A /* DatabaseDAO+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DatabaseDAO+Additions.h"; sourceTree = "<group>"; };
+		5B2030641CA52B360050023A /* DatabaseDAO+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "DatabaseDAO+Additions.m"; sourceTree = "<group>"; };
+		5B2030661CA52CF30050023A /* DatabaseDAO+Transaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DatabaseDAO+Transaction.h"; sourceTree = "<group>"; };
+		5B2030671CA52CF30050023A /* DatabaseDAO+Transaction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "DatabaseDAO+Transaction.m"; sourceTree = "<group>"; };
 		5B25541D1CA3B5E5004A5D74 /* ActiveObject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ActiveObject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B2554211CA3B5E5004A5D74 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		5B2554231CA3B5E5004A5D74 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -155,6 +162,10 @@
 			children = (
 				5B2554611CA3B9E7004A5D74 /* DatabaseDAO.h */,
 				5B2554621CA3B9E7004A5D74 /* DatabaseDAO.m */,
+				5B2030661CA52CF30050023A /* DatabaseDAO+Transaction.h */,
+				5B2030671CA52CF30050023A /* DatabaseDAO+Transaction.m */,
+				5B2030631CA52B360050023A /* DatabaseDAO+Additions.h */,
+				5B2030641CA52B360050023A /* DatabaseDAO+Additions.m */,
 			);
 			path = DAO;
 			sourceTree = "<group>";
@@ -171,6 +182,7 @@
 		5B25546A1CA3B9E7004A5D74 /* Record */ = {
 			isa = PBXGroup;
 			children = (
+				5B2030621CA521F20050023A /* RecordDefine.h */,
 				5B2554771CA3B9E7004A5D74 /* Record.h */,
 				5B2554781CA3B9E7004A5D74 /* Record.m */,
 				5B2554711CA3B9E7004A5D74 /* Record+DDL.h */,
@@ -296,8 +308,10 @@
 				5B2554281CA3B5E5004A5D74 /* ViewController.m in Sources */,
 				5B65D6161CA431B9001D3975 /* BankCard.m in Sources */,
 				5B25547F1CA3B9E7004A5D74 /* Record+Additions.m in Sources */,
+				5B2030651CA52B360050023A /* DatabaseDAO+Additions.m in Sources */,
 				5B25547C1CA3B9E7004A5D74 /* Database.m in Sources */,
 				5B2554801CA3B9E7004A5D74 /* Record+Condition.m in Sources */,
+				5B2030681CA52CF30050023A /* DatabaseDAO+Transaction.m in Sources */,
 				5B2554251CA3B5E5004A5D74 /* AppDelegate.m in Sources */,
 				5B2554221CA3B5E5004A5D74 /* main.m in Sources */,
 				5B65D6131CA401BD001D3975 /* NSDictionary+JSON.m in Sources */,

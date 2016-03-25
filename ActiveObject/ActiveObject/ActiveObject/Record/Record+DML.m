@@ -8,6 +8,7 @@
 
 #import "Record+DML.h"
 #import "DatabaseDAO.h"
+#import "DatabaseDAO+Additions.h"
 #import "Record+Additions.h"
 #import "NSObject+Record.h"
 #import "Record+Condition.h"

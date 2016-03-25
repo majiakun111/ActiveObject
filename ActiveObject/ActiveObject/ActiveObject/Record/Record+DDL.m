@@ -9,6 +9,7 @@
 #import "Record+DDL.h"
 #import "DatabaseDAO.h"
 #import "NSObject+Record.h"
+#import "RecordDefine.h"
 
 @interface TableBuilder : NSObject
 
@@ -50,15 +51,15 @@
         return YES;
     }
 
-    NSDictionary *propertyInfoMap = [class getPropertyInfoMapUntilRootClass:rootClass];
-    if (!propertyInfoMap || [propertyInfoMap count] <= 0) {
+    NSArray *propertyInfoList = [class getPropertyInfoListUntilRootClass:rootClass];
+    if (!propertyInfoList || [propertyInfoList count] <= 0) {
         NSLog(@"Could not create not field table");
         return NO;
     }
     
     NSMutableArray *propertyAndTypeList = [[NSMutableArray alloc] init];
-    [propertyInfoMap enumerateKeysAndObjectsUsingBlock:^(NSString*  _Nonnull propertyName, NSDictionary*  _Nonnull typeMap, BOOL * _Nonnull stop) {
-        [propertyAndTypeList addObject:[NSString stringWithFormat:@"%@ %@", propertyName, typeMap[@"dbType"]]];
+    [propertyInfoList enumerateObjectsUsingBlock:^(NSDictionary*  _Nonnull propertyInfo, NSUInteger idx, BOOL * _Nonnull stop) {
+        [propertyAndTypeList addObject:[NSString stringWithFormat:@"%@ %@", propertyInfo[PROPERTY_NAME], propertyInfo[DATABASE_TYPE]]];
     }];
     
     NSString *sql = [NSString stringWithFormat:@"create table if not exists %@ (%@ integer primary key autoincrement, %@)", [(Record *)class tableName], ROW_ID, [propertyAndTypeList componentsJoinedByString:@","]];

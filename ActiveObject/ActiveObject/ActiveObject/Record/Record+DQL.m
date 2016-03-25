@@ -12,6 +12,7 @@
 #import "Record+Condition.h"
 #import "NSObject+Record.h"
 #import "NSString+JSON.h"
+#import "RecordDefine.h"
 
 @implementation Record (DQL)
 
@@ -64,14 +65,16 @@
         return nil;
     }
     
-    NSDictionary *propertyInfoMap = [self getPropertyInfoMapUntilRootClass:[Record class]];
+    NSArray *propertyInfoList = [self getPropertyInfoListUntilRootClass:[Record class]];
     NSMutableArray <Record *> *records = [[NSMutableArray alloc] init];
     
     for (NSDictionary *dictionary in array) {
         Record *record = [[[self class] alloc] init];
-        [propertyInfoMap enumerateKeysAndObjectsUsingBlock:^(NSString*  _Nonnull propertyName, NSDictionary* _Nonnull typeMap, BOOL * _Nonnull stop) {
+        
+        [propertyInfoList enumerateObjectsUsingBlock:^(NSDictionary*  _Nonnull propertyInfo, NSUInteger idx, BOOL * _Nonnull stop) {
             
-            NSString *propertyType = typeMap[@"propertyType"];
+            NSString *propertyName = propertyInfo[PROPERTY_NAME];
+            NSString *propertyType = propertyInfo[PROPERTY_TYPE];
             if ([NSClassFromString(propertyType) isSubclassOfClass:[Record class]]) {
                 
                 NSNumber *rowId = dictionary[propertyName];
@@ -85,9 +88,10 @@
             } else if ([propertyType isEqual:@"NSArray"]) {
                 
                 NSString *value = dictionary[propertyName];
-
+                
                 Class class = [self getArrayTransformerModelClassWithKeyPath:propertyName];
                 if (class && [class isSubclassOfClass:[Record class]]) {
+                    
                     NSArray *rowIds = [value componentsSeparatedByString:@","];
                     NSMutableArray *rds = [[NSMutableArray alloc] init];
                     for (NSString *rowId in rowIds) {

@@ -8,13 +8,14 @@
 
 #import "Record+Additions.h"
 #import "DatabaseDAO.h"
+#import "DatabaseDAO+Additions.h"
+#import "RecordDefine.h"
 
 @implementation Record (Additions)
 
 - (NSArray *)getColumns
 {
-    NSString *sql = [NSString stringWithFormat:@"pragma table_info('%@')" , [self tableName]];
-    NSArray <NSDictionary *> *tableInfos = [[DatabaseDAO sharedInstance] executeQuery:sql];
+    NSArray <NSDictionary *> *tableInfos = [[DatabaseDAO sharedInstance] getTableInfoForTable:[self tableName]];
     
     NSMutableArray *columns = [[NSMutableArray alloc] init];
     for (NSDictionary *tableInfo in tableInfos) {
@@ -23,7 +24,7 @@
     }
     
     //remove rowId
-    [columns removeObjectAtIndex:0];
+    [columns removeObject:ROW_ID];
     
     return columns;
 }

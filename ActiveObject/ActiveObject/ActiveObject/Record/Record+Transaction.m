@@ -8,6 +8,7 @@
 
 #import "Record+Transaction.h"
 #import "DatabaseDAO.h"
+#import "DatabaseDAO+Transaction.h"
 
 @implementation Record (Transaction)
 

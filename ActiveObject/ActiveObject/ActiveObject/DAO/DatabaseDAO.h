@@ -7,8 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Database.h"
 
 @interface DatabaseDAO : NSObject
+
+@property (nonatomic, strong) Database *database;
 
 + (instancetype)sharedInstance;
 
@@ -20,24 +23,5 @@
 
 //select
 - (NSArray<NSDictionary *> *)executeQuery:(NSString*)sql;
-
-- (long long)lastInsertRowId;
-
-//transaction
-- (BOOL)beginDeferredTransaction;
-
-- (BOOL)beginImmediateTransaction;
-
-- (BOOL)beginExclusiveTransaction;
-
-- (BOOL)startSavePointWithName:(NSString*)name;
-
-- (BOOL)releaseSavePointWithName:(NSString*)name;
-
-- (BOOL)rollbackToSavePointWithName:(NSString*)name;
-
-- (BOOL)rollback;
-
-- (BOOL)commit;
 
 @end

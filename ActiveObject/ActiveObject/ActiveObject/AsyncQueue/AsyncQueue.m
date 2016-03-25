@@ -9,6 +9,7 @@
 #import "AsyncQueue.h"
 #import "Database.h"
 #import "DatabaseDAO.h"
+#import "DatabaseDAO+Transaction.h"
 
 typedef NS_ENUM(NSInteger, TransactionType) {
     Deferred = 0,
