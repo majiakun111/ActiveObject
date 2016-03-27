@@ -11,6 +11,7 @@
 
 #import "Person.h"
 #import "BankCard.h"
+#import "TestDatabaseMigrator.h"
 
 @interface ViewController ()
 
@@ -22,13 +23,19 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
+    NSString *documentDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+    NSString *databasePath = [documentDirectory stringByAppendingPathComponent:@"Test.db"];
+    [[DatabaseDAO sharedInstance] configDatabasePath:databasePath databaseVersion:@"2.0"];
+    
+    TestDatabaseMigrator *databaseMigrator = [[TestDatabaseMigrator alloc] init];
+    [[DatabaseDAO sharedInstance] setDatabaseMigrator:databaseMigrator];
+    
     Person *person = [[Person alloc] init];
     
     [person arrayTransformerWithModelClass:[BankCard class] forKeyPath:@"bankCards"];
-    [person setValue:nil forUndefinedKey:@"age3"];
     person.age = 35;
     person.height = 170.5;
-//    person.name = @"Ansel";
+    person.name = @"Ansel";
     person.telphones = @[@"138", @"135"];
     person.info = @{@"hello" : @"world"};
     

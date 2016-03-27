@@ -15,9 +15,11 @@
 
 @property (nonatomic, assign) NSInteger age;
 @property (nonatomic, assign) CGFloat height;
-@property (nonatomic, copy) NSString *name;
+@property (nonatomic, copy)   NSString *name;
+@property (nonatomic, copy)   NSString *cid;
 @property (nonatomic, strong) NSArray *telphones;
 @property (nonatomic, strong) NSDictionary *info;
+@property (nonatomic, copy) NSString *address;
 
 @property (nonatomic, strong) BankCard *mainBankCard;
 

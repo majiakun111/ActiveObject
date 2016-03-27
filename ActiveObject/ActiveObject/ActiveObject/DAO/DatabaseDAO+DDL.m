@@ -16,7 +16,7 @@
 
 + (instancetype)sharedInstance;
 
-- (BOOL)buildTable:(NSString *)tableName forClass:(Class)class untilRootClass:(Class)rootClass;
+- (BOOL)buildTable:(NSString *)tableName forClass:(Class)class untilRootClass:(Class)rootClass columnConstraints:(NSDictionary *)columnConstraints;
 
 @end
 
@@ -35,7 +35,7 @@
     return instance;
 }
 
-- (BOOL)buildTable:(NSString *)tableName forClass:(Class)class untilRootClass:(Class)rootClass
+- (BOOL)buildTable:(NSString *)tableName forClass:(Class)class untilRootClass:(Class)rootClass columnConstraints:(NSDictionary *)columnConstraints
 {
     BOOL buildFlag = [self isBuiltTable:tableName forClass:class];
     if (buildFlag) {
@@ -48,12 +48,27 @@
         return NO;
     }
     
-    NSMutableArray *propertyAndTypeList = [[NSMutableArray alloc] init];
-    [propertyInfoList enumerateObjectsUsingBlock:^(NSDictionary*  _Nonnull propertyInfo, NSUInteger idx, BOOL * _Nonnull stop) {
-        [propertyAndTypeList addObject:[NSString stringWithFormat:@"%@ %@", propertyInfo[PROPERTY_NAME], propertyInfo[DATABASE_TYPE]]];
-    }];
+    NSMutableString *sql = [NSMutableString stringWithFormat:@"create table if not exists %@ (%@ integer primary key autoincrement,", tableName, ROW_ID];
     
-    NSString *sql = [NSString stringWithFormat:@"create table if not exists %@ (%@ integer primary key autoincrement, %@)", tableName, ROW_ID, [propertyAndTypeList componentsJoinedByString:@","]];
+    NSInteger count = [propertyInfoList count];
+    for (NSInteger index = 0; index < count; index++) {
+        
+        NSDictionary *propertyInfo = propertyInfoList[index];
+        [sql appendFormat:@" %@ %@", propertyInfo[PROPERTY_NAME], propertyInfo[DATABASE_TYPE]];
+        
+        NSString *columnConstraint = columnConstraints[propertyInfo[PROPERTY_NAME]];
+        if (columnConstraint) {
+            [sql appendFormat:@" %@", columnConstraint];
+        }
+        
+        if (index != count -1) {
+            [sql appendFormat:@","];
+        } else {
+            [sql appendFormat:@")"];
+        }
+        
+    }
+    
     BOOL result = [[DatabaseDAO sharedInstance] executeUpdate:sql];
     if (result) {
         [self.tableBuiltFlags setObject:@(YES) forKey:tableName];
@@ -92,9 +107,9 @@
 
 @implementation DatabaseDAO (DDL)
 
-- (BOOL)createTable:(NSString *)tableName forClass:(Class)class untilRootClass:(Class)rootClass
+- (BOOL)createTable:(NSString *)tableName forClass:(Class)class untilRootClass:(Class)rootClass columnConstraints:(NSDictionary *)columnConstraints
 {
-    return [[TableBuilder sharedInstance] buildTable:tableName forClass:class untilRootClass:rootClass];
+    return [[TableBuilder sharedInstance] buildTable:tableName forClass:class untilRootClass:rootClass columnConstraints:columnConstraints];
 }
 
 - (BOOL)dropTable:(NSString *)tableName

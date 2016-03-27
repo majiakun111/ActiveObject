@@ -9,9 +9,6 @@
 #import "Database.h"
 
 @interface Database ()
-{
-    sqlite3 *_db;
-}
 
 @property (nonatomic, copy) NSString *databasePath;
 
@@ -169,13 +166,6 @@
     }
     
     return results;
-}
-
-- (sqlite_int64)lastInsertRowId
-{
-    sqlite_int64 rowId = sqlite3_last_insert_rowid(_db);
-    
-    return rowId;
 }
 
 #pragma mark - PrivateMethod

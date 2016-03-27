@@ -1,18 +1,17 @@
 //
-//  DatabaseDAO+Additions.h
+//  Database+Additions.h
 //  ActiveObject
 //
-//  Created by Ansel on 16/3/25.
+//  Created by Ansel on 16/3/26.
 //  Copyright © 2016年 PingAn. All rights reserved.
 //
 
-#import "DatabaseDAO.h"
+#import "Database.h"
 
-@interface DatabaseDAO (Additions)
+@interface Database (Additions)
 
-- (long long)lastInsertRowId;
-
-- (NSArray <NSDictionary *> *)getTableInfoForTable:(NSString *)tableName;
+//获取最后插入的rowId
+- (sqlite_int64)lastInsertRowId;
 
 /*
  * set database 加解密的key

@@ -52,9 +52,11 @@
     return [_arrayTransformerModelClassMap objectForKey:keyPath];
 }
 
-- (NSDictionary<NSString *, Class> *)getArrayTransformerModelClassMap
+#pragma mark - HookMethod
+
+- (NSDictionary *)columnConstraints
 {
-    return _arrayTransformerModelClassMap;
+    return nil;
 }
 
 #pragma mark -Overrride 避免崩溃

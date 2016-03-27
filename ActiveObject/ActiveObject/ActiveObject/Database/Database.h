@@ -10,6 +10,9 @@
 #import <sqlite3.h>
 
 @interface Database : NSObject
+{
+    sqlite3 *_db;
+}
 
 - (instancetype)initWithDatabasePath:(NSString *)databasePath;
 
@@ -24,8 +27,5 @@
 
 //select
 - (NSArray<NSDictionary *> *)executeQuery:(NSString*)sql;
-
-//获取最后插入的rowId
-- (sqlite_int64)lastInsertRowId;
 
 @end

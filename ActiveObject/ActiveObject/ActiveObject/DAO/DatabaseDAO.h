@@ -8,16 +8,28 @@
 
 #import <Foundation/Foundation.h>
 #import "Database.h"
+#import "DatabaseMigrator.h"
 
 @interface DatabaseDAO : NSObject
 
 @property (nonatomic, strong) Database *database;
+//修改
+@property (nonatomic, strong) DatabaseMigrator *databaseMigrator;
 
 + (instancetype)sharedInstance;
 
 - (void)configDatabasePath:(NSString*)databasePath;
 
 - (void)configDatabasePath:(NSString*)databasePath flags:(int)flags;
+
+- (void)configDatabasePath:(NSString*)databasePath databaseVersion:(NSString *)databaseVersion;
+
+/**
+ * databasePath : database path
+ * flags:  database permission
+ * databaseVersion : database version,
+ */
+- (void)configDatabasePath:(NSString*)databasePath flags:(int)flags databaseVersion:(NSString *)databaseVersion;
 
 - (BOOL)executeUpdate:(NSString*)sql;
 

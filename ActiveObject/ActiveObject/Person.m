@@ -10,5 +10,16 @@
 
 @implementation Person
 
+- (NSDictionary *)columnConstraints
+{
+    return @{
+              @"age" :  @"check (age >= 0)",
+              @"height": @"check (height > 0)",
+              @"name" : @"not null",
+              @"cid"  : @"unique not null",
+              @"telphones" : @"default ''"
+            };
+}
+
 @end
 

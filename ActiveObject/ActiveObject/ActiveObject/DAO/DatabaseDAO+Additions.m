@@ -7,6 +7,7 @@
 //
 
 #import "DatabaseDAO+Additions.h"
+#import "Database+Additions.h"
 
 @implementation DatabaseDAO (Additions)
 
@@ -21,6 +22,16 @@
     NSArray <NSDictionary *> *tableInfo = [[DatabaseDAO sharedInstance] executeQuery:sql];
     
     return tableInfo;
+}
+
+- (BOOL)setKey:(NSString*)key
+{
+    return [self.database setKey:key];
+}
+
+- (BOOL)resetKey:(NSString*)key
+{
+    return [self.database resetKey:key];
 }
 
 @end
