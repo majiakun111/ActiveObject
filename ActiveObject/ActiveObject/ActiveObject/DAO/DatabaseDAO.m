@@ -110,7 +110,6 @@
         return;
     }
     
-    
     if ([currentDatabaseVersion compare:self.databaseVersion options:NSCaseInsensitiveSearch] != NSOrderedAscending) {
         return;
     }

@@ -15,7 +15,7 @@
 		5B20307C1CA545590050023A /* NSObject+Record.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B20307A1CA545590050023A /* NSObject+Record.m */; };
 		5B20307F1CA676450050023A /* Database+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B20307E1CA676450050023A /* Database+Additions.m */; };
 		5B2030831CA6D8B50050023A /* DatabaseMigrator.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2030821CA6D8B50050023A /* DatabaseMigrator.m */; };
-		5B2030871CA7BC240050023A /* Version2MigrateExecutor.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2030861CA7BC240050023A /* Version2MigrateExecutor.m */; };
+		5B2030871CA7BC240050023A /* OneToTwoVersionMigrateExecutor.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2030861CA7BC240050023A /* OneToTwoVersionMigrateExecutor.m */; };
 		5B20308A1CA7C6320050023A /* TestDatabaseMigrator.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2030891CA7C6320050023A /* TestDatabaseMigrator.m */; };
 		5B2554221CA3B5E5004A5D74 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2554211CA3B5E5004A5D74 /* main.m */; };
 		5B2554251CA3B5E5004A5D74 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2554241CA3B5E5004A5D74 /* AppDelegate.m */; };
@@ -60,8 +60,8 @@
 		5B2030811CA6D8B50050023A /* DatabaseMigrator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatabaseMigrator.h; sourceTree = "<group>"; };
 		5B2030821CA6D8B50050023A /* DatabaseMigrator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatabaseMigrator.m; sourceTree = "<group>"; };
 		5B2030841CA6DB990050023A /* VersionMigrateExecutor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VersionMigrateExecutor.h; sourceTree = "<group>"; };
-		5B2030851CA7BC230050023A /* Version2MigrateExecutor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Version2MigrateExecutor.h; sourceTree = "<group>"; };
-		5B2030861CA7BC240050023A /* Version2MigrateExecutor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Version2MigrateExecutor.m; sourceTree = "<group>"; };
+		5B2030851CA7BC230050023A /* OneToTwoVersionMigrateExecutor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OneToTwoVersionMigrateExecutor.h; sourceTree = "<group>"; };
+		5B2030861CA7BC240050023A /* OneToTwoVersionMigrateExecutor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OneToTwoVersionMigrateExecutor.m; sourceTree = "<group>"; };
 		5B2030881CA7C6320050023A /* TestDatabaseMigrator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestDatabaseMigrator.h; sourceTree = "<group>"; };
 		5B2030891CA7C6320050023A /* TestDatabaseMigrator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestDatabaseMigrator.m; sourceTree = "<group>"; };
 		5B25541D1CA3B5E5004A5D74 /* ActiveObject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ActiveObject.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -162,8 +162,8 @@
 				5B65D6151CA431B9001D3975 /* BankCard.m */,
 				5B2030881CA7C6320050023A /* TestDatabaseMigrator.h */,
 				5B2030891CA7C6320050023A /* TestDatabaseMigrator.m */,
-				5B2030851CA7BC230050023A /* Version2MigrateExecutor.h */,
-				5B2030861CA7BC240050023A /* Version2MigrateExecutor.m */,
+				5B2030851CA7BC230050023A /* OneToTwoVersionMigrateExecutor.h */,
+				5B2030861CA7BC240050023A /* OneToTwoVersionMigrateExecutor.m */,
 				5B2554291CA3B5E5004A5D74 /* Main.storyboard */,
 				5B25542C1CA3B5E5004A5D74 /* Assets.xcassets */,
 				5B25542E1CA3B5E5004A5D74 /* LaunchScreen.storyboard */,
@@ -361,7 +361,7 @@
 				5B25547C1CA3B9E7004A5D74 /* Database.m in Sources */,
 				5B2554801CA3B9E7004A5D74 /* Record+Condition.m in Sources */,
 				5B20307F1CA676450050023A /* Database+Additions.m in Sources */,
-				5B2030871CA7BC240050023A /* Version2MigrateExecutor.m in Sources */,
+				5B2030871CA7BC240050023A /* OneToTwoVersionMigrateExecutor.m in Sources */,
 				5B20306E1CA52F510050023A /* DatabaseDAO+DDL.m in Sources */,
 				5B2030681CA52CF30050023A /* DatabaseDAO+Transaction.m in Sources */,
 				5B2554251CA3B5E5004A5D74 /* AppDelegate.m in Sources */,

@@ -16,8 +16,6 @@
 {
     NSDictionary *columnConstraints = [self columnConstraints];
     
-    
-    
     return [[DatabaseDAO sharedInstance] createTable:[self tableName] forClass:[self class] untilRootClass:[Record class] columnConstraints: columnConstraints];
 }
 

@@ -7,7 +7,7 @@
 //
 
 #import "TestDatabaseMigrator.h"
-#import "Version2MigrateExecutor.h"
+#import "OneToTwoVersionMigrateExecutor.h"
 
 @implementation TestDatabaseMigrator
 
@@ -18,7 +18,7 @@
 
 - (NSDictionary<NSString*, Class> *)migrateVersionAndExecutorMap
 {
-    return @{@"2.0": [Version2MigrateExecutor class]};
+    return @{@"2.0": [OneToTwoVersionMigrateExecutor class]};
 }
 
 @end

@@ -9,6 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "VersionMigrateExecutor.h"
 
-@interface Version2MigrateExecutor : NSObject <VersionMigrateExecutor>
+@interface OneToTwoVersionMigrateExecutor : NSObject <VersionMigrateExecutor>
 
 @end

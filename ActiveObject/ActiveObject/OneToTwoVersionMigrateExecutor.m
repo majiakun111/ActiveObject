@@ -6,11 +6,11 @@
 //  Copyright © 2016年 PingAn. All rights reserved.
 //
 
-#import "Version2MigrateExecutor.h"
+#import "OneToTwoVersionMigrateExecutor.h"
 #import "Person.h"
 #import "Record+DDL.h"
 
-@implementation Version2MigrateExecutor
+@implementation OneToTwoVersionMigrateExecutor
 
 - (BOOL)execute
 {
