@@ -7,7 +7,7 @@
 
 二. 支持异步
 
-三. 支持迁移
+三. 支持迁移, 对于column add and delete, index add and delete支持自动迁移, 只需要更改DatabaseVersion即可和配置
 
 四. 支持加密
 
