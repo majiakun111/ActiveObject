@@ -18,9 +18,10 @@
 
 @interface Record (DQL)
 
+/**
+ * default query all
+ */
 - (NSArray <__kindof Record *> *)query;
-
-- (NSArray <__kindof Record *> *)queryAll;
 
 /*
  * 返回的不是 Record的数据结构 

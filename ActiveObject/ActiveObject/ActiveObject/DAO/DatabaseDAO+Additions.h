@@ -12,7 +12,13 @@
 
 - (long long)lastInsertRowId;
 
-- (NSArray <NSDictionary *> *)getTableInfoForTable:(NSString *)tableName;
+- (NSArray<NSDictionary *> *)getTableInfoForTable:(NSString *)tableName;
+
+- (NSArray<NSString *> *)getColumnsForTableName:(NSString *)tableName;
+
+- (NSArray<NSString *> *)getAllTableName;
+
+- (NSDictionary<NSString*, NSDictionary*> *)getColumnIndexesFromSqliteMasterForTable:(NSString *)tableName;
 
 /*
  * set database 加解密的key

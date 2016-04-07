@@ -25,29 +25,21 @@
     
     NSArray *realMigrationVersionList = [migrationVersionList subarrayWithRange:NSMakeRange(currentDatabaseVersionIndex, count)];
     if (!realMigrationVersionList || [realMigrationVersionList count] <= 0) {
-        return NO;
+        return YES;
     }
     
-    //获取版本件迁移的执行者
+    //执行迁移
+    BOOL result = YES;
     NSDictionary *migrateVersionAndExecutorMap = [self migrateVersionAndExecutorMap];
-    NSMutableArray<Class> *executors = [NSMutableArray array];
     [realMigrationVersionList enumerateObjectsUsingBlock:^(NSString*  _Nonnull databaseVersion, NSUInteger idx, BOOL * _Nonnull stop) {
         
         Class class = migrateVersionAndExecutorMap[databaseVersion];
-        if (class) {
-            [executors addObject:class];
+        id <VersionMigrateExecutor> executor = [[class alloc] init];
+        BOOL result = [executor execute];
+        if (!result) {
+            *stop = YES;
         }
         
-    }];
-
-    //开始执行迁移
-    __block BOOL result = YES;
-    [executors enumerateObjectsUsingBlock:^(Class  _Nonnull class, NSUInteger idx, BOOL * _Nonnull stop) {
-        id <VersionMigrateExecutor> executor = [[class alloc] init];
-        result = [executor execute];
-        if (!result) {
-            *stop = !result;
-        }
     }];
     
     return result;
@@ -57,13 +49,17 @@
 
 - (NSArray<NSString *> *)migrationVersionList
 {
+#ifdef DEBUG
     [NSException raise:@"Must Override" format:@"migrationVersionList"];
+#endif
     return nil;
 }
 
 - (NSDictionary<NSString*, Class> *)migrateVersionAndExecutorMap
 {
+#ifdef DEBUG
     [NSException raise:@"Must Override" format:@"migrateVersionAndExecutorMap"];
+#endif
     return nil;
 }
 

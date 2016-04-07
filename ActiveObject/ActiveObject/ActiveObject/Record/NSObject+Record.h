@@ -11,11 +11,11 @@
 @interface NSObject (Record)
 
 /**
-*   return [{propertyName : @"age", PROPERTY_TYPE: @"NSString", DATABASE_TYPE: @"text"}, ...]; //以propertyName 作为key
+*   return [{PROPERTY_NAME : @"age", PROPERTY_TYPE: @"NSString", DATABASE_TYPE: @"text"}, ...]; 
 */
-- (NSArray *)getPropertyInfoListUntilRootClass:(Class)rootClass;
+- (NSArray *)getPropertyInfoList;
 
-+ (NSArray *)getPropertyInfoListUntilRootClass:(Class)rootClass;
++ (NSArray *)getPropertyInfoList;
 
 - (NSArray *)getValueListWithPropertyList:(NSArray *)propertyList;
 

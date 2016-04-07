@@ -35,17 +35,6 @@
     return records;
 }
 
-- (NSArray <__kindof Record *> *)queryAll
-{
-    NSArray *columns = [self getColumns];
-
-    NSArray <NSMutableDictionary *> *results =  [[DatabaseDAO sharedInstance] queryWithColumns:[columns componentsJoinedByString:@", "] where:@"" groupBy:@"" having:@"" orderBy:@"" limit:@"" forTable:[self tableName]];
-    
-    NSArray <Record *> *records = [self getModelsfromArray:results];
-    
-    return records;
-}
-
 - (NSArray <NSDictionary *> *)queryDictionary
 {
     NSArray<NSDictionary *> *results = [[DatabaseDAO sharedInstance] queryWithColumns:self.field where:self.where groupBy:self.groupBy having:self.having orderBy:self.orderBy limit:self.limit forTable:[self tableName]];
@@ -54,16 +43,17 @@
 }
 
 #pragma mark - PrivateMethod
-
+//此方法耦合性 较强
 - (NSArray <Record *> *)getModelsfromArray:(NSArray <NSDictionary *> *)array
 {
     if (!array) {
         return nil;
     }
     
-    NSArray *propertyInfoList = [self getPropertyInfoListUntilRootClass:[Record class]];
+    NSArray *propertyInfoList = [self getPropertyInfoList];
     NSMutableArray <Record *> *records = [[NSMutableArray alloc] init];
     
+    //array 是数据库返回的结果
     for (NSDictionary *dictionary in array) {
         Record *record = [[[self class] alloc] init];
         
@@ -73,7 +63,7 @@
             NSString *propertyType = propertyInfo[PROPERTY_TYPE];
             id value = dictionary[propertyName];
             if ([NSClassFromString(propertyType) isSubclassOfClass:[Record class]]) {
-                
+                //value 是rowId
                 Record *rd = [self getRecordWithRowId:value class:NSClassFromString(propertyType)];
                 [record setValue:rd forKeyPath:propertyName];
                 
@@ -133,6 +123,7 @@
     id arrayValue = nil;
     Class class = [self getArrayTransformerModelClassWithKeyPath:propertyName];
     if (class && [class isSubclassOfClass:[Record class]]) {
+        //此value是rowIds, eg.@"1,2,3"
         arrayValue = [self getRecordsWithRowIds:[value componentsSeparatedByString:@","] class:class];
     }
     else {

@@ -13,10 +13,17 @@
 @interface DatabaseDAO : NSObject
 
 @property (nonatomic, strong) Database *database;
-//修改
+
 @property (nonatomic, strong) DatabaseMigrator *databaseMigrator;
 
+void registerColumnConstraints(NSString *tableName, NSDictionary *columnConstraints); //注册columnConstraints
+void registerColumnIndexes(NSString *tableName, NSDictionary *columnIndex); //注册columnIndex
+
 + (instancetype)sharedInstance;
+
+- (NSDictionary<NSString*, NSDictionary*> *)getColumnConstraintsForTableName:(NSString *)tableName;
+
+- (NSDictionary<NSString*, NSDictionary*> *)getColumnIndexesForTableName:(NSString *)tableName;
 
 - (void)configDatabasePath:(NSString*)databasePath;
 

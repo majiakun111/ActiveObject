@@ -7,6 +7,207 @@
 //
 
 #import "DatabaseDAO.h"
+#import "DatabaseDAO+Additions.h"
+#import "DatabaseDAO+DDL.h"
+#import "NSObject+Record.h"
+#import "ActiveObjectDefine.h"
+
+// column add or delete, constraint add and delete
+@interface DatabaseAutoMigrator : NSObject
+
+- (BOOL)autoExecuteMigrate;
+
+@end
+
+
+@implementation DatabaseAutoMigrator
+
+- (BOOL)autoExecuteMigrate
+{
+    NSArray<NSString *> *tableNames = [[DatabaseDAO sharedInstance] getAllTableName];
+    
+    BOOL result = YES;
+    for (NSString *tableName in tableNames) {
+        result = [self executeColumnMigrateForTable:tableName];
+        if (!result) {
+            break;
+        }
+        
+        result = [self executeIndexesMigrateForTable:tableName];
+        if (!result) {
+            break;
+        }
+    }
+    
+    return result;
+}
+
+#pragma mark - PrivateMethod
+
+- (BOOL)executeColumnMigrateForTable:(NSString *)tableName
+{
+    Class class = NSClassFromString(tableName);
+    NSArray *propertyInfoList = [class getPropertyInfoList];
+    
+    NSArray *columns = [[DatabaseDAO sharedInstance] getColumnsForTableName:tableName];
+    
+    NSMutableArray<NSDictionary *> *addColumns = [[NSMutableArray alloc] init];
+    NSMutableArray<NSString *> *deleteAfterColumns = [[NSMutableArray alloc] init];
+    
+    for (NSDictionary *propertyInfo in propertyInfoList) {
+        if (![columns containsObject:propertyInfo[PROPERTY_NAME]]) {
+            [addColumns addObject:propertyInfo];
+        }
+    }
+    
+    for (NSString *column in columns) {
+        __block BOOL isContian = NO;
+       [propertyInfoList enumerateObjectsUsingBlock:^(NSDictionary*  _Nonnull propertyInfo, NSUInteger idx, BOOL * _Nonnull stop) {
+           if ([propertyInfo[PROPERTY_NAME] isEqualToString:column]) {
+               *stop = YES;
+               isContian = YES;
+           }
+       }];
+        
+        if (isContian) {
+            [deleteAfterColumns addObject:column];
+        }
+    }
+
+    BOOL result = YES;
+    do {
+        if ([deleteAfterColumns count] != [columns count]) {
+            result = [self executeDeleteColumnsWithDeleteAfterColumns:deleteAfterColumns forTable:tableName];
+            
+            if (!result) {
+                break;
+            }
+        }
+        
+        if ([addColumns count] > 0) {
+            result = [self executeAddColumns:addColumns forTable:tableName];
+            
+            if (!result) {
+                break;
+            }
+        }
+    } while (0);
+    
+    return result;
+}
+
+- (BOOL)executeAddColumns:(NSArray<NSDictionary *> *)columns forTable:(NSString *)tableName
+{
+    BOOL result = YES;
+    NSDictionary *columnContraints = [[DatabaseDAO sharedInstance] getColumnConstraintsForTableName:tableName];
+    for (NSDictionary *propertyInfo in columns) {
+        NSString *columnName = propertyInfo[PROPERTY_NAME];
+        
+        result = [[DatabaseDAO sharedInstance] addColumn:propertyInfo[PROPERTY_NAME] type:propertyInfo[PROPERTY_TYPE] constraint:columnContraints[columnName] forTable:tableName];
+        
+        if (!result) {
+            break;
+        }
+    }
+    
+    return result;
+}
+
+- (BOOL)executeDeleteColumnsWithDeleteAfterColumns:(NSArray *)deleteAfterColumns forTable:(NSString *)tableName
+{
+    NSString *tmpTableName = [NSString stringWithFormat:@"tmp%@", tableName];
+    [[DatabaseDAO sharedInstance] renameTable:tableName toTableNewName:tmpTableName];
+    
+    Class class = NSClassFromString(tableName);
+    [[DatabaseDAO sharedInstance] createTable:tableName forClass:class];
+    
+    NSMutableString *sql = [[NSMutableString alloc] initWithFormat:@"insert into Person(%@) select %@ from %@", [deleteAfterColumns componentsJoinedByString:@", "], [deleteAfterColumns componentsJoinedByString:@", "], tmpTableName];
+    
+    [[DatabaseDAO sharedInstance] executeUpdate:sql];
+    
+    [[DatabaseDAO sharedInstance] dropTable:tmpTableName];
+    
+    return YES;
+}
+
+- (BOOL)executeIndexesMigrateForTable:(NSString *)tableName
+{
+    NSDictionary<NSString*, NSDictionary*> *currentColumnIndexes = [[DatabaseDAO sharedInstance] getColumnIndexesFromSqliteMasterForTable:tableName];
+
+    NSDictionary<NSString*, NSDictionary*> *columnIndexes = [[DatabaseDAO sharedInstance] getColumnIndexesForTableName:tableName];
+    
+    
+    NSMutableDictionary<NSString*, NSDictionary*> *addColumnIndexes = [NSMutableDictionary dictionary];
+    NSMutableArray *deleteIndexNames = [[NSMutableArray alloc] init];
+    
+    NSArray *currentColumns = [currentColumnIndexes allKeys];
+    NSArray *columns = [columnIndexes allKeys];
+
+    for (NSString *columnName in columns) {
+        if (![currentColumns containsObject:columnName]) {
+            [addColumnIndexes setObject:columnIndexes[columnName] forKey:columnName];
+        }
+    }
+    
+    for (NSString *columnName in currentColumns) {
+        if (![columns containsObject:columnName]) {
+            [deleteIndexNames addObject:currentColumnIndexes[columnName][INDEX_NAME]];
+        }
+    }
+    
+    BOOL result = YES;
+    do {
+        if ([deleteIndexNames count] > 0) {
+            result = [self executeDropIndexesWithIndexNames:deleteIndexNames];
+            
+            if (!result) {
+                break;
+            }
+        }
+        
+        if ([addColumnIndexes count] > 0) {
+            result = [self executeAddIndexesWithColumnIndexes:addColumnIndexes forTable:tableName];
+            
+            if (!result) {
+                break;
+            }
+        }
+    } while (0);
+    
+    return result;
+}
+
+- (BOOL)executeAddIndexesWithColumnIndexes:(NSDictionary<NSString*, NSDictionary*> *)columnIndexes forTable:(NSString *)tableName
+{
+    BOOL result = YES;
+    for (NSString *columnName in columnIndexes) {
+        NSDictionary *columnIndex = columnIndexes[columnName];
+        
+        result = [[DatabaseDAO sharedInstance] createIndex:columnIndex[INDEX_NAME] onColumn:columnName isUnique:[columnIndex[IS_UNIQUE] boolValue] forTable:tableName];
+        
+        if (!result) {
+            break;
+        }
+    }
+    
+    return result;
+}
+
+- (BOOL)executeDropIndexesWithIndexNames:(NSArray *)indexNames
+{
+    BOOL result = YES;
+    for (NSString *indexName in indexNames) {
+        result = [[DatabaseDAO sharedInstance] dropIndex:indexName];
+        if (!result) {
+            break;
+        }
+    }
+    
+    return result;
+}
+
+@end
+
 
 #define DEFAULT_DATABASE_NAME  @"Ansel.db"
 
@@ -15,10 +216,42 @@
 @property (nonatomic, copy) NSString *databasePath;
 @property (nonatomic, assign) int flags;
 @property (nonatomic, copy) NSString *databaseVersion;
+@property (nonatomic, strong) DatabaseAutoMigrator *databaseAutoMigrator;
 
 @end
 
 @implementation DatabaseDAO
+
+static NSMutableDictionary<NSString*, NSDictionary*> *g_columnConstraintsMap;
+static NSMutableDictionary<NSString*, NSDictionary*> *g_columnIndexesMap;
+
+void registerColumnConstraints(NSString *tableName, NSDictionary *columnConstraints)
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        g_columnConstraintsMap = [[NSMutableDictionary alloc] init];
+    });
+    
+    if (!columnConstraints || !tableName) {
+        return;
+    }
+    
+    [g_columnConstraintsMap setObject:columnConstraints forKey:tableName];
+}
+
+void registerColumnIndexes(NSString *tableName, NSDictionary *columnIndex)
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        g_columnIndexesMap = [[NSMutableDictionary alloc] init];
+    });
+    
+    if (!columnIndex || !tableName) {
+        return;
+    }
+    
+    [g_columnIndexesMap setObject:columnIndex forKey:tableName];
+}
 
 + (instancetype)sharedInstance
 {
@@ -31,6 +264,18 @@
     });
     
     return instance;
+}
+
+#pragma mark - get columnConstraints and columnIndex
+
+- (NSDictionary<NSString*, NSDictionary*> *)getColumnConstraintsForTableName:(NSString *)tableName
+{
+    return [g_columnConstraintsMap objectForKey:tableName];
+}
+
+- (NSDictionary<NSString*, NSDictionary*> *)getColumnIndexesForTableName:(NSString *)tableName;
+{
+    return [g_columnIndexesMap objectForKey:tableName];
 }
 
 #pragma mark - Config
@@ -89,6 +334,15 @@
     return _database;
 }
 
+- (DatabaseAutoMigrator *)databaseAutoMigrator
+{
+    if (nil == _databaseAutoMigrator) {
+        _databaseAutoMigrator = [[DatabaseAutoMigrator alloc] init];
+    }
+    
+    return _databaseAutoMigrator;
+}
+
 #pragma mark - PrivateMethod
 
 - (void)configDefaultParameter
@@ -114,10 +368,17 @@
         return;
     }
     
-   BOOL result =  [self.databaseMigrator executeMigrateForDatabase:self.database currentDatabaseVersion:currentDatabaseVersion];
-    if (result) {
-        [[NSUserDefaults standardUserDefaults] setObject:self.databaseVersion forKey:@"DatabaseVersion"];
+    BOOL result = [self.databaseAutoMigrator autoExecuteMigrate];
+    if (!result) {
+        return;
     }
+    
+    result =  [self.databaseMigrator executeMigrateForDatabase:self.database currentDatabaseVersion:currentDatabaseVersion];
+    if (!result) {
+        return;
+    }
+    
+    [[NSUserDefaults standardUserDefaults] setObject:self.databaseVersion forKey:@"DatabaseVersion"];
 }
 
 @end

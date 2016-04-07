@@ -14,8 +14,10 @@
 
 - (BOOL)execute
 {
+    return YES;
+    
     Person *person = [[Person alloc] init];
-    return [person addColumn:@"address" type:@"text" constraint:@"default ''"];
+    return [person createIndex:@"height_index" onColumn:@"height" isUnique:NO];
 }
 
 @end

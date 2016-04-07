@@ -15,6 +15,7 @@
 
 @property (nonatomic, assign) NSInteger age;
 @property (nonatomic, assign) CGFloat height;
+@property (nonatomic, assign) CGFloat weight;
 @property (nonatomic, copy)   NSString *name;
 @property (nonatomic, copy)   NSString *cid;
 @property (nonatomic, strong) NSArray *telphones;

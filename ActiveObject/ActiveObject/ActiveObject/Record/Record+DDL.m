@@ -13,10 +13,8 @@
 @implementation Record (DDL)
 
 - (BOOL)createTable
-{
-    NSDictionary *columnConstraints = [self columnConstraints];
-    
-    return [[DatabaseDAO sharedInstance] createTable:[self tableName] forClass:[self class] untilRootClass:[Record class] columnConstraints: columnConstraints];
+{    
+    return [[DatabaseDAO sharedInstance] createTable:[self tableName] forClass:[self class]];
 }
 
 - (BOOL)dropTable

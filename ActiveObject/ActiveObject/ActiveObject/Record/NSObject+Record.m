@@ -14,20 +14,20 @@
 
 @implementation NSObject (Record)
 
-- (NSArray *)getPropertyInfoListUntilRootClass:(Class)rootClass
+- (NSArray *)getPropertyInfoList
 {
-    return [[self class] getPropertyInfoListUntilRootClass:rootClass];
+    return [[self class] getPropertyInfoList];
 }
 
-+ (NSArray *)getPropertyInfoListUntilRootClass:(Class)rootClass
++ (NSArray *)getPropertyInfoList
 {
     NSMutableArray *propertyInfoList = [NSMutableArray array];
     
     NSString *currentClassName = NSStringFromClass([self class]);
-    NSString *rootClassName = NSStringFromClass(rootClass);
+    NSString *rootClassName = NSStringFromClass([Record class]);
     
-    if ([[self class] superclass] && rootClass && ![currentClassName isEqual:rootClassName]) {
-        NSArray *superPropertyInfoList = [[self superclass] getPropertyInfoListUntilRootClass:rootClass];
+    if ([[self class] superclass] && ![currentClassName isEqual:rootClassName]) {
+        NSArray *superPropertyInfoList = [[self superclass] getPropertyInfoList];
         if ([superPropertyInfoList count] > 0) {
             [propertyInfoList addObjectsFromArray:superPropertyInfoList];
         }

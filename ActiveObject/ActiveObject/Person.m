@@ -7,17 +7,40 @@
 //
 
 #import "Person.h"
+#import "ActiveObjectDefine.h"
 
 @implementation Person
 
-- (NSDictionary *)columnConstraints
++(void)load
+{
+    registerColumnConstraints([self tableName], [self columnConstraints]);
+    registerColumnIndexes([self tableName], [self columnIndex]);
+}
+
++ (NSDictionary<NSString*, NSString*> *)columnConstraints
 {
     return @{
               @"age" :  @"check (age >= 0)",
               @"height": @"check (height > 0)",
+              @"weight": @"check (weight > 0)",
               @"name" : @"not null",
               @"cid"  : @"unique not null",
               @"telphones" : @"default ''"
+            };
+}
+
++ (NSDictionary<NSString*, NSDictionary*> *)columnIndex
+{
+    return @{
+             @"age" : @{
+                        INDEX_NAME : @"age_index",
+                        IS_UNIQUE : @(NO),
+                       },
+             
+             @"height" : @{
+                     INDEX_NAME : @"height_index",
+                     IS_UNIQUE : @(NO),
+                     },
             };
 }
 

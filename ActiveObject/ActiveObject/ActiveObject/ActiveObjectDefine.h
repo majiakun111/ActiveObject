@@ -16,4 +16,8 @@
 #define PROPERTY_TYPE @"propertyType"
 #define DATABASE_TYPE @"databaseType"
 
+#define INDEX_NAME   @"indexName"
+#define IS_UNIQUE   @"isUnique"
+
+
 #endif /* ActiveObjectDefine_h */
