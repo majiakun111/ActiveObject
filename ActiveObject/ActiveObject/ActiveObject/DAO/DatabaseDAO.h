@@ -16,14 +16,14 @@
 
 @property (nonatomic, strong) DatabaseMigrator *databaseMigrator;
 
-void registerColumnConstraints(NSString *tableName, NSDictionary *columnConstraints); //注册columnConstraints
-void registerColumnIndexes(NSString *tableName, NSDictionary *columnIndex); //注册columnIndex
+void registerConstraints(NSString *tableName, NSDictionary *constraints); //注册constraints
+void registerIndexes(NSString *tableName, NSDictionary *indexes); //注册indexes
 
 + (instancetype)sharedInstance;
 
-- (NSDictionary<NSString*, NSDictionary*> *)getColumnConstraintsForTableName:(NSString *)tableName;
+- (NSDictionary<NSString*, NSDictionary*> *)getConstraintsForTableName:(NSString *)tableName;
 
-- (NSDictionary<NSString*, NSDictionary*> *)getColumnIndexesForTableName:(NSString *)tableName;
+- (NSDictionary<NSString*, NSDictionary*> *)getIndexesForTableName:(NSString *)tableName;
 
 - (void)configDatabasePath:(NSString*)databasePath;
 

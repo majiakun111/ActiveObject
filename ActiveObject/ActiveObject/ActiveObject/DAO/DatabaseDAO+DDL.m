@@ -117,8 +117,8 @@
 
 - (BOOL)createTable:(NSString *)tableName forClass:(Class)class
 {
-    NSDictionary *columnConstraints = [self getColumnConstraintsForTableName:tableName];
-    NSDictionary *columnIndex = [self getColumnIndexesForTableName:tableName];
+    NSDictionary *columnConstraints = [self getConstraintsForTableName:tableName];
+    NSDictionary *columnIndex = [self getIndexesForTableName:tableName];
 
     return [[TableBuilder sharedInstance] buildTable:tableName forClass:class columnConstraints:columnConstraints columnIndexes:columnIndex];
 }

@@ -13,11 +13,18 @@
 @implementation OneToTwoVersionMigrateExecutor
 
 - (BOOL)execute
-{
-    return YES;
-    
+{    
     Person *person = [[Person alloc] init];
-    return [person createIndex:@"height_index" onColumn:@"height" isUnique:NO];
+    
+    BOOL result = YES;
+    result = [person dropIndex:@"height_index"];
+    if (!result) {
+        return NO;
+    }
+    
+    result = [person createIndex:@"height_index" onColumn:@"height, weight" isUnique:NO];
+    
+    return result;
 }
 
 @end

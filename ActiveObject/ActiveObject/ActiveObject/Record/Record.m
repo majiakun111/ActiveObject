@@ -22,8 +22,8 @@
 //子类都需要重写
 +(void)load
 {
-    registerColumnConstraints([self tableName], [self columnConstraints]);
-    registerColumnIndexes([self tableName], [self columnIndex]);
+    registerConstraints([self tableName], [self constraints]);
+    registerIndexes([self tableName], [self indexes]);
 }
 
 - (instancetype)init
@@ -61,12 +61,12 @@
 
 #pragma mark - HookMethod
 
-+ (NSDictionary<NSString*, NSString*> *)columnConstraints
++ (NSDictionary<NSString*, NSString*> *)constraints
 {
     return nil;
 }
 
-+ (NSDictionary<NSString*, NSDictionary*> *)columnIndex
++ (NSDictionary<NSString*, NSDictionary*> *)indexes
 {
     return nil;
 }

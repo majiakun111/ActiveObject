@@ -13,11 +13,11 @@
 
 +(void)load
 {
-    registerColumnConstraints([self tableName], [self columnConstraints]);
-    registerColumnIndexes([self tableName], [self columnIndex]);
+    registerConstraints([self tableName], [self constraints]);
+    registerIndexes([self tableName], [self indexes]);
 }
 
-+ (NSDictionary<NSString*, NSString*> *)columnConstraints
++ (NSDictionary<NSString*, NSString*> *)constraints
 {
     return @{
               @"age" :  @"check (age >= 0)",
@@ -29,7 +29,7 @@
             };
 }
 
-+ (NSDictionary<NSString*, NSDictionary*> *)columnIndex
++ (NSDictionary<NSString*, NSDictionary*> *)indexes
 {
     return @{
              @"age" : @{

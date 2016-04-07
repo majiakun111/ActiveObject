@@ -12,7 +12,7 @@
 #import "NSObject+Record.h"
 #import "ActiveObjectDefine.h"
 
-// column add or delete, constraint add and delete
+// column add or delete, index add and delete
 @interface DatabaseAutoMigrator : NSObject
 
 - (BOOL)autoExecuteMigrate;
@@ -99,7 +99,7 @@
 - (BOOL)executeAddColumns:(NSArray<NSDictionary *> *)columns forTable:(NSString *)tableName
 {
     BOOL result = YES;
-    NSDictionary *columnContraints = [[DatabaseDAO sharedInstance] getColumnConstraintsForTableName:tableName];
+    NSDictionary *columnContraints = [[DatabaseDAO sharedInstance] getConstraintsForTableName:tableName];
     for (NSDictionary *propertyInfo in columns) {
         NSString *columnName = propertyInfo[PROPERTY_NAME];
         
@@ -132,26 +132,26 @@
 
 - (BOOL)executeIndexesMigrateForTable:(NSString *)tableName
 {
-    NSDictionary<NSString*, NSDictionary*> *currentColumnIndexes = [[DatabaseDAO sharedInstance] getColumnIndexesFromSqliteMasterForTable:tableName];
+    NSDictionary<NSString*, NSDictionary*> *sqliteMasteIndexes = [[DatabaseDAO sharedInstance] getIndexesFromSqliteMasterForTable:tableName];
 
-    NSDictionary<NSString*, NSDictionary*> *columnIndexes = [[DatabaseDAO sharedInstance] getColumnIndexesForTableName:tableName];
+    NSDictionary<NSString*, NSDictionary*> *indexes = [[DatabaseDAO sharedInstance] getIndexesForTableName:tableName];
     
     
-    NSMutableDictionary<NSString*, NSDictionary*> *addColumnIndexes = [NSMutableDictionary dictionary];
+    NSMutableDictionary<NSString*, NSDictionary*> *addIndexes = [NSMutableDictionary dictionary];
     NSMutableArray *deleteIndexNames = [[NSMutableArray alloc] init];
     
-    NSArray *currentColumns = [currentColumnIndexes allKeys];
-    NSArray *columns = [columnIndexes allKeys];
+    NSArray *currentColumns = [sqliteMasteIndexes allKeys];
+    NSArray *columns = [indexes allKeys];
 
     for (NSString *columnName in columns) {
         if (![currentColumns containsObject:columnName]) {
-            [addColumnIndexes setObject:columnIndexes[columnName] forKey:columnName];
+            [addIndexes setObject:indexes[columnName] forKey:columnName];
         }
     }
     
     for (NSString *columnName in currentColumns) {
         if (![columns containsObject:columnName]) {
-            [deleteIndexNames addObject:currentColumnIndexes[columnName][INDEX_NAME]];
+            [deleteIndexNames addObject:sqliteMasteIndexes[columnName][INDEX_NAME]];
         }
     }
     
@@ -165,8 +165,8 @@
             }
         }
         
-        if ([addColumnIndexes count] > 0) {
-            result = [self executeAddIndexesWithColumnIndexes:addColumnIndexes forTable:tableName];
+        if ([addIndexes count] > 0) {
+            result = [self executeAddIndexesWithColumnIndexes:addIndexes forTable:tableName];
             
             if (!result) {
                 break;
@@ -222,35 +222,35 @@
 
 @implementation DatabaseDAO
 
-static NSMutableDictionary<NSString*, NSDictionary*> *g_columnConstraintsMap;
-static NSMutableDictionary<NSString*, NSDictionary*> *g_columnIndexesMap;
+static NSMutableDictionary<NSString*, NSDictionary*> *g_constraintsMap;
+static NSMutableDictionary<NSString*, NSDictionary*> *g_indexesMap;
 
-void registerColumnConstraints(NSString *tableName, NSDictionary *columnConstraints)
+void registerConstraints(NSString *tableName, NSDictionary *constraints)
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        g_columnConstraintsMap = [[NSMutableDictionary alloc] init];
+        g_constraintsMap = [[NSMutableDictionary alloc] init];
     });
     
-    if (!columnConstraints || !tableName) {
+    if (!constraints || !tableName) {
         return;
     }
     
-    [g_columnConstraintsMap setObject:columnConstraints forKey:tableName];
+    [g_constraintsMap setObject:constraints forKey:tableName];
 }
 
-void registerColumnIndexes(NSString *tableName, NSDictionary *columnIndex)
+void registerIndexes(NSString *tableName, NSDictionary *indexes)
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        g_columnIndexesMap = [[NSMutableDictionary alloc] init];
+        g_indexesMap = [[NSMutableDictionary alloc] init];
     });
     
-    if (!columnIndex || !tableName) {
+    if (!indexes || !tableName) {
         return;
     }
     
-    [g_columnIndexesMap setObject:columnIndex forKey:tableName];
+    [g_indexesMap setObject:indexes forKey:tableName];
 }
 
 + (instancetype)sharedInstance
@@ -268,14 +268,14 @@ void registerColumnIndexes(NSString *tableName, NSDictionary *columnIndex)
 
 #pragma mark - get columnConstraints and columnIndex
 
-- (NSDictionary<NSString*, NSDictionary*> *)getColumnConstraintsForTableName:(NSString *)tableName
+- (NSDictionary<NSString*, NSDictionary*> *)getConstraintsForTableName:(NSString *)tableName
 {
-    return [g_columnConstraintsMap objectForKey:tableName];
+    return [g_constraintsMap objectForKey:tableName];
 }
 
-- (NSDictionary<NSString*, NSDictionary*> *)getColumnIndexesForTableName:(NSString *)tableName;
+- (NSDictionary<NSString*, NSDictionary*> *)getIndexesForTableName:(NSString *)tableName;
 {
-    return [g_columnIndexesMap objectForKey:tableName];
+    return [g_indexesMap objectForKey:tableName];
 }
 
 #pragma mark - Config

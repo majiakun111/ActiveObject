@@ -18,7 +18,7 @@
 
 - (NSArray<NSString *> *)getAllTableName;
 
-- (NSDictionary<NSString*, NSDictionary*> *)getColumnIndexesFromSqliteMasterForTable:(NSString *)tableName;
+- (NSDictionary<NSString*, NSDictionary*> *)getIndexesFromSqliteMasterForTable:(NSString *)tableName;
 
 /*
  * set database 加解密的key

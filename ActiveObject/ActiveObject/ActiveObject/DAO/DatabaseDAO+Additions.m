@@ -58,12 +58,12 @@
     return tableNames;
 }
 
-- (NSDictionary<NSString*, NSDictionary*> *)getColumnIndexesFromSqliteMasterForTable:(NSString *)tableName
+- (NSDictionary<NSString*, NSDictionary*> *)getIndexesFromSqliteMasterForTable:(NSString *)tableName
 {
     NSString *sql = [NSString stringWithFormat:@"select name, sql from sqlite_master where type = 'index' and tbl_name = '%@'", tableName];
     NSArray<NSDictionary *> *indexInfos = [[DatabaseDAO sharedInstance] executeQuery:sql];
     
-    NSMutableDictionary<NSString*, NSDictionary*> *columnIndex = [NSMutableDictionary dictionary];
+    NSMutableDictionary<NSString*, NSDictionary*> *indexes = [NSMutableDictionary dictionary];
     
     for (NSDictionary *indexInfo in indexInfos) {
         NSString *indexName = indexInfo[@"name"];
@@ -84,12 +84,12 @@
         if (afterBracket.location != NSNotFound && afterBracket.location > beforeBracket.location) {
             columnString = [sql substringWithRange:NSMakeRange(beforeBracket.location+1, afterBracket.location - (beforeBracket.location+1))];
             
-            [columnIndex setObject:@{INDEX_NAME : indexName, IS_UNIQUE : @(isUnique)} forKey:columnString];
+            [indexes setObject:@{INDEX_NAME : indexName, IS_UNIQUE : @(isUnique)} forKey:columnString];
         }
         
     }
     
-    return columnIndex;
+    return indexes;
 }
 
 - (BOOL)setKey:(NSString*)key
