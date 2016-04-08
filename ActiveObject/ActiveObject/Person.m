@@ -11,12 +11,6 @@
 
 @implementation Person
 
-+(void)load
-{
-    registerConstraints([self tableName], [self constraints]);
-    registerIndexes([self tableName], [self indexes]);
-}
-
 + (NSDictionary<NSString*, NSString*> *)constraints
 {
     return @{

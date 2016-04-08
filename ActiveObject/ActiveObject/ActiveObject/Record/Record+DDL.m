@@ -9,16 +9,37 @@
 #import "Record+DDL.h"
 #import "DatabaseDAO.h"
 #import "DatabaseDAO+DDL.h"
+#import "Record+Additions.h"
+#import "NSObject+Record.h"
 
 @implementation Record (DDL)
 
 - (BOOL)createTable
-{    
-    return [[DatabaseDAO sharedInstance] createTable:[self tableName] forClass:[self class]];
+{
+    return [[DatabaseDAO sharedInstance] createTable:[self tableName] constraints:[[self class] constraints] indexes:[[self class] indexes] forClass:[self class]];
 }
 
 - (BOOL)dropTable
 {
+    BOOL result = YES;
+    NSArray *propertyList = [self getColumns];
+    NSArray *valueList = [self getValueListWithPropertyList:propertyList];
+    
+    for (id value in valueList) {
+        if ([value isKindOfClass:[Record class]]) {
+            result = [(Record *)value dropTable];
+            if (!result) {
+                return result;
+            }
+        } else if ([value isKindOfClass:[NSArray class]]) {
+            Record *record = [value firstObject];
+            result = [record dropTable];
+            if (!result) {
+                return result;
+            }
+        }
+    }
+
     return [[DatabaseDAO sharedInstance] dropTable:[self tableName]];
 }
 

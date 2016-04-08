@@ -35,9 +35,6 @@
         [columns addObject:columnName];
     }
     
-    //remove rowId
-    [columns removeObject:ROW_ID];
-    
     return columns;
 }
 

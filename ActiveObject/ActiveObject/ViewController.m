@@ -37,7 +37,7 @@
     person.height = 170.5;
     person.weight = 120;
     person.name = @"Ansel";
-    person.cid = @"12";
+    person.cid = @"17";
     person.telphones = @[@"138", @"135"];
     person.info = @{@"hello" : @"world"};
     
@@ -59,6 +59,14 @@
     [person save];
     
     NSArray <Person *> *persons = [person query];
+    
+    [person setWhere:@{@"cid" : @"15"}];
+    [person delete];
+    
+    [person setWhere:nil];
+    
+    persons = [person query];
+
     
     //    for (NSInteger index = 0; index < 1000; index++) {
     //        [[AsyncQueue sharedInstance] inDatabase:^{

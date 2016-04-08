@@ -19,6 +19,8 @@
 
 @interface Record : NSObject
 
+@property (nonatomic, assign) NSInteger rowId; //与 ROW_ID 对应,是 primary key autoincrement
+
 + (NSString *)tableName;
 
 - (NSString *)tableName;

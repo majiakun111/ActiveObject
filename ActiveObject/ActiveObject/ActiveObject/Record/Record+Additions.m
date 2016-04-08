@@ -8,12 +8,16 @@
 
 #import "Record+Additions.h"
 #import "DatabaseDAO+Additions.h"
+#import "ActiveObjectDefine.h"
 
 @implementation Record (Additions)
 
 - (NSArray *)getColumns
 {
-    return [[DatabaseDAO sharedInstance] getColumnsForTableName:[self tableName]];
+    NSMutableArray *columns  = (NSMutableArray *)[[DatabaseDAO sharedInstance] getColumnsForTableName:[self tableName]];
+    [columns removeObject:ROW_ID];
+    
+    return columns;
 }
 
 @end

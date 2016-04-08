@@ -12,9 +12,8 @@
 
 - (BOOL)save;
 
+//需要删除关联的表,先query后delete
 - (BOOL)delete;
-
-- (BOOL)deleteAll;
 
 - (BOOL)update;
 
@@ -27,10 +26,6 @@
 - (void)deleteBefore;
 
 - (void)deleteAfter;
-
-- (void)deleteAllBefore;
-
-- (void)deleteAllAfter;
 
 - (void)updateBefore;
 

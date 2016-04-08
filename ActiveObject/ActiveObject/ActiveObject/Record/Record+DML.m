@@ -7,12 +7,15 @@
 //
 
 #import "Record+DML.h"
+#import "ActiveObjectDefine.h"
 #import "DatabaseDAO.h"
 #import "DatabaseDAO+DML.h"
 #import "DatabaseDAO+Additions.h"
 #import "Record+Additions.h"
 #import "NSObject+Record.h"
 #import "Record+Condition.h"
+#import "Record+Additions.h"
+#import "Record+DDL.h"
 
 @implementation Record (DML)
 
@@ -33,20 +36,35 @@
 {
     [self deleteBefore];
     
-    BOOL result = [[DatabaseDAO sharedInstance] deleteWithWhere:self.where forTable:[self tableName]];
+    BOOL result = YES;
+    
+    //删除关联的表对应的数据
+    NSArray *propertyList = [self getColumns];
+    NSArray *valueList = [self getValueListWithPropertyList:propertyList];
+    
+    for (NSInteger index = 0; index < [valueList count]; index++) {
+        id value = valueList[index];
+        if ([value isKindOfClass:[Record class]]) {
+            
+            [(Record *)value setWhere:@{ROW_ID : @([(Record *)value rowId])}];
+            result = [(Record *)value delete];
+            if (!result) {
+                return result;
+            }
+        } else if ([value isKindOfClass:[NSArray class]]) {
+            for (Record *record in value) {
+                [record setWhere:@{ROW_ID : @([record rowId])}];
+                result = [record delete];
+                if (!result) {
+                    return result;
+                }
+            }
+        }
+    }
+    
+    result = [[DatabaseDAO sharedInstance] deleteWithWhere:self.where forTable:[self tableName]];
     
     [self deleteAfter];
-    
-    return result;
-}
-
-- (BOOL)deleteAll
-{
-    [self deleteAllBefore];
-    
-    BOOL result = [[DatabaseDAO sharedInstance] deleteAllForTable:[self tableName]];
-    
-    [self deleteAllAfter];
     
     return result;
 }
@@ -71,10 +89,6 @@
 - (void)deleteBefore{}
 
 - (void)deleteAfter{}
-
-- (void)deleteAllBefore{}
-
-- (void)deleteAllAfter{}
 
 - (void)updateBefore{}
 

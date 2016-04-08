@@ -12,7 +12,7 @@
 
 - (BOOL)insertWithFields:(NSString *)fields values:(NSString *)values forTable:(NSString *)tableName
 {
-    NSMutableString *sql = [NSMutableString stringWithFormat:@"replace into %@ (%@) values (%@)", tableName, fields, values];
+    NSMutableString *sql = [NSMutableString stringWithFormat:@"insert into %@ (%@) values (%@)", tableName, fields, values];
 
     return [self executeUpdate:sql];
 }

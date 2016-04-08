@@ -16,7 +16,7 @@
 
 + (instancetype)sharedInstance;
 
-- (BOOL)buildTable:(NSString *)tableName forClass:(Class)class columnConstraints:(NSDictionary *)columnConstraints columnIndexes:(NSDictionary *)columnIndexes;
+- (BOOL)buildTable:(NSString *)tableName forClass:(Class)class constraints:(NSDictionary *)constraints indexes:(NSDictionary *)indexes;
 
 @end
 
@@ -35,7 +35,7 @@
     return instance;
 }
 
-- (BOOL)buildTable:(NSString *)tableName forClass:(Class)class columnConstraints:(NSDictionary *)columnConstraints columnIndexes:(NSDictionary *)columnIndexes
+- (BOOL)buildTable:(NSString *)tableName forClass:(Class)class constraints:(NSDictionary *)constraints indexes:(NSDictionary *)indexes
 {
     BOOL buildFlag = [self isBuiltTable:tableName forClass:class];
     if (buildFlag) {
@@ -43,10 +43,6 @@
     }
     
     NSArray *propertyInfoList = [class getPropertyInfoList];
-    if (!propertyInfoList || [propertyInfoList count] <= 0) {
-        NSLog(@"Could not create not field table");
-        return NO;
-    }
     
     NSMutableString *sql = [NSMutableString stringWithFormat:@"create table if not exists %@ (%@ integer primary key autoincrement,", tableName, ROW_ID];
     
@@ -54,11 +50,15 @@
     for (NSInteger i = 0; i < count; i++) {
         
         NSDictionary *propertyInfo = propertyInfoList[i];
+        if ([propertyInfo[PROPERTY_NAME] isEqualToString:ROW_ID]) {
+            continue;
+        }
+        
         [sql appendFormat:@" %@ %@", propertyInfo[PROPERTY_NAME], propertyInfo[DATABASE_TYPE]];
         
-        NSString *columnConstraint = columnConstraints[propertyInfo[PROPERTY_NAME]];
-        if (columnConstraint) {
-            [sql appendFormat:@" %@", columnConstraint];
+        NSString *constraint = constraints[propertyInfo[PROPERTY_NAME]];
+        if (constraint) {
+            [sql appendFormat:@" %@", constraint];
         }
         
         if (i != count -1) {
@@ -76,10 +76,9 @@
     }
     
     //create index
-    for (NSString *columnName in columnIndexes) {
-        NSDictionary *columnIndex = columnIndexes[columnName];
-        
-        [[DatabaseDAO sharedInstance] createIndex:columnIndex[INDEX_NAME] onColumn:columnName isUnique:[columnIndex[IS_UNIQUE] boolValue] forTable:tableName];
+    for (NSString *columnName in indexes) {
+        NSDictionary *indexInfo = indexes[columnName];
+        [[DatabaseDAO sharedInstance] createIndex:indexInfo[INDEX_NAME] onColumn:columnName isUnique:[indexInfo[IS_UNIQUE] boolValue] forTable:tableName];
     }
     
     return result;
@@ -115,17 +114,15 @@
 
 @implementation DatabaseDAO (DDL)
 
-- (BOOL)createTable:(NSString *)tableName forClass:(Class)class
+- (BOOL)createTable:(NSString *)tableName constraints:(NSDictionary<NSString* , NSString *> *)constraints indexes:(NSDictionary<NSString*, NSDictionary*> *)indexes forClass:(Class)class
 {
-    NSDictionary *columnConstraints = [self getConstraintsForTableName:tableName];
-    NSDictionary *columnIndex = [self getIndexesForTableName:tableName];
 
-    return [[TableBuilder sharedInstance] buildTable:tableName forClass:class columnConstraints:columnConstraints columnIndexes:columnIndex];
+    return [[TableBuilder sharedInstance] buildTable:tableName forClass:class constraints:constraints indexes:indexes];
 }
 
 - (BOOL)dropTable:(NSString *)tableName
 {
-    NSString *sql = [NSString stringWithFormat:@"drop table %@", tableName];
+    NSString *sql = [NSString stringWithFormat:@"drop table if exists %@", tableName];
     return [self executeUpdate:sql];
 }
 

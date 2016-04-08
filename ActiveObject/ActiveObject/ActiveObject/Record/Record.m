@@ -19,13 +19,6 @@
 
 @implementation Record
 
-//子类都需要重写
-+(void)load
-{
-    registerConstraints([self tableName], [self constraints]);
-    registerIndexes([self tableName], [self indexes]);
-}
-
 - (instancetype)init
 {
     self = [super init];

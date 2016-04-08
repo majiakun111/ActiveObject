@@ -16,14 +16,7 @@
 
 @property (nonatomic, strong) DatabaseMigrator *databaseMigrator;
 
-void registerConstraints(NSString *tableName, NSDictionary *constraints); //注册constraints
-void registerIndexes(NSString *tableName, NSDictionary *indexes); //注册indexes
-
 + (instancetype)sharedInstance;
-
-- (NSDictionary<NSString*, NSDictionary*> *)getConstraintsForTableName:(NSString *)tableName;
-
-- (NSDictionary<NSString*, NSDictionary*> *)getIndexesForTableName:(NSString *)tableName;
 
 - (void)configDatabasePath:(NSString*)databasePath;
 

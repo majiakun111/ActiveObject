@@ -18,17 +18,8 @@
 @implementation Record (DQL)
 
 - (NSArray <__kindof Record *> *)query
-{
-    NSString *columns = @"";
-    NSString *field = [self.field stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    if ([field isEqual:@"*"]) {
-        columns = [[self getColumns] componentsJoinedByString:@", "];
-    }
-    else {
-        columns = self.field;
-    }
-    
-    NSArray <NSMutableDictionary *> *results =  [[DatabaseDAO sharedInstance] queryWithColumns:columns where:self.where groupBy:self.groupBy having:self.having orderBy:self.orderBy limit:self.limit forTable:[self tableName]];
+{    
+    NSArray <NSMutableDictionary *> *results =  [[DatabaseDAO sharedInstance] queryWithColumns:self.field where:self.where groupBy:self.groupBy having:self.having orderBy:self.orderBy limit:self.limit forTable:[self tableName]];
     
     NSArray <Record *> *records = [self getModelsfromArray:results];
     
