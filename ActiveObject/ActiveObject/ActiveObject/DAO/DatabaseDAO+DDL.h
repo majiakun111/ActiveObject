@@ -10,7 +10,7 @@
 
 @interface DatabaseDAO (DDL)
 
-- (BOOL)createTable:(NSString *)tableName constraints:(NSDictionary<NSString* , NSString *> *)constraints indexes:(NSDictionary<NSString*, NSDictionary*> *)indexes forClass:(Class)class;
+- (BOOL)createTable:(NSString *)tableName constraints:(NSDictionary<NSString* , NSString *> *)constraints indexes:(NSDictionary<NSString*, NSDictionary*> *)indexes forClass:(Class)clazz untilRootClass:(Class)rootClazz;
 
 - (BOOL)dropTable:(NSString *)tableName;
 

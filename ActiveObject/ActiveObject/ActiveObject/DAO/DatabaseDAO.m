@@ -125,12 +125,12 @@
         return;
     }
     
-    BOOL result = [self.databaseAutoMigrator autoExecuteMigrate];
+    BOOL result =  [self.databaseMigrator executeMigrateForDatabase:self.database currentDatabaseVersion:currentDatabaseVersion];
     if (!result) {
         return;
     }
     
-    result =  [self.databaseMigrator executeMigrateForDatabase:self.database currentDatabaseVersion:currentDatabaseVersion];
+    result = [self.databaseAutoMigrator autoExecuteMigrate];
     if (!result) {
         return;
     }

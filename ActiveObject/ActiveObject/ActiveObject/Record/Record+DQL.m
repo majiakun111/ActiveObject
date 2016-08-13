@@ -11,9 +11,9 @@
 #import "DatabaseDAO+DQL.h"
 #import "Record+Additions.h"
 #import "Record+Condition.h"
-#import "NSObject+Record.h"
 #import "NSString+JSON.h"
 #import "ActiveObjectDefine.h"
+#import "PropertyManager.h"
 
 @implementation Record (DQL)
 
@@ -41,17 +41,17 @@
         return nil;
     }
     
-    NSArray *propertyInfoList = [self getPropertyInfoList];
+    NSArray<PropertyInfo *> *propertyInfoList = [[PropertyManager shareInstance] getPropertyInfoListForClass:[self class] untilRootClass:[Record class]];
     NSMutableArray <Record *> *records = [[NSMutableArray alloc] init];
     
     //array 是数据库返回的结果
     for (NSDictionary *dictionary in array) {
         Record *record = [[[self class] alloc] init];
         
-        [propertyInfoList enumerateObjectsUsingBlock:^(NSDictionary*  _Nonnull propertyInfo, NSUInteger idx, BOOL * _Nonnull stop) {
+        [propertyInfoList enumerateObjectsUsingBlock:^(PropertyInfo*  _Nonnull propertyInfo, NSUInteger idx, BOOL * _Nonnull stop) {
             
-            NSString *propertyName = propertyInfo[PROPERTY_NAME];
-            NSString *propertyType = propertyInfo[PROPERTY_TYPE];
+            NSString *propertyName = propertyInfo.propertyName;
+            NSString *propertyType = propertyInfo.propertyType;
             id value = dictionary[propertyName];
             if ([NSClassFromString(propertyType) isSubclassOfClass:[Record class]]) {
                 //value 是rowId
@@ -112,7 +112,7 @@
 - (id)getArrayValueWithValue:(id)value propertyName:(NSString *)propertyName
 {
     id arrayValue = nil;
-    Class class = [self getArrayTransformerModelClassWithKeyPath:propertyName];
+    Class class = [self arrayContainerClassForPropertyName:propertyName];
     if (class && [class isSubclassOfClass:[Record class]]) {
         //此value是rowIds, eg.@"1,2,3"
         arrayValue = [self getRecordsWithRowIds:[value componentsSeparatedByString:@","] class:class];

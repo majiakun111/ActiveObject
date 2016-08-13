@@ -194,7 +194,7 @@
 
 - (void)printErrorMessageForMethod:(NSString *)method sql:(NSString *)sql
 {
-    NSLog(@"database call %@ error. errorInfo: %d \"%@\"", method,  [self lastErrorCode], [self lastErrorMessage]);
+    NSLog(@"database call %@ method error. errorInfo: %d \"%@\"", method,  [self lastErrorCode], [self lastErrorMessage]);
     NSLog(@"database sql: %@", sql);
     NSLog(@"database path: %@", _databasePath);
 }

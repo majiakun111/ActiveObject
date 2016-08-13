@@ -13,7 +13,6 @@
 		5B20306E1CA52F510050023A /* DatabaseDAO+DDL.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B20306D1CA52F510050023A /* DatabaseDAO+DDL.m */; };
 		5B2030751CA536E40050023A /* DatabaseDAO+DQL.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2030741CA536E40050023A /* DatabaseDAO+DQL.m */; };
 		5B2030781CA53DCA0050023A /* DatabaseDAO+DML.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2030771CA53DCA0050023A /* DatabaseDAO+DML.m */; };
-		5B20307C1CA545590050023A /* NSObject+Record.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B20307A1CA545590050023A /* NSObject+Record.m */; };
 		5B20307F1CA676450050023A /* Database+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B20307E1CA676450050023A /* Database+Additions.m */; };
 		5B2030831CA6D8B50050023A /* DatabaseMigrator.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2030821CA6D8B50050023A /* DatabaseMigrator.m */; };
 		5B2030871CA7BC240050023A /* OneToTwoVersionMigrateExecutor.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2030861CA7BC240050023A /* OneToTwoVersionMigrateExecutor.m */; };
@@ -34,6 +33,7 @@
 		5B2554831CA3B9E7004A5D74 /* Record+DQL.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2554761CA3B9E7004A5D74 /* Record+DQL.m */; };
 		5B2554841CA3B9E7004A5D74 /* Record.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2554781CA3B9E7004A5D74 /* Record.m */; };
 		5B2554861CA3BA81004A5D74 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B2554851CA3BA81004A5D74 /* libsqlite3.0.tbd */; };
+		5B29BF4A1D5F0B58004795BC /* PropertyManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B29BF491D5F0B58004795BC /* PropertyManager.m */; };
 		5B384EC31CA3C2C6001E2956 /* Record+Transaction.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B384EC21CA3C2C6001E2956 /* Record+Transaction.m */; };
 		5B384EC81CA3C5EC001E2956 /* AsyncQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B384EC71CA3C5EC001E2956 /* AsyncQueue.m */; };
 		5B384ED01CA3DE5C001E2956 /* NSArray+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B384ECF1CA3DE5C001E2956 /* NSArray+JSON.m */; };
@@ -56,8 +56,6 @@
 		5B2030761CA53DCA0050023A /* DatabaseDAO+DML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DatabaseDAO+DML.h"; sourceTree = "<group>"; };
 		5B2030771CA53DCA0050023A /* DatabaseDAO+DML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "DatabaseDAO+DML.m"; sourceTree = "<group>"; };
 		5B2030791CA5449E0050023A /* ActiveObjectDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ActiveObjectDefine.h; sourceTree = "<group>"; };
-		5B20307A1CA545590050023A /* NSObject+Record.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+Record.m"; sourceTree = "<group>"; };
-		5B20307B1CA545590050023A /* NSObject+Record.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+Record.h"; sourceTree = "<group>"; };
 		5B20307D1CA676450050023A /* Database+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Database+Additions.h"; sourceTree = "<group>"; };
 		5B20307E1CA676450050023A /* Database+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Database+Additions.m"; sourceTree = "<group>"; };
 		5B2030811CA6D8B50050023A /* DatabaseMigrator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatabaseMigrator.h; sourceTree = "<group>"; };
@@ -96,6 +94,8 @@
 		5B2554771CA3B9E7004A5D74 /* Record.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Record.h; sourceTree = "<group>"; };
 		5B2554781CA3B9E7004A5D74 /* Record.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Record.m; sourceTree = "<group>"; };
 		5B2554851CA3BA81004A5D74 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
+		5B29BF481D5F0B58004795BC /* PropertyManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PropertyManager.h; sourceTree = "<group>"; };
+		5B29BF491D5F0B58004795BC /* PropertyManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PropertyManager.m; sourceTree = "<group>"; };
 		5B384EC11CA3C2C6001E2956 /* Record+Transaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Record+Transaction.h"; sourceTree = "<group>"; };
 		5B384EC21CA3C2C6001E2956 /* Record+Transaction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Record+Transaction.m"; sourceTree = "<group>"; };
 		5B384EC41CA3C370001E2956 /* ActiveObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ActiveObject.h; sourceTree = "<group>"; };
@@ -247,8 +247,8 @@
 				5B25546E1CA3B9E7004A5D74 /* Record+Additions.m */,
 				5B25546F1CA3B9E7004A5D74 /* Record+Condition.h */,
 				5B2554701CA3B9E7004A5D74 /* Record+Condition.m */,
-				5B20307A1CA545590050023A /* NSObject+Record.m */,
-				5B20307B1CA545590050023A /* NSObject+Record.h */,
+				5B29BF481D5F0B58004795BC /* PropertyManager.h */,
+				5B29BF491D5F0B58004795BC /* PropertyManager.m */,
 			);
 			path = Record;
 			sourceTree = "<group>";
@@ -369,10 +369,10 @@
 				5B20307F1CA676450050023A /* Database+Additions.m in Sources */,
 				5B2030871CA7BC240050023A /* OneToTwoVersionMigrateExecutor.m in Sources */,
 				5B20306E1CA52F510050023A /* DatabaseDAO+DDL.m in Sources */,
+				5B29BF4A1D5F0B58004795BC /* PropertyManager.m in Sources */,
 				5B2030681CA52CF30050023A /* DatabaseDAO+Transaction.m in Sources */,
 				5B2554251CA3B5E5004A5D74 /* AppDelegate.m in Sources */,
 				5B2554221CA3B5E5004A5D74 /* main.m in Sources */,
-				5B20307C1CA545590050023A /* NSObject+Record.m in Sources */,
 				5B65D6131CA401BD001D3975 /* NSDictionary+JSON.m in Sources */,
 				5B2554821CA3B9E7004A5D74 /* Record+DML.m in Sources */,
 				5B2554841CA3B9E7004A5D74 /* Record.m in Sources */,

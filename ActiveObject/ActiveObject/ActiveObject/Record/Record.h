@@ -11,7 +11,7 @@
 
 /**
 *1. 支持的属性类型: 整形, 浮点型, NSNumber, NSString, NSArray, NSDictionary, Record
-*2. 若属性是NSArray 可以存 Record (但是必须调用 arrayTransformerWithModelClass: forKeyPath: 指定NSArray存的是那个Class, 支持嵌套), 也可以存 NSNumber, NSString, NSArray, NSDictionary
+*2. 若属性是NSArray 可以存 Record (但是必须调用 arrayTransformerWithModelClass: forPropertyName: 指定NSArray存的是那个Class, 支持嵌套), 也可以存 NSNumber, NSString, NSArray, NSDictionary
 *3. NSDictionary(不能包含 Record对象)
 *4. 支持迁移
 *5. 对于column add and delete, index add and delete支持自动迁移, 只需要更改DatabaseVersion即可和配置
@@ -25,9 +25,9 @@
 
 - (NSString *)tableName;
 
-- (void)arrayTransformerWithModelClass:(Class)class forKeyPath:(NSString *)keyPath;
+- (void)arrayContainerClass:(Class)class forPropertyName:(NSString *)propertyName;
 
-- (Class)getArrayTransformerModelClassWithKeyPath:(NSString *)keyPath;
+- (Class)arrayContainerClassForPropertyName:(NSString *)propertyName;
 
 #pragma mark - May Override
 

@@ -12,10 +12,10 @@
 #import "DatabaseDAO+DML.h"
 #import "DatabaseDAO+Additions.h"
 #import "Record+Additions.h"
-#import "NSObject+Record.h"
 #import "Record+Condition.h"
 #import "Record+Additions.h"
 #import "Record+DDL.h"
+#import "PropertyManager.h"
 
 @implementation Record (DML)
 
@@ -40,7 +40,7 @@
     
     //删除关联的表对应的数据
     NSArray *propertyList = [self getColumns];
-    NSArray *valueList = [self getValueListWithPropertyList:propertyList];
+    NSArray *valueList = [[PropertyManager shareInstance] getValueListWithPropertyList:propertyList forRecord:self];
     
     for (NSInteger index = 0; index < [valueList count]; index++) {
         id value = valueList[index];
@@ -99,7 +99,7 @@
 - (BOOL)insert
 {
     NSArray *propertyList = [self getColumns];
-    NSArray *valueList = [self getValueListWithPropertyList:propertyList];
+    NSArray *valueList = [[PropertyManager shareInstance] getValueListWithPropertyList:propertyList forRecord:self];
     
     NSMutableString *valuesSql = [NSMutableString string];
     NSInteger count = [valueList count];

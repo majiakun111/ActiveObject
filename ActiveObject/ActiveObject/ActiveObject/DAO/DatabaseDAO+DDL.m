@@ -8,7 +8,7 @@
 
 #import "DatabaseDAO+DDL.h"
 #import "ActiveObjectDefine.h"
-#import "NSObject+Record.h"
+#import "PropertyManager.h"
 
 @interface TableBuilder : NSObject
 
@@ -16,7 +16,7 @@
 
 + (instancetype)sharedInstance;
 
-- (BOOL)buildTable:(NSString *)tableName forClass:(Class)class constraints:(NSDictionary *)constraints indexes:(NSDictionary *)indexes;
+- (BOOL)buildTable:(NSString *)tableName constraints:(NSDictionary *)constraints indexes:(NSDictionary *)indexes forClass:(Class)clazz untilRootClass:(Class)rootClazz;
 
 @end
 
@@ -35,28 +35,28 @@
     return instance;
 }
 
-- (BOOL)buildTable:(NSString *)tableName forClass:(Class)class constraints:(NSDictionary *)constraints indexes:(NSDictionary *)indexes
+- (BOOL)buildTable:(NSString *)tableName constraints:(NSDictionary *)constraints indexes:(NSDictionary *)indexes forClass:(Class)clazz untilRootClass:(Class)rootClazz
 {
-    BOOL buildFlag = [self isBuiltTable:tableName forClass:class];
+    BOOL buildFlag = [self isBuiltTable:tableName forClass:clazz];
     if (buildFlag) {
         return YES;
     }
     
-    NSArray *propertyInfoList = [class getPropertyInfoList];
+    NSArray *propertyInfoList = [[PropertyManager shareInstance] getPropertyInfoListForClass:clazz untilRootClass:rootClazz];
     
     NSMutableString *sql = [NSMutableString stringWithFormat:@"create table if not exists %@ (%@ integer primary key autoincrement,", tableName, ROW_ID];
     
     NSInteger count = [propertyInfoList count];
     for (NSInteger i = 0; i < count; i++) {
         
-        NSDictionary *propertyInfo = propertyInfoList[i];
-        if ([propertyInfo[PROPERTY_NAME] isEqualToString:ROW_ID]) {
+        PropertyInfo *propertyInfo = propertyInfoList[i];
+        if ([propertyInfo.propertyName isEqualToString:ROW_ID]) {
             continue;
         }
         
-        [sql appendFormat:@" %@ %@", propertyInfo[PROPERTY_NAME], propertyInfo[DATABASE_TYPE]];
+        [sql appendFormat:@" %@ %@", propertyInfo.propertyName, propertyInfo.databaseType];
         
-        NSString *constraint = constraints[propertyInfo[PROPERTY_NAME]];
+        NSString *constraint = constraints[propertyInfo.propertyName];
         if (constraint) {
             [sql appendFormat:@" %@", constraint];
         }
@@ -114,10 +114,9 @@
 
 @implementation DatabaseDAO (DDL)
 
-- (BOOL)createTable:(NSString *)tableName constraints:(NSDictionary<NSString* , NSString *> *)constraints indexes:(NSDictionary<NSString*, NSDictionary*> *)indexes forClass:(Class)class
+- (BOOL)createTable:(NSString *)tableName constraints:(NSDictionary<NSString* , NSString *> *)constraints indexes:(NSDictionary<NSString*, NSDictionary*> *)indexes forClass:(Class)clazz untilRootClass:(Class)rootClazz;
 {
-
-    return [[TableBuilder sharedInstance] buildTable:tableName forClass:class constraints:constraints indexes:indexes];
+    return [[TableBuilder sharedInstance] buildTable:tableName constraints:constraints indexes:indexes forClass:clazz untilRootClass:rootClazz];
 }
 
 - (BOOL)dropTable:(NSString *)tableName

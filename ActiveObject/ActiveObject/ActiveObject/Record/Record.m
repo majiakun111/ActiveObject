@@ -9,13 +9,10 @@
 #import "Record.h"
 #import "Record+DDL.h"
 #import "Record+Condition.h"
+#import <objc/runtime.h>
 
-@interface Record ()
-{
-    NSMutableDictionary<NSString *, Class> *_arrayTransformerModelClassMap;
-}
-
-@end
+//下面静态无需初始化，因为用于关联对象的key的时候只会用到其地址
+static const char * kAssociatedArrayContainerClassMapDictioanry;
 
 @implementation Record
 
@@ -26,7 +23,7 @@
         [self createTable];
         [self resetAll];
         
-        _arrayTransformerModelClassMap = [[NSMutableDictionary alloc] init];
+        [self setupArrayContaineClassMapDictioanry];
     }
     
     return self;
@@ -42,14 +39,16 @@
     return NSStringFromClass([self class]);
 }
 
-- (void)arrayTransformerWithModelClass:(Class)class forKeyPath:(NSString *)keyPath
+- (void)arrayContainerClass:(Class)class forPropertyName:(NSString *)propertyName
 {
-    [_arrayTransformerModelClassMap setObject:class forKey:keyPath];
+    NSMutableDictionary *arrayContainerClassMapDictioanry = objc_getAssociatedObject(self.class, &kAssociatedArrayContainerClassMapDictioanry);
+    [arrayContainerClassMapDictioanry setObject:class forKey:propertyName];
 }
 
-- (Class)getArrayTransformerModelClassWithKeyPath:(NSString *)keyPath
+- (Class)arrayContainerClassForPropertyName:(NSString *)propertyName
 {
-    return [_arrayTransformerModelClassMap objectForKey:keyPath];
+    NSMutableDictionary *arrayContainerClassMapDictioanry = objc_getAssociatedObject(self.class, &kAssociatedArrayContainerClassMapDictioanry);
+    return [arrayContainerClassMapDictioanry objectForKey:propertyName];
 }
 
 #pragma mark - HookMethod
@@ -69,15 +68,37 @@
 - (void)setNilValueForKey:(NSString *)key
 {
 #ifdef DEBUG
-    NSLog(@"%@", NSStringFromSelector(_cmd));
+    NSLog(@"WARNING: %@ %@ %@", NSStringFromClass([self class]),  NSStringFromSelector(_cmd), key);
 #endif
 }
 
 - (void)setValue:(id)value forUndefinedKey:(NSString *)key
 {
 #ifdef DEBUG
-    NSLog(@"%@", NSStringFromSelector(_cmd));
+    NSLog(@"WARNING: %@ setValue:%@ forUndefinedKey:%@", NSStringFromClass([self class]),  value, key);
 #endif
+}
+
+- (id)valueForUndefinedKey:(NSString *)key {
+#ifdef DEBUG
+    NSLog(@"WARNING: %@ %@ %@", NSStringFromClass([self class]),  NSStringFromSelector(_cmd), key);
+#endif
+    
+    return nil;
+}
+
+#pragma mark - PrivateMethod
+
+//此Dictionary可以用来描述model容器中元素对应的类@{"propertyNameA":ClassA}
+- (void)setupArrayContaineClassMapDictioanry
+{
+    if (objc_getAssociatedObject(self.class, &kAssociatedArrayContainerClassMapDictioanry) == nil) {
+        NSMutableDictionary *arrayContaineClassMapDictioanry = [[NSMutableDictionary alloc] init];
+        
+        objc_setAssociatedObject(self.class, &kAssociatedArrayContainerClassMapDictioanry, arrayContaineClassMapDictioanry, OBJC_ASSOCIATION_RETAIN);
+        
+        arrayContaineClassMapDictioanry = nil;
+    }
 }
 
 @end

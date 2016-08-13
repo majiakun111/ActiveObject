@@ -32,7 +32,7 @@
     
     Person *person = [[Person alloc] init];
     
-    [person arrayTransformerWithModelClass:[BankCard class] forKeyPath:@"bankCards"];
+    [person arrayContainerClass:[BankCard class] forPropertyName:@"bankCards"];
     person.age = 35;
     person.height = 170.5;
     person.weight = 120;

@@ -10,9 +10,9 @@
 #import "ActiveObjectDefine.h"
 #import "DatabaseDAO+DDL.h"
 #import "DatabaseDAO+Additions.h"
-#import "NSObject+Record.h"
 #import "Record+DDL.h"
 #import "Record.h"
+#import "PropertyManager.h"
 
 @implementation DatabaseAutoMigrator
 
@@ -40,25 +40,25 @@
 
 - (BOOL)executeColumnMigrateForTable:(NSString *)tableName
 {
-    Class class = NSClassFromString(tableName);
-    NSArray *propertyInfoList = [class getPropertyInfoList];
+    Class clazz = NSClassFromString(tableName);
+    NSArray<PropertyInfo *> *propertyInfoList = [[PropertyManager shareInstance] getPropertyInfoListForClass:clazz untilRootClass:[Record class]];
     
     NSArray *columns = [[DatabaseDAO sharedInstance] getColumnsForTableName:tableName];
     
-    NSMutableArray<NSDictionary *> *addColumns = [[NSMutableArray alloc] init];
+    NSMutableArray<PropertyInfo *> *addColumns = [[NSMutableArray alloc] init];
     NSMutableArray<NSString *> *deleteAfterColumns = [[NSMutableArray alloc] init];
     NSMutableArray<NSString *> *needDeleteColumns = [[NSMutableArray alloc] init];
 
-    for (NSDictionary *propertyInfo in propertyInfoList) {
-        if (![columns containsObject:propertyInfo[PROPERTY_NAME]]) {
+    for (PropertyInfo *propertyInfo in propertyInfoList) {
+        if (![columns containsObject:propertyInfo.propertyName]) {
             [addColumns addObject:propertyInfo];
         }
     }
     
     for (NSString *column in columns) {
         __block BOOL isContian = NO;
-        [propertyInfoList enumerateObjectsUsingBlock:^(NSDictionary*  _Nonnull propertyInfo, NSUInteger idx, BOOL * _Nonnull stop) {
-            if ([propertyInfo[PROPERTY_NAME] isEqualToString:column]) {
+        [propertyInfoList enumerateObjectsUsingBlock:^(PropertyInfo*  _Nonnull propertyInfo, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([propertyInfo.propertyName isEqualToString:column]) {
                 *stop = YES;
                 isContian = YES;
             }
@@ -93,16 +93,16 @@
     return result;
 }
 
-- (BOOL)executeAddColumns:(NSArray<NSDictionary *> *)columns forTable:(NSString *)tableName
+- (BOOL)executeAddColumns:(NSArray<PropertyInfo *> *)columns forTable:(NSString *)tableName
 {
     BOOL result = YES;
     
     Class class = NSClassFromString(tableName);
     NSDictionary<NSString*, NSString*> *contraints = [class constraints];
-    for (NSDictionary *propertyInfo in columns) {
-        NSString *columnName = propertyInfo[PROPERTY_NAME];
+    for (PropertyInfo *propertyInfo in columns) {
+        NSString *columnName = propertyInfo.propertyName;
         
-        result = [[DatabaseDAO sharedInstance] addColumn:propertyInfo[PROPERTY_NAME] type:propertyInfo[PROPERTY_TYPE] constraint:contraints[columnName] forTable:tableName];
+        result = [[DatabaseDAO sharedInstance] addColumn:propertyInfo.propertyName type:propertyInfo.propertyType constraint:contraints[columnName] forTable:tableName];
         
         if (!result) {
             break;
@@ -112,27 +112,11 @@
     return result;
 }
 
+//若删除的column对应table 自需要自己实现删除
 - (BOOL)executeDeleteColumnsWithDeleteAfterColumns:(NSArray<NSString *> *)deleteAfterColumns needDeleteColumns:(NSArray<NSString *> *)needDeleteColumns forTable:(NSString *)tableName
 {
     BOOL result = YES;
-    
-    //若删除的column 对应 table 该表也应该删除
-    NSArray *valueList = [self getValueListWithPropertyList:needDeleteColumns];
-    for (id value in valueList) {
-        if ([value isKindOfClass:[Record class]]) {
-            result = [(Record *)value dropTable];
-            if (!result) {
-                return result;
-            }
-        } else if ([value isKindOfClass:[NSArray class]]) {
-            Record *record = [value firstObject];
-            result = [record dropTable];
-            if (!result) {
-                return result;
-            }
-        }
-    }
-    
+        
     NSString *tmpTableName = [NSString stringWithFormat:@"tmp%@", tableName];
     result = [[DatabaseDAO sharedInstance] renameTable:tableName toTableNewName:tmpTableName];
     if (!result) {
@@ -140,7 +124,7 @@
     }
     
     Class class = NSClassFromString(tableName);
-    result = [[DatabaseDAO sharedInstance] createTable:tableName constraints:[class constraints] indexes:[class indexes] forClass:class];
+    result = [[DatabaseDAO sharedInstance] createTable:tableName constraints:[class constraints] indexes:[class indexes] forClass:class untilRootClass:[Record class]];
     if (!result) {
         return result;
     }

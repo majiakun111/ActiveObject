@@ -10,20 +10,20 @@
 #import "DatabaseDAO.h"
 #import "DatabaseDAO+DDL.h"
 #import "Record+Additions.h"
-#import "NSObject+Record.h"
+#import "PropertyManager.h"
 
 @implementation Record (DDL)
 
 - (BOOL)createTable
 {
-    return [[DatabaseDAO sharedInstance] createTable:[self tableName] constraints:[[self class] constraints] indexes:[[self class] indexes] forClass:[self class]];
+    return [[DatabaseDAO sharedInstance] createTable:[self tableName] constraints:[[self class] constraints] indexes:[[self class] indexes] forClass:[self class] untilRootClass:[Record class]];
 }
 
 - (BOOL)dropTable
 {
     BOOL result = YES;
     NSArray *propertyList = [self getColumns];
-    NSArray *valueList = [self getValueListWithPropertyList:propertyList];
+    NSArray *valueList = [[PropertyManager shareInstance] getValueListWithPropertyList:propertyList forRecord:self];
     
     for (id value in valueList) {
         if ([value isKindOfClass:[Record class]]) {
