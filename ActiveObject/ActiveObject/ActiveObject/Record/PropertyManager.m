@@ -57,22 +57,7 @@
             cls = [cls stringByReplacingOccurrencesOfString:@"@" withString:@""];
             cls = [cls stringByReplacingOccurrencesOfString:@"\"" withString:@""];
             
-            if ([NSClassFromString(cls) isSubclassOfClass:[NSString class]]) {
-                self.propertyType = @"NSString";
-            }
-            else if ([NSClassFromString(cls) isSubclassOfClass:[NSNumber class]]) {
-                self.propertyType = @"NSNumber";
-            }
-            else if ([NSClassFromString(cls) isSubclassOfClass:[NSArray class]]) {
-                self.propertyType = @"NSArray";
-            }
-            else if ([NSClassFromString(cls) isSubclassOfClass:[NSDictionary class]]) {
-                self.propertyType = @"NSDictionary";
-            }
-            else if ([NSClassFromString(cls) isSubclassOfClass:[Record class]]) {
-                self.propertyType = cls;
-            }
-            
+            self.propertyType = cls;
             self.databaseType = @"text";
             break;
         }
