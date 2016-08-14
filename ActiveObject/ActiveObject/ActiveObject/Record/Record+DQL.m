@@ -91,7 +91,6 @@
     return [results firstObject];
 }
 
-
 - (NSArray<Record *> *)getRecordsWithRowIds:(NSArray *)rowIds class:(Class)class
 {
     NSMutableArray *records = [[NSMutableArray alloc] init];
