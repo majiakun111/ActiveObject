@@ -14,6 +14,7 @@
 #import "NSString+JSON.h"
 #import "ActiveObjectDefine.h"
 #import "PropertyManager.h"
+#import "NSArray+JSONModel.h"
 
 @implementation Record (DQL)
 
@@ -21,7 +22,7 @@
 {    
     NSArray <NSMutableDictionary *> *results =  [[DatabaseDAO sharedInstance] queryWithColumns:self.field where:self.where groupBy:self.groupBy having:self.having orderBy:self.orderBy limit:self.limit forTable:[self tableName]];
     
-    NSArray <Record *> *records = [self getModelsfromArray:results];
+    NSArray <Record *> *records = [self getRecordsfromDictionaryRecords:results];
     
     return records;
 }
@@ -34,78 +35,64 @@
 }
 
 #pragma mark - PrivateMethod
-//此方法耦合性 较强
-- (NSArray <Record *> *)getModelsfromArray:(NSArray <NSDictionary *> *)array
+
+- (NSArray <Record *> *)getRecordsfromDictionaryRecords:(NSArray <NSDictionary *> *)dictionaryRecords
+{
+    if (!dictionaryRecords || [dictionaryRecords count] == 0) {
+        return nil;
+    }
+    
+    NSArray <NSDictionary *> *associationDictionaryRecords = [self getAssociationDictionaryRecordsWithArray:dictionaryRecords];
+    if (!associationDictionaryRecords || [associationDictionaryRecords count] == 0) {
+        return nil;
+    }
+    
+    NSArray <Record *> *records = [associationDictionaryRecords modelArrayWithClass:[self class]];
+    return records;
+}
+
+- (NSArray<NSDictionary *> *)getAssociationDictionaryRecordsWithArray:(NSArray <NSDictionary *> *)array
 {
     if (!array) {
         return nil;
     }
     
     NSArray<PropertyInfo *> *propertyInfoList = [[PropertyManager shareInstance] getPropertyInfoListForClass:[self class] untilRootClass:[Record class]];
-    NSMutableArray <Record *> *records = [[NSMutableArray alloc] init];
+    NSMutableArray <NSMutableDictionary *> *associationDictionaryRecords = [[NSMutableArray alloc] init];
     
     //array 是数据库返回的结果
-    for (NSDictionary *dictionary in array) {
-        Record *record = [[[self class] alloc] init];
+    for (NSDictionary *dictionaryRecord in array) {
+        NSMutableDictionary *associationDictionaryRecord = [[NSMutableDictionary alloc] initWithDictionary:dictionaryRecord];
         
         [propertyInfoList enumerateObjectsUsingBlock:^(PropertyInfo*  _Nonnull propertyInfo, NSUInteger idx, BOOL * _Nonnull stop) {
-            
             NSString *propertyName = propertyInfo.propertyName;
             NSString *propertyType = propertyInfo.propertyType;
-            id value = dictionary[propertyName];
+            id value = dictionaryRecord[propertyName];
             if ([NSClassFromString(propertyType) isSubclassOfClass:[Record class]]) {
                 //value 是rowId
-                Record *rd = [self getRecordWithRowId:value class:NSClassFromString(propertyType)];
-                [record setValue:rd forKeyPath:propertyName];
-                
+                NSDictionary *rd = [self getDictionaryRecordWithRowId:value class:NSClassFromString(propertyType)];
+                [associationDictionaryRecord setObject:rd forKey:propertyName];
             } else if ([propertyType isEqual:@"NSArray"]) {
-                
                 id arrayValue = [self getArrayValueWithValue:value propertyName:propertyName];
-                [record setValue:arrayValue forKeyPath:propertyName];
-                
-            } else if ([propertyType isEqual:@"NSDictionary"]) {
-                
-                id JSONObject = [value JSONObject];
-                [record setValue:JSONObject forKeyPath:propertyName];
-                
-            } else {
-                
-                [record setValue:value forKeyPath:propertyName];
-                
+                [associationDictionaryRecord setValue:arrayValue forKeyPath:propertyName];
             }
-            
         }];
         
-        [records addObject:record];
+        [associationDictionaryRecords addObject:associationDictionaryRecord];
     }
     
-    return records;
+    return associationDictionaryRecords;
 }
 
-- (Record *)getRecordWithRowId:(NSNumber *)rowId class:(Class)class
+- (NSDictionary *)getDictionaryRecordWithRowId:(NSNumber *)rowId class:(Class)class
 {
     Record *record = [[class alloc] init];
     [record setWhere:@{ROW_ID : rowId}];
-    NSArray<Record *> *results = [record query];
+    NSArray<NSDictionary *> *dictionaryRecords = [record queryDictionary];
     
-    return [results firstObject];
-}
+    NSArray<NSDictionary *> *associationDictionaryRecords = [record getAssociationDictionaryRecordsWithArray:dictionaryRecords];
 
-- (NSArray<Record *> *)getRecordsWithRowIds:(NSArray *)rowIds class:(Class)class
-{
-    NSMutableArray *records = [[NSMutableArray alloc] init];
-
-    for (NSString *rowId in rowIds) {
-        Record *record = [self getRecordWithRowId:@([rowId longLongValue]) class:class];
-        
-        if (!record) {
-            continue;
-        }
-        
-        [records addObject:record];
-    }
-    
-    return records;
+    return [associationDictionaryRecords firstObject];
 }
 
 - (id)getArrayValueWithValue:(id)value propertyName:(NSString *)propertyName
@@ -114,13 +101,30 @@
     Class class = [self arrayContainerClassForPropertyName:propertyName];
     if (class && [class isSubclassOfClass:[Record class]]) {
         //此value是rowIds, eg.@"1,2,3"
-        arrayValue = [self getRecordsWithRowIds:[value componentsSeparatedByString:@","] class:class];
+        arrayValue = [self getDictionaryRecordsWithRowIds:[value componentsSeparatedByString:@","] class:class];
     }
     else {
         arrayValue = [value JSONObject];
     }
     
     return arrayValue;
+}
+
+- (NSArray<NSDictionary *> *)getDictionaryRecordsWithRowIds:(NSArray *)rowIds class:(Class)class
+{
+    NSMutableArray<NSDictionary *> *dictionaryRecords = [[NSMutableArray alloc] init];
+    
+    for (NSString *rowId in rowIds) {
+        NSDictionary *dictionaryRecord = [self getDictionaryRecordWithRowId:@([rowId longLongValue]) class:class];
+        
+        if (!dictionaryRecord) {
+            continue;
+        }
+        
+        [dictionaryRecords addObject:dictionaryRecord];
+    }
+    
+    return dictionaryRecords;
 }
 
 @end

@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <objc/runtime.h>
 
-@class Record;
+@class JSONModel;
 
 @interface PropertyInfo : NSObject
 
@@ -27,6 +27,6 @@
 
 - (NSArray<PropertyInfo *> *)getPropertyInfoListForClass:(Class)clazz untilRootClass:(Class)clazz;
 
-- (NSArray *)getValueListWithPropertyList:(NSArray *)propertyList forRecord:(Record *)record;
+- (NSArray *)getValueListWithPropertyList:(NSArray *)propertyList forRecord:(JSONModel *)record;
 
 @end

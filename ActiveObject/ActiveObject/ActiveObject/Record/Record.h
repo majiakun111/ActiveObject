@@ -6,7 +6,7 @@
 //  Copyright © 2016年 PingAn. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "JSONModel.h"
 #import "DatabaseDAO.h"
 
 /**
@@ -17,17 +17,13 @@
 *5. 对于column add and delete, index add and delete支持自动迁移, 只需要更改DatabaseVersion即可和配置
 */
 
-@interface Record : NSObject
+@interface Record : JSONModel
 
 @property (nonatomic, assign) NSInteger rowId; //与 ROW_ID 对应,是 primary key autoincrement
 
 + (NSString *)tableName;
 
 - (NSString *)tableName;
-
-- (void)arrayContainerClass:(Class)class forPropertyName:(NSString *)propertyName;
-
-- (Class)arrayContainerClassForPropertyName:(NSString *)propertyName;
 
 #pragma mark - May Override
 

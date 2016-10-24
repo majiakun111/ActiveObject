@@ -8,7 +8,7 @@
 
 #import "PropertyManager.h"
 #import "ActiveObjectDefine.h"
-#import "Record.h"
+#import "JSONModel.h"
 #import "NSArray+JSON.h"
 
 @implementation PropertyInfo
@@ -131,7 +131,7 @@
     return propertyInfoList;
 }
 
-- (NSArray *)getValueListWithPropertyList:(NSArray *)propertyList forRecord:(Record *)record
+- (NSArray *)getValueListWithPropertyList:(NSArray *)propertyList forRecord:(JSONModel *)record
 {
     NSMutableArray *valueList = self.valueListMap[@([record hash])];
     if (valueList) {
@@ -184,11 +184,11 @@
 
 #pragma mark - PrivateMethod
 
-- (id)getValuesWithArrayValue:(NSArray *)arrayValue propertyName:(NSString *)propertyName forRecord:(Record *)record
+- (id)getValuesWithArrayValue:(NSArray *)arrayValue propertyName:(NSString *)propertyName forRecord:(JSONModel *)record
 {
     id  value = nil;
     Class class = [record arrayContainerClassForPropertyName:propertyName];
-    if ([class isSubclassOfClass:[Record class]]) {
+    if ([class isSubclassOfClass:[JSONModel class]]) {
         value = arrayValue; //直接返回数组
     }
     else {
