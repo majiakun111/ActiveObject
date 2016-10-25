@@ -10,8 +10,15 @@
 #import "Record+DDL.h"
 #import "Record+Condition.h"
 #import <objc/runtime.h>
+#import "PropertyManager.h"
 
 @implementation Record
+
+- (void)dealloc
+{
+    [[PropertyManager shareInstance] removePropertyInfoListForClasss:[self class]];
+    [[PropertyManager shareInstance] removeValueListForRecord:self];
+}
 
 - (instancetype)init
 {

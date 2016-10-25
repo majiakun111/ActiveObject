@@ -1,15 +1,13 @@
 //
-//  PropertyInfoListManager.h
+//  PropertyInfo.h
 //  ActiveObject
 //
-//  Created by Ansel on 16/8/13.
+//  Created by Ansel on 2016/10/25.
 //  Copyright © 2016年 PingAn. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import <objc/runtime.h>
-
-@class JSONModel;
 
 @interface PropertyInfo : NSObject
 
@@ -18,15 +16,5 @@
 @property (nonatomic, copy) NSString *databaseType;
 
 - (instancetype)initWithProperty:(objc_property_t)property;
-
-@end
-
-@interface PropertyManager : NSObject
-
-+ (instancetype)shareInstance; 
-
-- (NSArray<PropertyInfo *> *)getPropertyInfoListForClass:(Class)clazz untilRootClass:(Class)clazz;
-
-- (NSArray *)getValueListWithPropertyList:(NSArray *)propertyList forRecord:(JSONModel *)record;
 
 @end

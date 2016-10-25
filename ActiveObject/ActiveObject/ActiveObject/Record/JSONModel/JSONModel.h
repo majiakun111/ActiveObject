@@ -23,4 +23,6 @@
 
 - (Class)arrayContainerClassForPropertyName:(NSString *)propertyName;
 
+- (NSDictionary <NSString *, NSString *> *)jsonKeyToModelPropertyNameMap;
+
 @end

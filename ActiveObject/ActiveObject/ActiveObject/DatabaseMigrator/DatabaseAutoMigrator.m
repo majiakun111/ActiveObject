@@ -13,6 +13,7 @@
 #import "Record+DDL.h"
 #import "Record.h"
 #import "PropertyManager.h"
+#import "PropertyInfo.h"
 
 @implementation DatabaseAutoMigrator
 

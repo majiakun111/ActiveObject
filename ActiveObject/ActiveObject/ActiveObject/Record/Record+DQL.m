@@ -15,6 +15,7 @@
 #import "ActiveObjectDefine.h"
 #import "PropertyManager.h"
 #import "NSArray+JSONModel.h"
+#import "PropertyInfo.h"
 
 @implementation Record (DQL)
 

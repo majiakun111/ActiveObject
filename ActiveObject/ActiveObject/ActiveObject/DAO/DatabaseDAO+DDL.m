@@ -9,6 +9,7 @@
 #import "DatabaseDAO+DDL.h"
 #import "ActiveObjectDefine.h"
 #import "PropertyManager.h"
+#import "PropertyInfo.h"
 
 @interface TableBuilder : NSObject
 
