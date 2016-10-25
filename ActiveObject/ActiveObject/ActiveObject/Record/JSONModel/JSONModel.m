@@ -81,9 +81,7 @@ static const char * kAssociatedPropertyInfoMap;
     }
     
     JSONModelKeyMapper *keyMapper = [self getKeyMapper];
-    
     NSMutableDictionary *jsonDictionary = [[NSMutableDictionary alloc] init];
-    
     [propertyInfoMap enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, PropertyInfo * _Nonnull propertyInfo, BOOL * _Nonnull stop) {
         NSString *propertyName = propertyInfo.propertyName;
         NSString *propertyType = propertyInfo.propertyType;
@@ -248,13 +246,17 @@ static const char * kAssociatedPropertyInfoMap;
         }
     } else if ([propertyType isEqual:@"NSDictionary"]) {
         value = [jsonValue JSONObject];
-    } else if ([propertyType isEqual:@"NSString"]) {
-        //需要处理
-    } else if ([propertyType isEqual:@"NSNumber"]) {
-        //需要处理
-    } else if ([propertyType isEqual:@"CGFloat"] ||
-               [propertyType isEqual:@"NSInteger"]) {
-        //需要处理
+    } else if ([propertyType isEqual:@"NSString"] &&
+               ![value isKindOfClass:[NSString class]]) {
+        value = [NSString stringWithFormat:@"%@", value];
+    } else if (([propertyType isEqual:@"NSNumber"] ||
+               [propertyType isEqual:@"CGFloat"] ||
+               [propertyType isEqual:@"NSInteger"]) &&
+               [value isKindOfClass:[NSString class]]) {
+        NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+        [numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
+        value = [numberFormatter numberFromString:value];
+    } else {
     }
 
     return value;
