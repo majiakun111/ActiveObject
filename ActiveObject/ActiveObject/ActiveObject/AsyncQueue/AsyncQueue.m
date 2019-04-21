@@ -12,15 +12,24 @@
 #import "DatabaseDAO+Transaction.h"
 
 typedef NS_ENUM(NSInteger, TransactionType) {
-    Deferred = 0,
-    Immediate = 1,
-    Exclusive = 2,
+    TransactionForUnknowType = -1,
+    
+    TransactionForDeferredType = 0,
+    TransactionForImmediateType = 1,
+    TransactionForExclusiveType = 2,
+    
+    TransactionForAllType
 };
 
+NSUInteger const MaxConcurrentOperationCountOfRead = 1;
+NSUInteger const MaxConcurrentOperationCountOfWrite = 1;
 
 @interface AsyncQueue ()
 
-@property (nonatomic, strong) NSOperationQueue *operationQueue;
+@property(nonatomic, strong) dispatch_semaphore_t semaphore;//锁
+
+@property(nonatomic, strong) NSOperationQueue *readOperationQueue; //数据库读的任务队列
+@property(nonatomic, strong) NSOperationQueue *writeOperationQueue; //数据库写的任务队列
 
 @end
 
@@ -39,47 +48,62 @@ typedef NS_ENUM(NSInteger, TransactionType) {
     return instance;
 }
 
-- (void)inDatabase:(void (^)())block
-{
-    NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
-        block();
-    }];
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _semaphore = dispatch_semaphore_create(1);
+
+        _readOperationQueue = [[NSOperationQueue alloc] init];
+        [_readOperationQueue setMaxConcurrentOperationCount:MaxConcurrentOperationCountOfRead];
+        
+        _writeOperationQueue = [[NSOperationQueue alloc] init];
+        [_writeOperationQueue setMaxConcurrentOperationCount:MaxConcurrentOperationCountOfWrite];
+    }
     
-    [self.operationQueue addOperation:operation];
+    return self;
 }
 
-- (void)inDeferredTransaction:(void (^)(BOOL *rollback))block
+- (void)inDatabase:(void (^)(void))block forSqlType:(SqlType)sqlType
 {
-    [self beginTransaction:Deferred withBlock:block];
+    [self executeBlock:block sqlType:sqlType];
 }
 
-- (void)inImmediateTransaction:(void (^)(BOOL *rollback))block
+- (void)inDeferredTransaction:(void (^)(BOOL *rollback))block forSqlType:(SqlType)sqlType
 {
-    [self beginTransaction:Immediate withBlock:block];
+    [self beginTransaction:TransactionForDeferredType block:block forSqlType:sqlType];
 }
 
-- (void)inExclusiveTransaction:(void (^)(BOOL *rollback))block
+- (void)inImmediateTransaction:(void (^)(BOOL *rollback))block forSqlType:(SqlType)sqlType
 {
-    [self beginTransaction:Exclusive withBlock:block];
+    [self beginTransaction:TransactionForImmediateType block:block forSqlType:sqlType];
+}
+
+- (void)inExclusiveTransaction:(void (^)(BOOL *rollback))block forSqlType:(SqlType)sqlType
+{
+    [self beginTransaction:TransactionForExclusiveType block:block forSqlType:sqlType];
 }
 
 #pragma mark - PrivateMethod
 
-- (void)beginTransaction:(TransactionType)transactionType withBlock:(void (^)(BOOL *rollback))block
+- (void)beginTransaction:(TransactionType)transactionType block:(void (^)(BOOL *rollback))block forSqlType:(SqlType)sqlType
 {
-    NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+    if (!block) {
+        return;
+    }
+    
+    void (^warpperBlock)(void) = ^{
         BOOL shouldRollback = NO;
         
         switch (transactionType) {
-            case Deferred: {
+            case  TransactionForDeferredType: {
                 [[DatabaseDAO sharedInstance] beginDeferredTransaction];
                 break;
             }
-            case Immediate: {
+            case TransactionForImmediateType: {
                 [[DatabaseDAO sharedInstance] beginImmediateTransaction];
                 break;
             }
-            case Exclusive: {
+            case TransactionForExclusiveType: {
                 [[DatabaseDAO sharedInstance] beginExclusiveTransaction];
                 break;
             }
@@ -95,21 +119,30 @@ typedef NS_ENUM(NSInteger, TransactionType) {
         else {
             [[DatabaseDAO sharedInstance] commit];
         }
-    }];
-    
-    [self.operationQueue addOperation:operation];
+    };
+
+    [self executeBlock:warpperBlock sqlType:sqlType];
 }
 
-#pragma mark - PrivateMethod
-
-- (NSOperationQueue *)operationQueue
+- (void)executeBlock:(void (^)(void))block sqlType:(SqlType)sqlType
 {
-    if (nil == _operationQueue) {
-        _operationQueue = [[NSOperationQueue alloc] init];
-        [_operationQueue setMaxConcurrentOperationCount:1];
+    if (!block) {
+        return;
     }
     
-    return _operationQueue;
+    NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+        dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
+        
+        block();
+        
+        dispatch_semaphore_signal(self.semaphore);
+    }];
+    
+    if (sqlType == SqlForDQLType) {
+        [self.readOperationQueue addOperation:operation];
+    } else {
+        [self.writeOperationQueue addOperation:operation];
+    }
 }
 
 @end
