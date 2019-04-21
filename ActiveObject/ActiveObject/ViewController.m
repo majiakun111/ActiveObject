@@ -56,25 +56,31 @@
     
     person.bankCards =@[bankCard1, bankCard2];
     
-    [person save];
-    
-    NSArray <Person *> *persons = [person query];
-    
-    [person setWhere:@{@"cid" : @"15"}];
-    [person delete];
-    
-    [person setWhere:nil];
-    
-    persons = [person query];
+//    [person save];
+//
+//    NSArray <Person *> *persons = [person query];
+//
+//    [person setWhere:@{@"cid" : @"15"}];
+//    [person delete];
+//
+//    [person setWhere:nil];
+//
+//    persons = [person query];
 
+
+    for (NSInteger index = 0; index < 6; index++) {
+        [[AsyncQueue sharedInstance] inDatabase:^{
+            NSLog(@"xxxxx: %@", [NSThread currentThread]);
+            [person save];
+        } forSqlType:SqlForDMLType];
+    }
     
-    //    for (NSInteger index = 0; index < 1000; index++) {
-    //        [[AsyncQueue sharedInstance] inDatabase:^{
-    //            [person save];
-    //        }];
-    //    }
-    
-    
+    for (NSInteger index = 0; index < 6; index++) {
+        [[AsyncQueue sharedInstance] inDatabase:^{
+            NSArray <Person *> *persons = [person query];
+            NSLog(@"xxxxx: %@,  yyyy:%@", [NSThread currentThread], persons);
+        } forSqlType:SqlForDQLType];
+    }
     //
     //    person.height = 17;
     //    person.age = 35;
