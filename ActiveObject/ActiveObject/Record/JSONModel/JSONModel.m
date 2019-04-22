@@ -24,41 +24,38 @@ static const char * kAssociatedArrayContainerClassMapDictioanry;
 
 - (id)initWithJSONDictionary:(NSDictionary *)dictionary error:(NSError **)error
 {
-    JSONModel *jsonModel = [[[self class] alloc] init];
-    
-    NSArray<PropertyInfo *> *propertyInfoList = [PropertyAnalyzer getPropertyInfoListForClass:[self class] untilRootClass:[JSONModel class]];
-    [propertyInfoList enumerateObjectsUsingBlock:^(PropertyInfo*  _Nonnull propertyInfo, NSUInteger idx, BOOL * _Nonnull stop) {
-        
-        NSString *propertyName = propertyInfo.propertyName;
-        NSString *propertyType = propertyInfo.propertyType;
-        id value = dictionary[propertyName];
-        if ([NSClassFromString(propertyType) isSubclassOfClass:[JSONModel class]]) {
-            
-            Class clazz = NSClassFromString(propertyType);
-            value = [clazz modelWithJSONDictionary:value];
-            [jsonModel setValue:value forKeyPath:propertyName];
-            
-        } else if ([propertyType isEqual:@"NSArray"]) {
-            Class class = [self objectClassInArray][propertyName];
-            if (class && [class isSubclassOfClass:[JSONModel class]]) {
-                value = [value modelArrayWithClass:class];
+    self = [super init];
+    if (self) {
+        NSArray<PropertyInfo *> *propertyInfoList = [PropertyAnalyzer getPropertyInfoListForClass:[self class] untilRootClass:[JSONModel class]];
+        [propertyInfoList enumerateObjectsUsingBlock:^(PropertyInfo*  _Nonnull propertyInfo, NSUInteger idx, BOOL * _Nonnull stop) {
+            NSString *propertyName = propertyInfo.propertyName;
+            NSString *propertyType = propertyInfo.propertyType;
+            id value = dictionary[propertyName];
+            if ([NSClassFromString(propertyType) isSubclassOfClass:[JSONModel class]]) {
+                Class clazz = NSClassFromString(propertyType);
+                value = [clazz modelWithJSONDictionary:value];
+                
+                [self setValue:value forKeyPath:propertyName];
+            } else if ([propertyType isEqual:@"NSArray"]) {
+                Class class = [self objectClassInArray][propertyName];
+                if (class && [class isSubclassOfClass:[JSONModel class]]) {
+                    value = [value modelArrayWithClass:class];
+                }
+                
+                [self setValue:value forKeyPath:propertyName];
+            } else if ([propertyType isEqual:@"NSDictionary"]) {
+                if ([value isKindOfClass:[NSString class]]) {
+                    value = [value JSONObject];
+                }
+                
+                [self setValue:value forKeyPath:propertyName];
+            } else {
+                [self setValue:value forKeyPath:propertyName];
             }
-            [jsonModel setValue:value forKeyPath:propertyName];
-            
-        } else if ([propertyType isEqual:@"NSDictionary"]) {
-            
-            value = [value JSONObject];
-            [jsonModel setValue:value forKeyPath:propertyName];
-            
-        } else {
-            
-            [jsonModel setValue:value forKeyPath:propertyName];
-            
-        }
-        
-    }];
-
-    return jsonModel;
+        }];
+    }
+    
+    return self;
 }
 
 + (id)modelWithJSONDictionary:(NSDictionary *)dictionary
