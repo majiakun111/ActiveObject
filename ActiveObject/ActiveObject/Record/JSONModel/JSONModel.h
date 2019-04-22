@@ -3,7 +3,7 @@
 //  ActiveObject
 //
 //  Created by Ansel on 2016/10/24.
-//  Copyright © 2016年 PingAn. All rights reserved.
+//  Copyright © 2016年 MJK. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

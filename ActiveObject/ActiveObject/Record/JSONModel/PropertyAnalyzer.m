@@ -3,7 +3,7 @@
 //  ActiveObject
 //
 //  Created by Ansel on 2019/4/22.
-//  Copyright © 2019 PingAn. All rights reserved.
+//  Copyright © 2019 MJK. All rights reserved.
 //
 
 #import "PropertyAnalyzer.h"

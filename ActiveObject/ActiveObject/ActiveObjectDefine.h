@@ -3,7 +3,7 @@
 //  ActiveObject
 //
 //  Created by Ansel on 16/3/25.
-//  Copyright © 2016年 PingAn. All rights reserved.
+//  Copyright © 2016年 MJK. All rights reserved.
 //
 
 #ifndef ActiveObjectDefine_h
