@@ -12,7 +12,7 @@
 
 @implementation Record (Additions)
 
-- (NSArray *)getColumns
+- (NSArray<NSString *> *)getColumns
 {
     NSMutableArray *columns  = (NSMutableArray *)[[DatabaseDAO sharedInstance] getColumnsForTableName:[self tableName]];
     [columns removeObject:ROW_ID];

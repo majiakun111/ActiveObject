@@ -8,7 +8,7 @@
 
 #import "DatabaseDAO+DDL.h"
 #import "ActiveObjectDefine.h"
-#import "PropertyManager.h"
+#import "PropertyAnalyzer.h"
 
 @interface TableBuilder : NSObject
 
@@ -42,7 +42,7 @@
         return YES;
     }
     
-    NSArray *propertyInfoList = [[PropertyManager shareInstance] getPropertyInfoListForClass:clazz untilRootClass:rootClazz];
+    NSArray *propertyInfoList = [PropertyAnalyzer getPropertyInfoListForClass:clazz untilRootClass:rootClazz];
     
     NSMutableString *sql = [NSMutableString stringWithFormat:@"create table if not exists %@ (%@ integer primary key autoincrement,", tableName, ROW_ID];
     

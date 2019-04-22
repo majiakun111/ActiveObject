@@ -12,7 +12,7 @@
 #import "DatabaseDAO+Additions.h"
 #import "Record+DDL.h"
 #import "Record.h"
-#import "PropertyManager.h"
+#import "PropertyAnalyzer.h"
 
 @implementation DatabaseAutoMigrator
 
@@ -41,7 +41,7 @@
 - (BOOL)executeColumnMigrateForTable:(NSString *)tableName
 {
     Class clazz = NSClassFromString(tableName);
-    NSArray<PropertyInfo *> *propertyInfoList = [[PropertyManager shareInstance] getPropertyInfoListForClass:clazz untilRootClass:[Record class]];
+    NSArray<PropertyInfo *> *propertyInfoList = [PropertyAnalyzer getPropertyInfoListForClass:clazz untilRootClass:[Record class]];
     
     NSArray *columns = [[DatabaseDAO sharedInstance] getColumnsForTableName:tableName];
     

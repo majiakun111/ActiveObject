@@ -10,6 +10,6 @@
 
 @interface Record (Additions)
 
-- (NSArray *)getColumns;
+- (NSArray<NSString *> *)getColumns;
 
 @end

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5B06D50B1CB8026800D031AE /* DatabaseAutoMigrator.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B06D50A1CB8026800D031AE /* DatabaseAutoMigrator.m */; };
+		5B1E5258226D5469002729F6 /* PropertyAnalyzer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1E5257226D5469002729F6 /* PropertyAnalyzer.m */; };
 		5B2030651CA52B360050023A /* DatabaseDAO+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2030641CA52B360050023A /* DatabaseDAO+Additions.m */; };
 		5B2030681CA52CF30050023A /* DatabaseDAO+Transaction.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2030671CA52CF30050023A /* DatabaseDAO+Transaction.m */; };
 		5B20306E1CA52F510050023A /* DatabaseDAO+DDL.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B20306D1CA52F510050023A /* DatabaseDAO+DDL.m */; };
@@ -40,13 +41,14 @@
 		5B4CF55C1CA3F6F1006BD555 /* NSString+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B4CF55B1CA3F6F1006BD555 /* NSString+JSON.m */; };
 		5B65D6131CA401BD001D3975 /* NSDictionary+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B65D6121CA401BD001D3975 /* NSDictionary+JSON.m */; };
 		5B65D6161CA431B9001D3975 /* BankCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B65D6151CA431B9001D3975 /* BankCard.m */; };
-		5BA8290D1DBE59F900DF1129 /* PropertyManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BA8290C1DBE59F900DF1129 /* PropertyManager.m */; };
 		5BA829131DBE5AB500DF1129 /* JSONModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BA829121DBE5AB500DF1129 /* JSONModel.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		5B06D5091CB8026800D031AE /* DatabaseAutoMigrator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatabaseAutoMigrator.h; sourceTree = "<group>"; };
 		5B06D50A1CB8026800D031AE /* DatabaseAutoMigrator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatabaseAutoMigrator.m; sourceTree = "<group>"; };
+		5B1E5256226D5469002729F6 /* PropertyAnalyzer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PropertyAnalyzer.h; sourceTree = "<group>"; };
+		5B1E5257226D5469002729F6 /* PropertyAnalyzer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PropertyAnalyzer.m; sourceTree = "<group>"; };
 		5B2030631CA52B360050023A /* DatabaseDAO+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DatabaseDAO+Additions.h"; sourceTree = "<group>"; };
 		5B2030641CA52B360050023A /* DatabaseDAO+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "DatabaseDAO+Additions.m"; sourceTree = "<group>"; };
 		5B2030661CA52CF30050023A /* DatabaseDAO+Transaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DatabaseDAO+Transaction.h"; sourceTree = "<group>"; };
@@ -111,8 +113,6 @@
 		5B65D6121CA401BD001D3975 /* NSDictionary+JSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+JSON.m"; sourceTree = "<group>"; };
 		5B65D6141CA431B9001D3975 /* BankCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BankCard.h; sourceTree = "<group>"; };
 		5B65D6151CA431B9001D3975 /* BankCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BankCard.m; sourceTree = "<group>"; };
-		5BA8290B1DBE59F900DF1129 /* PropertyManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PropertyManager.h; sourceTree = "<group>"; };
-		5BA8290C1DBE59F900DF1129 /* PropertyManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PropertyManager.m; sourceTree = "<group>"; };
 		5BA829111DBE5AB500DF1129 /* JSONModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONModel.h; sourceTree = "<group>"; };
 		5BA829121DBE5AB500DF1129 /* JSONModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONModel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -293,10 +293,10 @@
 		5BA8290A1DBE59F900DF1129 /* JSONModel */ = {
 			isa = PBXGroup;
 			children = (
-				5BA8290B1DBE59F900DF1129 /* PropertyManager.h */,
-				5BA8290C1DBE59F900DF1129 /* PropertyManager.m */,
 				5BA829111DBE5AB500DF1129 /* JSONModel.h */,
 				5BA829121DBE5AB500DF1129 /* JSONModel.m */,
+				5B1E5256226D5469002729F6 /* PropertyAnalyzer.h */,
+				5B1E5257226D5469002729F6 /* PropertyAnalyzer.m */,
 			);
 			path = JSONModel;
 			sourceTree = "<group>";
@@ -328,7 +328,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0720;
-				ORGANIZATIONNAME = PingAn;
+				ORGANIZATIONNAME = MJK;
 				TargetAttributes = {
 					5B25541C1CA3B5E5004A5D74 = {
 						CreatedOnToolsVersion = 7.2;
@@ -340,6 +340,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -395,7 +396,7 @@
 				5B65D6131CA401BD001D3975 /* NSDictionary+JSON.m in Sources */,
 				5B2554821CA3B9E7004A5D74 /* Record+DML.m in Sources */,
 				5B2554841CA3B9E7004A5D74 /* Record.m in Sources */,
-				5BA8290D1DBE59F900DF1129 /* PropertyManager.m in Sources */,
+				5B1E5258226D5469002729F6 /* PropertyAnalyzer.m in Sources */,
 				5B384EC31CA3C2C6001E2956 /* Record+Transaction.m in Sources */,
 				5B4CF55C1CA3F6F1006BD555 /* NSString+JSON.m in Sources */,
 				5B2554811CA3B9E7004A5D74 /* Record+DDL.m in Sources */,

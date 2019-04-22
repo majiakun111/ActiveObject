@@ -13,7 +13,7 @@
 #import "Record+Condition.h"
 #import "NSString+JSON.h"
 #import "ActiveObjectDefine.h"
-#import "PropertyManager.h"
+#import "PropertyAnalyzer.h"
 #import "NSArray+JSONModel.h"
 
 @implementation Record (DQL)
@@ -57,7 +57,7 @@
         return nil;
     }
     
-    NSArray<PropertyInfo *> *propertyInfoList = [[PropertyManager shareInstance] getPropertyInfoListForClass:[self class] untilRootClass:[Record class]];
+    NSArray<PropertyInfo *> *propertyInfoList = [PropertyAnalyzer getPropertyInfoListForClass:[self class] untilRootClass:[Record class]];
     NSMutableArray <NSMutableDictionary *> *associationDictionaryRecords = [[NSMutableArray alloc] init];
     
     //array 是数据库返回的结果

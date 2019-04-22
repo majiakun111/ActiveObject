@@ -1,15 +1,17 @@
 //
-//  PropertyInfoListManager.m
+//  PropertyAnalyzer.m
 //  ActiveObject
 //
-//  Created by Ansel on 16/8/13.
-//  Copyright © 2016年 PingAn. All rights reserved.
+//  Created by Ansel on 2019/4/22.
+//  Copyright © 2019 PingAn. All rights reserved.
 //
 
-#import "PropertyManager.h"
+#import "PropertyAnalyzer.h"
 #import "ActiveObjectDefine.h"
 #import "JSONModel.h"
 #import "NSArray+JSON.h"
+
+static const char * PropertyInfoListAssociatedKey;
 
 @implementation PropertyInfo
 
@@ -70,42 +72,16 @@
 
 @end
 
-@interface PropertyManager ()
+@implementation PropertyAnalyzer
 
-/**
- *   return @{className : PropertyInfo, ...};
- */
-@property (nonatomic, strong) NSMutableDictionary<NSString *, NSMutableArray *> *propertyInfoListMap;
-
-/**
- *   return @{hash : [], ...}; // 对象的hash
- */
-@property (nonatomic, strong) NSMutableDictionary<NSNumber *, NSMutableArray *> *valueListMap;
-
-@end
-
-@implementation PropertyManager
-
-+ (instancetype)shareInstance
-{
-    static PropertyManager *instance;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        instance = [[PropertyManager alloc] init];
-    });
-    
-    return instance;
-}
-
-- (NSArray<PropertyInfo *> *)getPropertyInfoListForClass:(Class)clazz untilRootClass:(Class)rootClazz
-{
-    NSString *currentClassName = NSStringFromClass(clazz);
-    NSMutableArray<PropertyInfo *> *propertyInfoList = self.propertyInfoListMap[currentClassName];
++ (NSArray<PropertyInfo *> *)getPropertyInfoListForClass:(Class)clazz untilRootClass:(Class)rootClazz {
+    NSMutableArray<PropertyInfo *> *propertyInfoList = objc_getAssociatedObject(clazz, &PropertyInfoListAssociatedKey);
     if (propertyInfoList) {
         return propertyInfoList;
     }
     
     propertyInfoList = [[NSMutableArray alloc] init];
+    NSString *currentClassName = NSStringFromClass(clazz);
     NSString *rootClassName = NSStringFromClass(rootClazz);
     
     //递归获取
@@ -123,75 +99,44 @@
         PropertyInfo *propertyInfo = [[PropertyInfo alloc] initWithProperty:property];
         [propertyInfoList addObject:propertyInfo];
     }
-    
     free(properties);
     
-    self.propertyInfoListMap[currentClassName] = propertyInfoList;
+    objc_setAssociatedObject(clazz, &PropertyInfoListAssociatedKey, propertyInfoList, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
     return propertyInfoList;
 }
 
-- (NSArray *)getValueListWithPropertyList:(NSArray *)propertyList forRecord:(JSONModel *)record
-{
-    NSMutableArray *valueList = self.valueListMap[@([record hash])];
-    if (valueList) {
-        return valueList;
-    }
-    
-    valueList = [[NSMutableArray alloc] init];
++ (NSArray *)getPropertyValueListWithPropertyList:(NSArray<NSString *> *)propertyList forRecord:(JSONModel *)record {
+    NSMutableArray *propertyValueList = [[NSMutableArray alloc] init];
     for (NSString *propertyName in propertyList) {
         id value = [record valueForKey:propertyName];
         if (!value) {
-            [valueList addObject:@""];
+            [propertyValueList addObject:@""];
             continue;
         }
         
         if ([value isKindOfClass:[NSArray class]]) {
-            [valueList addObject: [self getValuesWithArrayValue:value propertyName:propertyName forRecord:record]];
+            [propertyValueList addObject:[self getValuesWithArrayValue:value propertyName:propertyName forRecord:record]];
         } else if ([value isKindOfClass:[NSDictionary class]]) {
             NSString *jsonString = [value JSONString];
-            [valueList addObject:jsonString ? jsonString : @""];
+            [propertyValueList addObject:jsonString ? jsonString : @""];
+        } else {
+            [propertyValueList addObject:value];
         }
-        else {
-            [valueList addObject:value];
-        }
     }
     
-    self.valueListMap[@([record hash])] = valueList;
-    
-    return valueList;
-}
-
-#pragma mark - Property
-
-- (NSMutableDictionary<NSString *, NSMutableArray *> *)propertyInfoListMap
-{
-    if (nil == _propertyInfoListMap) {
-        _propertyInfoListMap = [[NSMutableDictionary alloc] init];
-    }
-    
-    return _propertyInfoListMap;
-}
-
-- (NSMutableDictionary<NSNumber *,NSMutableArray *> *)valueListMap
-{
-    if (nil == _valueListMap) {
-        _valueListMap = [[NSMutableDictionary alloc] init];
-    }
-    
-    return _valueListMap;
+    return propertyValueList;
 }
 
 #pragma mark - PrivateMethod
 
-- (id)getValuesWithArrayValue:(NSArray *)arrayValue propertyName:(NSString *)propertyName forRecord:(JSONModel *)record
++ (id)getValuesWithArrayValue:(NSArray *)arrayValue propertyName:(NSString *)propertyName forRecord:(JSONModel *)record
 {
     id  value = nil;
-    Class class = [record arrayContainerClassForPropertyName:propertyName];
+    Class class = [record objectClassInArray][propertyName];
     if ([class isSubclassOfClass:[JSONModel class]]) {
         value = arrayValue; //直接返回数组
-    }
-    else {
+    } else {
         NSString *jsonString = [arrayValue JSONString];
         value = jsonString;
     }

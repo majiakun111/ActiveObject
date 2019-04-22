@@ -10,7 +10,7 @@
 #import "DatabaseDAO.h"
 #import "DatabaseDAO+DDL.h"
 #import "Record+Additions.h"
-#import "PropertyManager.h"
+#import "PropertyAnalyzer.h"
 
 @implementation Record (DDL)
 
@@ -22,8 +22,8 @@
 - (BOOL)dropTable
 {
     BOOL result = YES;
-    NSArray *propertyList = [self getColumns];
-    NSArray *valueList = [[PropertyManager shareInstance] getValueListWithPropertyList:propertyList forRecord:self];
+    NSArray<NSString *> *propertyList = [self getColumns];
+    NSArray *valueList = [PropertyAnalyzer getPropertyValueListWithPropertyList:propertyList forRecord:self];
     
     for (id value in valueList) {
         if ([value isKindOfClass:[Record class]]) {
