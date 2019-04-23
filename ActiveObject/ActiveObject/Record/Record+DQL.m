@@ -98,7 +98,7 @@
 - (id)getArrayValueWithValue:(id)value propertyName:(NSString *)propertyName
 {
     id arrayValue = nil;
-    Class class = [self arrayContainerClassForPropertyName:propertyName];
+    Class class = [self objectClassInArray][propertyName];
     if (class && [class isSubclassOfClass:[Record class]]) {
         //此value是rowIds, eg.@"1,2,3"
         arrayValue = [self getDictionaryRecordsWithRowIds:[value componentsSeparatedByString:@","] class:class];
