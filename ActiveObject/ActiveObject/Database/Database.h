@@ -14,6 +14,8 @@
     sqlite3 *_db;
 }
 
+@property(nonatomic, assign) BOOL shouldCacheStatements;
+
 - (instancetype)initWithDatabasePath:(NSString *)databasePath;
 
 - (BOOL)open;

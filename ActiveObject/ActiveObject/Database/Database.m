@@ -8,19 +8,69 @@
 
 #import "Database.h"
 
+@interface Statement : NSObject
+
+//sql
+@property (atomic, copy) NSString *query;
+@property (atomic, assign) void *statement;
+@property (atomic, assign) BOOL inUse;
+@property (atomic, assign) long useCount;
+
+- (void)close;
+- (void)reset;
+
+@end
+
+@implementation Statement
+
+- (void)dealloc {
+    [self close];
+}
+
+- (void)close {
+    if (_statement) {
+        sqlite3_finalize(_statement);
+        _statement = 0x00;
+    }
+    
+    _inUse = NO;
+}
+
+- (void)reset {
+    if (_statement) {
+        sqlite3_reset(_statement);
+    }
+    
+    _inUse = NO;
+}
+
+- (NSString*)description {
+    return [NSString stringWithFormat:@"%@ %ld hit(s) for query %@", [super description], _useCount, _query];
+}
+
+@end
+
+
 @interface Database ()
 
-@property (nonatomic, copy) NSString *databasePath;
+@property(nonatomic, copy) NSString *databasePath;
+@property(nonatomic, strong) NSMutableDictionary<NSString*,  NSMutableSet<Statement *>*> *cachedStatements;
 
 @end
 
 @implementation Database
+
+- (void)dealloc
+{
+    [self clearCachedStatements];
+}
 
 - (instancetype)initWithDatabasePath:(NSString *)databasePath
 {
     self = [super init];
     if (self) {
         self.databasePath = databasePath;
+        _cachedStatements = [[NSMutableDictionary alloc] init];
     }
     
     return self;
@@ -69,17 +119,30 @@
         return NO;
     }
     
-    BOOL result = YES;
+    if ([sql length] <= 0) {
+        NSLog(@"warning sql is empty");
+    }
     
+    BOOL result = YES;
     do {
-        sqlite3_stmt *pStmt = NULL;
-        //1. 预处理SQL
-        int statusCode = sqlite3_prepare_v2(_db, [sql UTF8String], -1, &pStmt, NULL);
-        if (statusCode != SQLITE_OK) {
-            [self printErrorMessageForMethod:@"sqlite3_prepare_v2" sql:sql];
-            sqlite3_finalize(pStmt);
-            result = NO;
-            break;
+        sqlite3_stmt *pStmt = 0x00;
+        Statement *statement = 0x00;
+        if (self.shouldCacheStatements) {
+            statement = [self cachedStatementForQuery:sql];
+            pStmt = statement ? [statement statement] : 0x00;
+            [statement reset];
+        }
+    
+        int statusCode = 0;
+        if (!pStmt) {
+            //1. 预处理SQL
+            statusCode = sqlite3_prepare_v2(_db, [sql UTF8String], -1, &pStmt, NULL);
+            if (statusCode != SQLITE_OK) {
+                [self printErrorMessageForMethod:@"sqlite3_prepare_v2" sql:sql];
+                sqlite3_finalize(pStmt);
+                result = NO;
+                break;
+            }
         }
         
         //2.执行SQL
@@ -90,6 +153,14 @@
             break;
         }
         
+        if (!statement && self.shouldCacheStatements) {
+            statement = [[Statement alloc] init];
+            [statement setStatement:pStmt];
+            
+            [self setCachedStatement:statement forQuery:sql];
+        }
+        [statement setUseCount:[statement useCount] + 1];
+        [statement setInUse:YES];
     } while (0);
     
     return result;
@@ -167,6 +238,49 @@
     
     return results;
 }
+
+#pragma mark - PrivateCachedStatements
+
+- (void)clearCachedStatements
+{
+    [self.cachedStatements enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, NSMutableSet<Statement *> * _Nonnull statements, BOOL * _Nonnull stop) {
+        [statements enumerateObjectsUsingBlock:^(Statement * _Nonnull statement, BOOL * _Nonnull stop) {
+            [statement close];
+        }];
+    }];
+    
+    [self.cachedStatements removeAllObjects];
+}
+
+- (Statement*)cachedStatementForQuery:(NSString*)query
+{
+    __block Statement *statement = nil;
+    NSMutableSet<Statement *> *statements = [self.cachedStatements objectForKey:query];
+    [statements enumerateObjectsUsingBlock:^(Statement * _Nonnull obj, BOOL * _Nonnull stop) {
+        if ([obj inUse]) {
+            return;
+        }
+        
+        statement = obj;
+        *stop = YES;
+    }];
+    
+    return statement;
+}
+
+- (void)setCachedStatement:(Statement*)statement forQuery:(NSString*)query
+{
+    [statement setQuery:query];
+    
+    NSMutableSet* statements = [self.cachedStatements objectForKey:query];
+    if (!statements) {
+        statements = [NSMutableSet set];
+    }
+    [statements addObject:statement];
+    
+    [self.cachedStatements setObject:statements forKey:query];
+}
+
 
 #pragma mark - PrivateMethod
 
