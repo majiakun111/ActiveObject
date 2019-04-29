@@ -38,5 +38,9 @@
             };
 }
 
+- (NSDictionary<NSString *,Class> *)objectClassInArray {
+    return @{@"bankCards" : [BankCard class]};
+}
+
 @end
 

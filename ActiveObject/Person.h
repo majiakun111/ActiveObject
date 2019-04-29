@@ -6,10 +6,9 @@
 //  Copyright © 2016年 MJK. All rights reserved.
 //
 
-#import "Record.h"
 #import <UIKit/UIKit.h>
-
-@class BankCard;
+#import "Record.h"
+#import "BankCard.h"
 
 @interface Person : Record
 

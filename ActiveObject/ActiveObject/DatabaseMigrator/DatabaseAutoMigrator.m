@@ -102,7 +102,7 @@
     for (PropertyInfo *propertyInfo in columns) {
         NSString *columnName = propertyInfo.propertyName;
         
-        result = [[DatabaseDAO sharedInstance] addColumn:propertyInfo.propertyName type:propertyInfo.propertyType constraint:contraints[columnName] forTable:tableName];
+        result = [[DatabaseDAO sharedInstance] addColumn:propertyInfo.propertyName type:propertyInfo.databaseType constraint:contraints[columnName] forTable:tableName];
         
         if (!result) {
             break;

@@ -22,7 +22,7 @@
 {    
     NSArray <NSMutableDictionary *> *results =  [[DatabaseDAO sharedInstance] queryWithColumns:self.field where:self.where groupBy:self.groupBy having:self.having orderBy:self.orderBy limit:self.limit forTable:[self tableName]];
     
-    NSArray <Record *> *records = [self getRecordsfromDictionaryRecords:results];
+    NSArray<Record *> *records = [self getRecordsfromDictionaryRecords:results];
     
     return records;
 }
@@ -36,7 +36,7 @@
 
 #pragma mark - PrivateMethod
 
-- (NSArray <Record *> *)getRecordsfromDictionaryRecords:(NSArray <NSDictionary *> *)dictionaryRecords
+- (NSArray<Record *> *)getRecordsfromDictionaryRecords:(NSArray <NSDictionary *> *)dictionaryRecords
 {
     if (!dictionaryRecords || [dictionaryRecords count] == 0) {
         return nil;
@@ -47,7 +47,7 @@
         return nil;
     }
     
-    NSArray <Record *> *records = [associationDictionaryRecords modelArrayWithClass:[self class]];
+    NSArray<Record *> *records = [associationDictionaryRecords modelArrayWithClass:[self class]];
     return records;
 }
 
@@ -65,16 +65,14 @@
         NSMutableDictionary *associationDictionaryRecord = [[NSMutableDictionary alloc] initWithDictionary:dictionaryRecord];
         
         [propertyInfoList enumerateObjectsUsingBlock:^(PropertyInfo*  _Nonnull propertyInfo, NSUInteger idx, BOOL * _Nonnull stop) {
-            NSString *propertyName = propertyInfo.propertyName;
-            NSString *propertyType = propertyInfo.propertyType;
-            id value = dictionaryRecord[propertyName];
-            if ([NSClassFromString(propertyType) isSubclassOfClass:[Record class]]) {
+            id value = dictionaryRecord[propertyInfo.propertyName];
+            if (propertyInfo.propertyClass && !propertyInfo.isFromFoundation) {
                 //value 是rowId
-                NSDictionary *rd = [self getDictionaryRecordWithRowId:value class:NSClassFromString(propertyType)];
-                [associationDictionaryRecord setObject:rd forKey:propertyName];
-            } else if ([propertyType isEqual:@"NSArray"]) {
-                id arrayValue = [self getArrayValueWithValue:value propertyName:propertyName];
-                [associationDictionaryRecord setValue:arrayValue forKeyPath:propertyName];
+                NSDictionary *rd = [self getDictionaryRecordWithRowId:value class:propertyInfo.propertyClass];
+                [associationDictionaryRecord setObject:rd forKey: propertyInfo.propertyName];
+            } else if ([propertyInfo.propertyClass isKindOfClass:object_getClass([NSArray class])]) {
+                id arrayValue = [self getArrayValueWithValue:value propertyName:propertyInfo.propertyName];
+                [associationDictionaryRecord setValue:arrayValue forKeyPath:propertyInfo.propertyName];
             }
         }];
         

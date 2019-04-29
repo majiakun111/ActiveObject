@@ -32,7 +32,6 @@
     
     Person *person = [[Person alloc] init];
     
-    [person arrayContainerClass:[BankCard class] forPropertyName:@"bankCards"];
     person.age = 35;
     person.height = 170.5;
     person.weight = 120;
@@ -40,6 +39,7 @@
     person.cid = @"17";
     person.telphones = @[@"138", @"135"];
     person.info = @{@"hello" : @"world"};
+    person.address = @"Beijing";
     
     BankCard *mainBankCard = [[BankCard alloc] init];
     mainBankCard.cardId = @"1234567890";
@@ -68,19 +68,19 @@
 //    persons = [person query];
 
 
-    for (NSInteger index = 0; index < 6; index++) {
-        [[AsyncQueue sharedInstance] inDatabase:^{
-            NSLog(@"xxxxx: %@", [NSThread currentThread]);
-            [person save];
-        } forSqlType:SqlForDMLType];
-    }
+//for (NSInteger index = 0; index < 6; index++) {
+//    [[AsyncQueue sharedInstance] inDatabase:^{
+//        NSLog(@"xxxxx: %@", [NSThread currentThread]);
+//        [person save];
+//    } forSqlType:SqlForDMLType];
+//}
     
-    for (NSInteger index = 0; index < 6; index++) {
+    //for (NSInteger index = 0; index < 6; index++) {
         [[AsyncQueue sharedInstance] inDatabase:^{
             NSArray <Person *> *persons = [person query];
             NSLog(@"xxxxx: %@,  yyyy:%@", [NSThread currentThread], persons);
         } forSqlType:SqlForDQLType];
-    }
+    //}
     //
     //    person.height = 17;
     //    person.age = 35;

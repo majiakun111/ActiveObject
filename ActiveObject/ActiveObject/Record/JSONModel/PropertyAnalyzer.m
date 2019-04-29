@@ -8,10 +8,20 @@
 
 #import "PropertyAnalyzer.h"
 #import "ActiveObjectDefine.h"
-#import "JSONModel.h"
+#import "NSObject+Foundation.h"
+#import "NSObject+JSONModel.h"
 #import "NSArray+JSON.h"
 
 static const char * PropertyInfoListAssociatedKey;
+
+@interface PropertyInfo ()
+
+@property (nonatomic, copy) NSString *propertyName;
+@property (nonatomic, strong) Class propertyClass;
+@property (nonatomic, getter = isFromFoundation) BOOL fromFoundation;
+@property (nonatomic, copy) NSString *databaseType;
+
+@end
 
 @implementation PropertyInfo
 
@@ -34,7 +44,6 @@ static const char * PropertyInfoListAssociatedKey;
     switch(type[0]) {
         case 'f': //float
         case 'd': {//double
-            self.propertyType = @"CGFloat";
             self.databaseType = @"float";
             break;
         }
@@ -48,7 +57,6 @@ static const char * PropertyInfoListAssociatedKey;
         case 'L':  // unsigned long
         case 'Q':  // unsigned long long
         case 'B': {// BOOL
-            self.propertyType = @"NSInteger";
             self.databaseType = @"integer";
             break;
         }
@@ -59,12 +67,12 @@ static const char * PropertyInfoListAssociatedKey;
             cls = [cls stringByReplacingOccurrencesOfString:@"@" withString:@""];
             cls = [cls stringByReplacingOccurrencesOfString:@"\"" withString:@""];
             
-            self.propertyType = cls;
+            self.propertyClass = NSClassFromString(cls);
+            self.fromFoundation = [self fromFoundationForClazz:self.propertyClass];
             self.databaseType = @"text";
             break;
         }
         default: {
-            self.propertyType = @"NSString";
             self.databaseType = @"text";
         }
     }
@@ -106,17 +114,17 @@ static const char * PropertyInfoListAssociatedKey;
     return propertyInfoList;
 }
 
-+ (NSArray *)getPropertyValueListWithPropertyList:(NSArray<NSString *> *)propertyList forRecord:(JSONModel *)record {
++ (NSArray *)getPropertyValueListWithPropertyList:(NSArray<NSString *> *)propertyList forObject:(NSObject *)object {
     NSMutableArray *propertyValueList = [[NSMutableArray alloc] init];
     for (NSString *propertyName in propertyList) {
-        id value = [record valueForKey:propertyName];
+        id value = [object valueForKey:propertyName];
         if (!value) {
             [propertyValueList addObject:@""];
             continue;
         }
-        
+
         if ([value isKindOfClass:[NSArray class]]) {
-            [propertyValueList addObject:[self getValuesWithArrayValue:value propertyName:propertyName forRecord:record]];
+            [propertyValueList addObject:[self getValuesWithArrayValue:value propertyName:propertyName forObject:object]];
         } else if ([value isKindOfClass:[NSDictionary class]]) {
             NSString *jsonString = [value JSONString];
             [propertyValueList addObject:jsonString ? jsonString : @""];
@@ -130,11 +138,11 @@ static const char * PropertyInfoListAssociatedKey;
 
 #pragma mark - PrivateMethod
 
-+ (id)getValuesWithArrayValue:(NSArray *)arrayValue propertyName:(NSString *)propertyName forRecord:(JSONModel *)record
++ (id)getValuesWithArrayValue:(NSArray *)arrayValue propertyName:(NSString *)propertyName forObject:(NSObject *)object
 {
     id  value = nil;
-    Class class = [record objectClassInArray][propertyName];
-    if ([class isSubclassOfClass:[JSONModel class]]) {
+    Class clazz = [object objectClassInArray][propertyName];
+    if (clazz && ![self fromFoundationForClazz:clazz]) {
         value = arrayValue; //直接返回数组
     } else {
         NSString *jsonString = [arrayValue JSONString];

@@ -7,7 +7,8 @@
 //
 
 #import "NSArray+JSONModel.h"
-#import "JSONModel.h"
+#import "NSObject+JSONModel.h"
+#import "NSObject+Foundation.h"
 
 @implementation NSArray (JSONModel)
 
@@ -39,8 +40,8 @@
     NSMutableArray *jsonArray = [[NSMutableArray alloc] init];
     
     for (id object in self) {
-        if ([object isKindOfClass:[JSONModel class]]) {
-            NSDictionary *objectDictionary = [(JSONModel *)object toJSONDictionary];
+        if ([self fromFoundationForClazz:[object class]]) {
+            NSDictionary *objectDictionary = [object toJSONDictionary];
             if (objectDictionary) {
                 [jsonArray addObject:objectDictionary];
             }

@@ -1,15 +1,16 @@
 //
-//  JSONModel.h
+//  NSObject+JSONModel.h
 //  ActiveObject
 //
-//  Created by Ansel on 2016/10/24.
-//  Copyright © 2016年 MJK. All rights reserved.
+//  Created by Ansel on 2019/4/29.
+//  Copyright © 2019 MJK. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
-//还需要考虑 model key 和 json key的映射
-@interface JSONModel : NSObject
+NS_ASSUME_NONNULL_BEGIN
+
+@interface NSObject (JSONModel)
 
 - (id)initWithJSONDictionary:(NSDictionary *)dictionary;
 - (id)initWithJSONDictionary:(NSDictionary *)dictionary error:(NSError **)error;
@@ -27,3 +28,5 @@
 - (NSDictionary<NSString*, Class> *)objectClassInArray;
 
 @end
+
+NS_ASSUME_NONNULL_END

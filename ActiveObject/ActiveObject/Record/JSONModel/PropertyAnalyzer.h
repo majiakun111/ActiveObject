@@ -9,15 +9,14 @@
 #import <Foundation/Foundation.h>
 #import <objc/runtime.h>
 
-@class JSONModel;
-
 NS_ASSUME_NONNULL_BEGIN
 
 @interface PropertyInfo : NSObject
 
-@property (nonatomic, copy) NSString *propertyName;
-@property (nonatomic, copy) NSString *propertyType;
-@property (nonatomic, copy) NSString *databaseType;
+@property (nonatomic, readonly, copy) NSString *propertyName;
+@property (nonatomic, readonly, strong) Class propertyClass;
+@property (nonatomic, readonly, getter = isFromFoundation) BOOL fromFoundation;
+@property (nonatomic, readonly, copy) NSString *databaseType;
 
 - (instancetype)initWithProperty:(objc_property_t)property;
 
@@ -27,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSArray<PropertyInfo *> *)getPropertyInfoListForClass:(Class)clazz untilRootClass:(Class)rootClazz;
 
-+ (NSArray *)getPropertyValueListWithPropertyList:(NSArray<NSString *> *)propertyList forRecord:(JSONModel *)record;
++ (NSArray *)getPropertyValueListWithPropertyList:(NSArray<NSString *> *)propertyList forObject:(NSObject *)object;
 
 @end
 

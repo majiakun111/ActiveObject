@@ -6,8 +6,9 @@
 //  Copyright © 2016年 MJK. All rights reserved.
 //
 
-#import "JSONModel.h"
+#import "NSObject+Foundation.h"
 #import "DatabaseDAO.h"
+#import "NSObject+JSONModel.h"
 
 /**
 *1. 支持的属性类型: 整形, 浮点型, NSNumber, NSString, NSArray, NSDictionary, Record
@@ -17,7 +18,7 @@
 *5. 对于column add and delete, index add and delete支持自动迁移, 只需要更改DatabaseVersion即可和配置
 */
 
-@interface Record : JSONModel
+@interface Record : NSObject
 
 @property (nonatomic, assign) NSInteger rowId; //与 ROW_ID 对应,是 primary key autoincrement
 

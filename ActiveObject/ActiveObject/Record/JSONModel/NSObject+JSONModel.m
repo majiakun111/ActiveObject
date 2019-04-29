@@ -1,21 +1,22 @@
 //
-//  JSONModel.m
+//  NSObject+JSONModel.m
 //  ActiveObject
 //
-//  Created by Ansel on 2016/10/24.
-//  Copyright © 2016年 MJK. All rights reserved.
+//  Created by Ansel on 2019/4/29.
+//  Copyright © 2019 MJK. All rights reserved.
 //
 
-#import "JSONModel.h"
+#import "NSObject+JSONModel.h"
 #import "PropertyAnalyzer.h"
 #import "NSDictionary+JSON.h"
 #import "NSString+JSON.h"
 #import "NSArray+JSONModel.h"
+#import "NSObject+Foundation.h"
 
 //下面静态无需初始化，因为用于关联对象的key的时候只会用到其地址
 static const char * kAssociatedArrayContainerClassMapDictioanry;
 
-@implementation JSONModel
+@implementation NSObject (JSONModel)
 
 - (id)initWithJSONDictionary:(NSDictionary *)dictionary
 {
@@ -24,34 +25,37 @@ static const char * kAssociatedArrayContainerClassMapDictioanry;
 
 - (id)initWithJSONDictionary:(NSDictionary *)dictionary error:(NSError **)error
 {
-    self = [super init];
+    self = [self init];
     if (self) {
-        NSArray<PropertyInfo *> *propertyInfoList = [PropertyAnalyzer getPropertyInfoListForClass:[self class] untilRootClass:[JSONModel class]];
+        NSArray<PropertyInfo *> *propertyInfoList = [PropertyAnalyzer getPropertyInfoListForClass:[self class] untilRootClass:[NSObject class]];
         [propertyInfoList enumerateObjectsUsingBlock:^(PropertyInfo*  _Nonnull propertyInfo, NSUInteger idx, BOOL * _Nonnull stop) {
             NSString *propertyName = propertyInfo.propertyName;
-            NSString *propertyType = propertyInfo.propertyType;
+            Class propertyClass = propertyInfo.propertyClass;
             id value = dictionary[propertyName];
-            if ([NSClassFromString(propertyType) isSubclassOfClass:[JSONModel class]]) {
-                Class clazz = NSClassFromString(propertyType);
-                value = [clazz modelWithJSONDictionary:value];
-                
-                [self setValue:value forKeyPath:propertyName];
-            } else if ([propertyType isEqual:@"NSArray"]) {
-                Class class = [self objectClassInArray][propertyName];
-                if (class && [class isSubclassOfClass:[JSONModel class]]) {
-                    value = [value modelArrayWithClass:class];
+            if (propertyClass && !propertyInfo.isFromFoundation) {
+                value = [propertyClass modelWithJSONDictionary:value];
+            } else if ([propertyClass isKindOfClass:object_getClass([NSArray class])]) {
+                Class clazz = [self objectClassInArray][propertyName];
+                if (clazz && ![self fromFoundationForClazz:clazz]) {
+                    value = [value modelArrayWithClass:clazz];
                 }
                 
-                [self setValue:value forKeyPath:propertyName];
-            } else if ([propertyType isEqual:@"NSDictionary"]) {
+                if ([propertyClass isKindOfClass:object_getClass([NSMutableArray class])]) {
+                    value = [value mutableCopy];
+                }
+            } else if ([propertyClass isKindOfClass:object_getClass([NSDictionary class])]) {
                 if ([value isKindOfClass:[NSString class]]) {
                     value = [value JSONObject];
                 }
                 
-                [self setValue:value forKeyPath:propertyName];
-            } else {
-                [self setValue:value forKeyPath:propertyName];
+                if ([propertyClass isKindOfClass:object_getClass([NSMutableDictionary class])]) {
+                    value = [value mutableCopy];
+                }
+            } else if ([propertyClass isKindOfClass:object_getClass([NSMutableString class])] || [propertyClass isKindOfClass:object_getClass([NSMutableData class])]) {
+                value = [value mutableCopy];
             }
+            
+            [self setValue:value forKeyPath:propertyName];
         }];
     }
     
@@ -70,7 +74,7 @@ static const char * kAssociatedArrayContainerClassMapDictioanry;
 
 - (NSDictionary *)toJSONDictionary
 {
-    NSArray<PropertyInfo *> *propertyInfoList = [PropertyAnalyzer getPropertyInfoListForClass:[self class] untilRootClass:[JSONModel class]];
+    NSArray<PropertyInfo *> *propertyInfoList = [PropertyAnalyzer getPropertyInfoListForClass:[self class] untilRootClass:[NSObject class]];
     if (!propertyInfoList || [propertyInfoList count] == 0) {
         return nil;
     }
@@ -78,24 +82,22 @@ static const char * kAssociatedArrayContainerClassMapDictioanry;
     NSMutableDictionary *jsonDictionary = [[NSMutableDictionary alloc] init];
     [propertyInfoList enumerateObjectsUsingBlock:^(PropertyInfo*  _Nonnull propertyInfo, NSUInteger idx, BOOL * _Nonnull stop) {
         NSString *propertyName = propertyInfo.propertyName;
-        NSString *propertyType = propertyInfo.propertyType;
+        Class propertyClass = propertyInfo.propertyClass;
         id value = [self valueForKey:propertyName];
-        if ([NSClassFromString(propertyType) isSubclassOfClass:[JSONModel class]]) {
-            value = [(JSONModel *)value toJSONDictionary];
-            [jsonDictionary setValue:value forKeyPath:propertyName];
-        } else if ([propertyType isEqual:@"NSArray"]) {
-            Class class = [self objectClassInArray][propertyName];
-            if (class && [class isSubclassOfClass:[JSONModel class]]) {
+        if (propertyClass && propertyInfo.isFromFoundation) {
+            value = [value toJSONDictionary];
+        } else if ([propertyClass isKindOfClass:object_getClass([NSArray class])]) {
+            Class clazz = [self objectClassInArray][propertyName];
+            if (clazz && ![self fromFoundationForClazz:clazz]) {
                 value = [(NSArray *)value toJSONArray];
             }
-            
-            [jsonDictionary setValue:value forKeyPath:propertyName];
-        } else if ([propertyType isEqual:@"NSDictionary"]) {
+        } else if ([propertyClass isKindOfClass:object_getClass([NSDictionary class])]) {
             value = [value JSONString];
-            [jsonDictionary setValue:value forKeyPath:propertyName];
-        } else {
-            [jsonDictionary setValue:value forKeyPath:propertyName];
+        } else if ([propertyClass isKindOfClass:object_getClass([NSMutableString class])] || [propertyClass isKindOfClass:object_getClass([NSMutableData class])]) {
+            value = [value copy];
         }
+        
+        [jsonDictionary setValue:value forKeyPath:propertyName];
     }];
     
     return jsonDictionary;
