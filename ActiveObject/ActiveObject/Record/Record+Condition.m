@@ -39,6 +39,16 @@
     return self;
 }
 
++ (SQLCondition *)defaultCondition {
+    static SQLCondition *sqlCondition = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sqlCondition = [[SQLCondition alloc] init];
+    });
+    
+    return sqlCondition;
+}
+
 @end
 //SQLCondition end
 
@@ -90,7 +100,7 @@
 {
     SQLCondition *sqlCondition = [self.map objectForKey:key];
     if (!sqlCondition) {
-        sqlCondition = [[SQLCondition alloc] init];
+        sqlCondition = [SQLCondition defaultCondition];
         [self.map setObject:sqlCondition forKey:key];
     }
     
@@ -105,7 +115,7 @@
 
 - (void)resetAll
 {
-    SQLCondition *sqlCondition = [[SQLCondition alloc] init];
+    SQLCondition *sqlCondition = [SQLCondition defaultCondition];
     [[SQLConditionManager shareInstance] setSQLCondition:sqlCondition key:[self tableName]];
 }
 

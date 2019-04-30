@@ -34,7 +34,7 @@
     return NSStringFromClass([self class]);
 }
 
-#pragma mark - HookMethod
+#pragma mark - May Override
 
 + (NSDictionary<NSString*, NSString*> *)constraints
 {

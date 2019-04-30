@@ -10,6 +10,10 @@
 		5B06D50B1CB8026800D031AE /* DatabaseAutoMigrator.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B06D50A1CB8026800D031AE /* DatabaseAutoMigrator.m */; };
 		5B1A3005227737B800EF0C08 /* NSObject+JSONModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A3004227737B800EF0C08 /* NSObject+JSONModel.m */; };
 		5B1A30082277394F00EF0C08 /* NSObject+Foundation.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A30072277394F00EF0C08 /* NSObject+Foundation.m */; };
+		5B1A301D2277EE4700EF0C08 /* NSArray+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A30152277EE4700EF0C08 /* NSArray+JSON.m */; };
+		5B1A301E2277EE4700EF0C08 /* NSDictionary+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A30172277EE4700EF0C08 /* NSDictionary+JSON.m */; };
+		5B1A301F2277EE4700EF0C08 /* NSArray+JSONModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A30192277EE4700EF0C08 /* NSArray+JSONModel.m */; };
+		5B1A30202277EE4700EF0C08 /* NSString+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A301B2277EE4700EF0C08 /* NSString+JSON.m */; };
 		5B1E5258226D5469002729F6 /* PropertyAnalyzer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1E5257226D5469002729F6 /* PropertyAnalyzer.m */; };
 		5B2030651CA52B360050023A /* DatabaseDAO+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2030641CA52B360050023A /* DatabaseDAO+Additions.m */; };
 		5B2030681CA52CF30050023A /* DatabaseDAO+Transaction.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2030671CA52CF30050023A /* DatabaseDAO+Transaction.m */; };
@@ -38,10 +42,6 @@
 		5B2554861CA3BA81004A5D74 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B2554851CA3BA81004A5D74 /* libsqlite3.0.tbd */; };
 		5B384EC31CA3C2C6001E2956 /* Record+Transaction.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B384EC21CA3C2C6001E2956 /* Record+Transaction.m */; };
 		5B384EC81CA3C5EC001E2956 /* AsyncQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B384EC71CA3C5EC001E2956 /* AsyncQueue.m */; };
-		5B384ED01CA3DE5C001E2956 /* NSArray+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B384ECF1CA3DE5C001E2956 /* NSArray+JSON.m */; };
-		5B4A5E3F1DBE61DA005D79D6 /* NSArray+JSONModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B4A5E3E1DBE61DA005D79D6 /* NSArray+JSONModel.m */; };
-		5B4CF55C1CA3F6F1006BD555 /* NSString+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B4CF55B1CA3F6F1006BD555 /* NSString+JSON.m */; };
-		5B65D6131CA401BD001D3975 /* NSDictionary+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B65D6121CA401BD001D3975 /* NSDictionary+JSON.m */; };
 		5B65D6161CA431B9001D3975 /* BankCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B65D6151CA431B9001D3975 /* BankCard.m */; };
 /* End PBXBuildFile section */
 
@@ -52,6 +52,14 @@
 		5B1A3004227737B800EF0C08 /* NSObject+JSONModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+JSONModel.m"; sourceTree = "<group>"; };
 		5B1A30062277394F00EF0C08 /* NSObject+Foundation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+Foundation.h"; sourceTree = "<group>"; };
 		5B1A30072277394F00EF0C08 /* NSObject+Foundation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+Foundation.m"; sourceTree = "<group>"; };
+		5B1A30152277EE4700EF0C08 /* NSArray+JSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+JSON.m"; sourceTree = "<group>"; };
+		5B1A30162277EE4700EF0C08 /* NSString+JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+JSON.h"; sourceTree = "<group>"; };
+		5B1A30172277EE4700EF0C08 /* NSDictionary+JSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+JSON.m"; sourceTree = "<group>"; };
+		5B1A30182277EE4700EF0C08 /* NSArray+JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+JSON.h"; sourceTree = "<group>"; };
+		5B1A30192277EE4700EF0C08 /* NSArray+JSONModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+JSONModel.m"; sourceTree = "<group>"; };
+		5B1A301A2277EE4700EF0C08 /* NSArray+JSONModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+JSONModel.h"; sourceTree = "<group>"; };
+		5B1A301B2277EE4700EF0C08 /* NSString+JSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+JSON.m"; sourceTree = "<group>"; };
+		5B1A301C2277EE4700EF0C08 /* NSDictionary+JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+JSON.h"; sourceTree = "<group>"; };
 		5B1E5256226D5469002729F6 /* PropertyAnalyzer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PropertyAnalyzer.h; sourceTree = "<group>"; };
 		5B1E5257226D5469002729F6 /* PropertyAnalyzer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PropertyAnalyzer.m; sourceTree = "<group>"; };
 		5B2030631CA52B360050023A /* DatabaseDAO+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DatabaseDAO+Additions.h"; sourceTree = "<group>"; };
@@ -108,14 +116,6 @@
 		5B384EC41CA3C370001E2956 /* ActiveObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ActiveObject.h; sourceTree = "<group>"; };
 		5B384EC61CA3C5EC001E2956 /* AsyncQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncQueue.h; sourceTree = "<group>"; };
 		5B384EC71CA3C5EC001E2956 /* AsyncQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncQueue.m; sourceTree = "<group>"; };
-		5B384ECE1CA3DE5C001E2956 /* NSArray+JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+JSON.h"; sourceTree = "<group>"; };
-		5B384ECF1CA3DE5C001E2956 /* NSArray+JSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+JSON.m"; sourceTree = "<group>"; };
-		5B4A5E3D1DBE61DA005D79D6 /* NSArray+JSONModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+JSONModel.h"; sourceTree = "<group>"; };
-		5B4A5E3E1DBE61DA005D79D6 /* NSArray+JSONModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+JSONModel.m"; sourceTree = "<group>"; };
-		5B4CF55A1CA3F6F1006BD555 /* NSString+JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+JSON.h"; sourceTree = "<group>"; };
-		5B4CF55B1CA3F6F1006BD555 /* NSString+JSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+JSON.m"; sourceTree = "<group>"; };
-		5B65D6111CA401BD001D3975 /* NSDictionary+JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+JSON.h"; sourceTree = "<group>"; };
-		5B65D6121CA401BD001D3975 /* NSDictionary+JSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+JSON.m"; sourceTree = "<group>"; };
 		5B65D6141CA431B9001D3975 /* BankCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BankCard.h; sourceTree = "<group>"; };
 		5B65D6151CA431B9001D3975 /* BankCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BankCard.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -164,7 +164,6 @@
 		5B25541F1CA3B5E5004A5D74 /* ActiveObject */ = {
 			isa = PBXGroup;
 			children = (
-				5B384ECC1CA3DE13001E2956 /* Foundation */,
 				5B25545F1CA3B9E7004A5D74 /* ActiveObject */,
 				5B2554231CA3B5E5004A5D74 /* AppDelegate.h */,
 				5B2554241CA3B5E5004A5D74 /* AppDelegate.m */,
@@ -270,32 +269,17 @@
 			path = AsyncQueue;
 			sourceTree = "<group>";
 		};
-		5B384ECC1CA3DE13001E2956 /* Foundation */ = {
-			isa = PBXGroup;
-			children = (
-				5B384ECD1CA3DE2B001E2956 /* Extension */,
-			);
-			path = Foundation;
-			sourceTree = "<group>";
-		};
-		5B384ECD1CA3DE2B001E2956 /* Extension */ = {
-			isa = PBXGroup;
-			children = (
-				5B384ECE1CA3DE5C001E2956 /* NSArray+JSON.h */,
-				5B384ECF1CA3DE5C001E2956 /* NSArray+JSON.m */,
-				5B65D6111CA401BD001D3975 /* NSDictionary+JSON.h */,
-				5B65D6121CA401BD001D3975 /* NSDictionary+JSON.m */,
-				5B4CF55A1CA3F6F1006BD555 /* NSString+JSON.h */,
-				5B4CF55B1CA3F6F1006BD555 /* NSString+JSON.m */,
-				5B4A5E3D1DBE61DA005D79D6 /* NSArray+JSONModel.h */,
-				5B4A5E3E1DBE61DA005D79D6 /* NSArray+JSONModel.m */,
-			);
-			path = Extension;
-			sourceTree = "<group>";
-		};
 		5BA8290A1DBE59F900DF1129 /* JSONModel */ = {
 			isa = PBXGroup;
 			children = (
+				5B1A30182277EE4700EF0C08 /* NSArray+JSON.h */,
+				5B1A30152277EE4700EF0C08 /* NSArray+JSON.m */,
+				5B1A301A2277EE4700EF0C08 /* NSArray+JSONModel.h */,
+				5B1A30192277EE4700EF0C08 /* NSArray+JSONModel.m */,
+				5B1A301C2277EE4700EF0C08 /* NSDictionary+JSON.h */,
+				5B1A30172277EE4700EF0C08 /* NSDictionary+JSON.m */,
+				5B1A30162277EE4700EF0C08 /* NSString+JSON.h */,
+				5B1A301B2277EE4700EF0C08 /* NSString+JSON.m */,
 				5B1A3003227737B800EF0C08 /* NSObject+JSONModel.h */,
 				5B1A3004227737B800EF0C08 /* NSObject+JSONModel.m */,
 				5B1E5256226D5469002729F6 /* PropertyAnalyzer.h */,
@@ -381,6 +365,7 @@
 				5B2030831CA6D8B50050023A /* DatabaseMigrator.m in Sources */,
 				5B20308A1CA7C6320050023A /* TestDatabaseMigrator.m in Sources */,
 				5B384EC81CA3C5EC001E2956 /* AsyncQueue.m in Sources */,
+				5B1A301F2277EE4700EF0C08 /* NSArray+JSONModel.m in Sources */,
 				5B2554281CA3B5E5004A5D74 /* ViewController.m in Sources */,
 				5B06D50B1CB8026800D031AE /* DatabaseAutoMigrator.m in Sources */,
 				5B65D6161CA431B9001D3975 /* BankCard.m in Sources */,
@@ -390,25 +375,24 @@
 				5B1A30082277394F00EF0C08 /* NSObject+Foundation.m in Sources */,
 				5B2030651CA52B360050023A /* DatabaseDAO+Additions.m in Sources */,
 				5B25547C1CA3B9E7004A5D74 /* Database.m in Sources */,
-				5B4A5E3F1DBE61DA005D79D6 /* NSArray+JSONModel.m in Sources */,
 				5B2554801CA3B9E7004A5D74 /* Record+Condition.m in Sources */,
 				5B20307F1CA676450050023A /* Database+Additions.m in Sources */,
+				5B1A301D2277EE4700EF0C08 /* NSArray+JSON.m in Sources */,
 				5B2030871CA7BC240050023A /* OneToTwoVersionMigrateExecutor.m in Sources */,
 				5B20306E1CA52F510050023A /* DatabaseDAO+DDL.m in Sources */,
 				5B2030681CA52CF30050023A /* DatabaseDAO+Transaction.m in Sources */,
 				5B2554251CA3B5E5004A5D74 /* AppDelegate.m in Sources */,
 				5B2554221CA3B5E5004A5D74 /* main.m in Sources */,
-				5B65D6131CA401BD001D3975 /* NSDictionary+JSON.m in Sources */,
 				5B2554821CA3B9E7004A5D74 /* Record+DML.m in Sources */,
 				5B2554841CA3B9E7004A5D74 /* Record.m in Sources */,
+				5B1A30202277EE4700EF0C08 /* NSString+JSON.m in Sources */,
 				5B1E5258226D5469002729F6 /* PropertyAnalyzer.m in Sources */,
 				5B384EC31CA3C2C6001E2956 /* Record+Transaction.m in Sources */,
-				5B4CF55C1CA3F6F1006BD555 /* NSString+JSON.m in Sources */,
 				5B2554811CA3B9E7004A5D74 /* Record+DDL.m in Sources */,
+				5B1A301E2277EE4700EF0C08 /* NSDictionary+JSON.m in Sources */,
 				5B25545E1CA3B612004A5D74 /* Person.m in Sources */,
 				5B1A3005227737B800EF0C08 /* NSObject+JSONModel.m in Sources */,
 				5B2554831CA3B9E7004A5D74 /* Record+DQL.m in Sources */,
-				5B384ED01CA3DE5C001E2956 /* NSArray+JSON.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

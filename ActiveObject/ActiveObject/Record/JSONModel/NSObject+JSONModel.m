@@ -13,9 +13,6 @@
 #import "NSArray+JSONModel.h"
 #import "NSObject+Foundation.h"
 
-//下面静态无需初始化，因为用于关联对象的key的时候只会用到其地址
-static const char * kAssociatedArrayContainerClassMapDictioanry;
-
 @implementation NSObject (JSONModel)
 
 - (id)initWithJSONDictionary:(NSDictionary *)dictionary
@@ -102,8 +99,6 @@ static const char * kAssociatedArrayContainerClassMapDictioanry;
     
     return jsonDictionary;
 }
-
-#pragma mark - Map
 
 - (NSDictionary *)objectClassInArray {
     return nil;

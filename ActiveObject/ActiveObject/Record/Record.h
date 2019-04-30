@@ -11,7 +11,7 @@
 #import "NSObject+JSONModel.h"
 
 /**
-*1. 支持的属性类型: 整形, 浮点型, NSNumber, NSString, NSArray, NSDictionary, Record
+*1. 支持的属性类型: 整形, 浮点型, NSNumber, NSString/NSMutableString, NSArray/NSMutableArray, NSDictionary/NSMutableDictionary, Record
 *2. 若属性是NSArray 可以存 Record (但必须要实现objectClassInArray 指定NSArray存的是那个Class, 支持嵌套), 也可以存 NSNumber, NSString, NSArray, NSDictionary
 *3. NSDictionary(不能包含 Record对象)
 *4. 支持迁移
