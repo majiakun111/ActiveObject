@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSArray<PropertyInfo *> *)getPropertyInfoListForClass:(Class)clazz;
 
-+ (NSArray *)getPropertyValueListWithPropertyList:(NSArray<NSString *> *)propertyList forObject:(NSObject *)object;
++ (NSArray *)getColumnsValueListWithPropertyList:(NSArray<NSString *> *)propertyList forObject:(NSObject *)object;
 
 @end
 

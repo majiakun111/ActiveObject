@@ -40,7 +40,7 @@
     
     //删除关联的表对应的数据
     NSArray<NSString *> *propertyList = [self getColumns];
-    NSArray *valueList = [PropertyAnalyzer getPropertyValueListWithPropertyList:propertyList forObject:self];
+    NSArray *valueList = [PropertyAnalyzer getColumnsValueListWithPropertyList:propertyList forObject:self];
     
     for (NSInteger index = 0; index < [valueList count]; index++) {
         id value = valueList[index];
@@ -99,7 +99,7 @@
 - (BOOL)insert
 {
     NSArray<NSString *> *propertyList = [self getColumns];
-    NSArray *valueList = [PropertyAnalyzer getPropertyValueListWithPropertyList:propertyList forObject:self];
+    NSArray *valueList = [PropertyAnalyzer getColumnsValueListWithPropertyList:propertyList forObject:self];
     
     NSMutableString *valuesSql = [NSMutableString string];
     NSInteger count = [valueList count];

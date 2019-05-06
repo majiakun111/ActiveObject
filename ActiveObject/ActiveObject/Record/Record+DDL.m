@@ -23,7 +23,7 @@
 {
     BOOL result = YES;
     NSArray<NSString *> *propertyList = [self getColumns];
-    NSArray *valueList = [PropertyAnalyzer getPropertyValueListWithPropertyList:propertyList forObject:self];
+    NSArray *valueList = [PropertyAnalyzer getColumnsValueListWithPropertyList:propertyList forObject:self];
     
     for (id value in valueList) {
         if ([value isKindOfClass:[Record class]]) {

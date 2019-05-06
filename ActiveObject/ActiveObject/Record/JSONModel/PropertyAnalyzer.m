@@ -111,7 +111,7 @@ static const char * PropertyInfoListAssociatedKey;
     return propertyInfoList;
 }
 
-+ (NSArray *)getPropertyValueListWithPropertyList:(NSArray<NSString *> *)propertyList forObject:(NSObject *)object {
++ (NSArray *)getColumnsValueListWithPropertyList:(NSArray<NSString *> *)propertyList forObject:(NSObject *)object {
     NSMutableArray *propertyValueList = [[NSMutableArray alloc] init];
     for (NSString *propertyName in propertyList) {
         id value = [object valueForKey:propertyName];
