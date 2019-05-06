@@ -41,7 +41,7 @@
 - (BOOL)executeColumnMigrateForTable:(NSString *)tableName
 {
     Class clazz = NSClassFromString(tableName);
-    NSArray<PropertyInfo *> *propertyInfoList = [PropertyAnalyzer getPropertyInfoListForClass:clazz untilRootClass:[Record class]];
+    NSArray<PropertyInfo *> *propertyInfoList = [PropertyAnalyzer getPropertyInfoListForClass:clazz];
     
     NSArray *columns = [[DatabaseDAO sharedInstance] getColumnsForTableName:tableName];
     

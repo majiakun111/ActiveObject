@@ -42,7 +42,7 @@
         return YES;
     }
     
-    NSArray *propertyInfoList = [PropertyAnalyzer getPropertyInfoListForClass:clazz untilRootClass:rootClazz];
+    NSArray *propertyInfoList = [PropertyAnalyzer getPropertyInfoListForClass:clazz];
     
     NSMutableString *sql = [NSMutableString stringWithFormat:@"create table if not exists %@ (%@ integer primary key autoincrement,", tableName, ROW_ID];
     

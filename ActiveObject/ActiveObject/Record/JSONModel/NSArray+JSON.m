@@ -8,7 +8,7 @@
 
 #import "NSArray+JSON.h"
 
-@implementation NSArray (JOSN)
+@implementation NSArray (JSON)
 
 - (NSString *)JSONString
 {

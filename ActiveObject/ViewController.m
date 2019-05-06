@@ -56,7 +56,7 @@
     
     person.bankCards =@[bankCard1, bankCard2];
     
-//    [person save];
+    [person save];
 //
 //    NSArray <Person *> *persons = [person query];
 //
@@ -77,7 +77,7 @@
     
     //for (NSInteger index = 0; index < 6; index++) {
         [[AsyncQueue sharedInstance] inDatabase:^{
-            NSArray <Person *> *persons = [person query];
+            NSArray<Person *> *persons = [person query];
             NSLog(@"xxxxx: %@,  yyyy:%@", [NSThread currentThread], persons);
         } forSqlType:SqlForDQLType];
     //}

@@ -8,9 +8,9 @@
 
 #import "PropertyAnalyzer.h"
 #import "ActiveObjectDefine.h"
-#import "NSObject+Foundation.h"
-#import "NSObject+JSONModel.h"
-#import "NSArray+JSON.h"
+#import "MJExtension.h"
+#import "NSArray+JSON.m"
+#import "MJFoundation.h"
 
 static const char * PropertyInfoListAssociatedKey;
 
@@ -68,7 +68,7 @@ static const char * PropertyInfoListAssociatedKey;
             cls = [cls stringByReplacingOccurrencesOfString:@"\"" withString:@""];
             
             self.propertyClass = NSClassFromString(cls);
-            self.fromFoundation = [self fromFoundationForClazz:self.propertyClass];
+            self.fromFoundation = [MJFoundation isClassFromFoundation:self.propertyClass];
             self.databaseType = @"text";
             break;
         }
@@ -82,19 +82,16 @@ static const char * PropertyInfoListAssociatedKey;
 
 @implementation PropertyAnalyzer
 
-+ (NSArray<PropertyInfo *> *)getPropertyInfoListForClass:(Class)clazz untilRootClass:(Class)rootClazz {
++ (NSArray<PropertyInfo *> *)getPropertyInfoListForClass:(Class)clazz {    
     NSMutableArray<PropertyInfo *> *propertyInfoList = objc_getAssociatedObject(clazz, &PropertyInfoListAssociatedKey);
     if (propertyInfoList) {
         return propertyInfoList;
     }
     
     propertyInfoList = [[NSMutableArray alloc] init];
-    NSString *currentClassName = NSStringFromClass(clazz);
-    NSString *rootClassName = NSStringFromClass(rootClazz);
-    
     //递归获取
-    if ([[self class] superclass] && ![currentClassName isEqual:rootClassName]) {
-        NSArray *superPropertyInfoList = [self getPropertyInfoListForClass:[clazz superclass] untilRootClass:rootClazz];
+    if ([clazz superclass] && ![[clazz superclass] isEqual:[NSObject class]]) {
+        NSArray *superPropertyInfoList = [self getPropertyInfoListForClass:[clazz superclass]];
         if ([superPropertyInfoList count] > 0) {
             [propertyInfoList addObjectsFromArray:superPropertyInfoList];
         }
@@ -126,7 +123,7 @@ static const char * PropertyInfoListAssociatedKey;
         if ([value isKindOfClass:[NSArray class]]) {
             [propertyValueList addObject:[self getValuesWithArrayValue:value propertyName:propertyName forObject:object]];
         } else if ([value isKindOfClass:[NSDictionary class]]) {
-            NSString *jsonString = [value JSONString];
+            NSString *jsonString = [value mj_JSONString];
             [propertyValueList addObject:jsonString ? jsonString : @""];
         } else {
             [propertyValueList addObject:value];
@@ -140,9 +137,16 @@ static const char * PropertyInfoListAssociatedKey;
 
 + (id)getValuesWithArrayValue:(NSArray *)arrayValue propertyName:(NSString *)propertyName forObject:(NSObject *)object
 {
-    id  value = nil;
-    Class clazz = [object objectClassInArray][propertyName];
-    if (clazz && ![self fromFoundationForClazz:clazz]) {
+    id value = nil;
+    Class clazz = nil;
+    if ([[object class] respondsToSelector:@selector(mj_objectClassInArray)]) {
+        clazz = [[object class] mj_objectClassInArray][propertyName];
+        if ([clazz isKindOfClass:[NSString class]]) {
+            clazz = NSClassFromString((NSString *)clazz);
+        }
+    }
+    
+    if (clazz && ![MJFoundation isClassFromFoundation:clazz]) {
         value = arrayValue; //直接返回数组
     } else {
         NSString *jsonString = [arrayValue JSONString];

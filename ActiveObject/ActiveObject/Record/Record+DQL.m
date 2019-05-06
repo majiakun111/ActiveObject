@@ -11,10 +11,9 @@
 #import "DatabaseDAO+DQL.h"
 #import "Record+Additions.h"
 #import "Record+Condition.h"
-#import "NSString+JSON.h"
 #import "ActiveObjectDefine.h"
 #import "PropertyAnalyzer.h"
-#import "NSArray+JSONModel.h"
+#import "MJExtension.h"
 
 @implementation Record (DQL)
 
@@ -36,18 +35,18 @@
 
 #pragma mark - PrivateMethod
 
-- (NSArray<Record *> *)getRecordsfromDictionaryRecords:(NSArray <NSDictionary *> *)dictionaryRecords
+- (NSArray<Record *> *)getRecordsfromDictionaryRecords:(NSArray<NSDictionary *> *)dictionaryRecords
 {
     if (!dictionaryRecords || [dictionaryRecords count] == 0) {
         return nil;
     }
     
-    NSArray <NSDictionary *> *associationDictionaryRecords = [self getAssociationDictionaryRecordsWithArray:dictionaryRecords];
+    NSArray<NSDictionary *> *associationDictionaryRecords = [self getAssociationDictionaryRecordsWithArray:dictionaryRecords];
     if (!associationDictionaryRecords || [associationDictionaryRecords count] == 0) {
         return nil;
     }
     
-    NSArray<Record *> *records = [associationDictionaryRecords modelArrayWithClass:[self class]];
+    NSArray<Record *> *records = [[self class] mj_objectArrayWithKeyValuesArray:associationDictionaryRecords];
     return records;
 }
 
@@ -57,7 +56,7 @@
         return nil;
     }
     
-    NSArray<PropertyInfo *> *propertyInfoList = [PropertyAnalyzer getPropertyInfoListForClass:[self class] untilRootClass:[Record class]];
+    NSArray<PropertyInfo *> *propertyInfoList = [PropertyAnalyzer getPropertyInfoListForClass:[self class]];
     NSMutableArray <NSMutableDictionary *> *associationDictionaryRecords = [[NSMutableArray alloc] init];
     
     //array 是数据库返回的结果
@@ -73,6 +72,9 @@
             } else if ([propertyInfo.propertyClass isKindOfClass:object_getClass([NSArray class])]) {
                 id arrayValue = [self getArrayValueWithValue:value propertyName:propertyInfo.propertyName];
                 [associationDictionaryRecord setValue:arrayValue forKeyPath:propertyInfo.propertyName];
+            } else if ([propertyInfo.propertyClass isKindOfClass:object_getClass([NSDictionary class])]) {
+                NSDictionary *dictionary = [value mj_JSONObject];
+                [associationDictionaryRecord setValue:dictionary forKeyPath:propertyInfo.propertyName];
             }
         }];
         
@@ -96,13 +98,19 @@
 - (id)getArrayValueWithValue:(id)value propertyName:(NSString *)propertyName
 {
     id arrayValue = nil;
-    Class class = [self objectClassInArray][propertyName];
-    if (class && [class isSubclassOfClass:[Record class]]) {
-        //此value是rowIds, eg.@"1,2,3"
-        arrayValue = [self getDictionaryRecordsWithRowIds:[value componentsSeparatedByString:@","] class:class];
+    Class clazz = nil;
+    if ([[self class] respondsToSelector:@selector(mj_objectClassInArray)]) {
+        clazz = [[self class] mj_objectClassInArray][propertyName];
+        if ([clazz isKindOfClass:[NSString class]]) {
+            clazz = NSClassFromString((NSString *)clazz);
+        }
     }
-    else {
-        arrayValue = [value JSONObject];
+    
+    if (clazz && [clazz isSubclassOfClass:[Record class]]) {
+        //此value是rowIds, eg.@"1,2,3"
+        arrayValue = [self getDictionaryRecordsWithRowIds:[value componentsSeparatedByString:@","] class:clazz];
+    } else {
+        arrayValue = [value mj_JSONObject];
     }
     
     return arrayValue;

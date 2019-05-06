@@ -8,6 +8,7 @@
 
 #import "Person.h"
 #import "ActiveObjectDefine.h"
+#import "MJExtension.h"
 
 @implementation Person
 
@@ -38,7 +39,7 @@
             };
 }
 
-- (NSDictionary<NSString *,Class> *)objectClassInArray {
++ (NSDictionary *)mj_objectClassInArray {
     return @{@"bankCards" : [BankCard class]};
 }
 

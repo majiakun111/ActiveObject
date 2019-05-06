@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PropertyAnalyzer : NSObject
 
-+ (NSArray<PropertyInfo *> *)getPropertyInfoListForClass:(Class)clazz untilRootClass:(Class)rootClazz;
++ (NSArray<PropertyInfo *> *)getPropertyInfoListForClass:(Class)clazz;
 
 + (NSArray *)getPropertyValueListWithPropertyList:(NSArray<NSString *> *)propertyList forObject:(NSObject *)object;
 

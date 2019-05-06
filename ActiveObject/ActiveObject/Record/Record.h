@@ -6,9 +6,8 @@
 //  Copyright © 2016年 MJK. All rights reserved.
 //
 
-#import "NSObject+Foundation.h"
+#import <Foundation/Foundation.h>
 #import "DatabaseDAO.h"
-#import "NSObject+JSONModel.h"
 
 /**
 *1. 支持的属性类型: 整形, 浮点型, NSNumber, NSString/NSMutableString, NSArray/NSMutableArray, NSDictionary/NSMutableDictionary, Record
