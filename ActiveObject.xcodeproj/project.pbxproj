@@ -48,6 +48,7 @@
 		5B6B332A227FD6B300A79B68 /* MJPropertyKey.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B6B331D227FD6B300A79B68 /* MJPropertyKey.m */; };
 		5B6B332B227FD6B300A79B68 /* MJFoundation.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B6B3321227FD6B300A79B68 /* MJFoundation.m */; };
 		5B6B3337227FE6C500A79B68 /* NSArray+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B6B3335227FE6C500A79B68 /* NSArray+JSON.m */; };
+		5B6B333A2280063300A79B68 /* ArrayConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B6B33392280063300A79B68 /* ArrayConverter.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -134,6 +135,8 @@
 		5B6B3321227FD6B300A79B68 /* MJFoundation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJFoundation.m; sourceTree = "<group>"; };
 		5B6B3335227FE6C500A79B68 /* NSArray+JSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+JSON.m"; sourceTree = "<group>"; };
 		5B6B3336227FE6C500A79B68 /* NSArray+JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+JSON.h"; sourceTree = "<group>"; };
+		5B6B33382280063300A79B68 /* ArrayConverter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ArrayConverter.h; sourceTree = "<group>"; };
+		5B6B33392280063300A79B68 /* ArrayConverter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ArrayConverter.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -320,6 +323,8 @@
 			children = (
 				5B6B3336227FE6C500A79B68 /* NSArray+JSON.h */,
 				5B6B3335227FE6C500A79B68 /* NSArray+JSON.m */,
+				5B6B33382280063300A79B68 /* ArrayConverter.h */,
+				5B6B33392280063300A79B68 /* ArrayConverter.m */,
 				5B1E5256226D5469002729F6 /* PropertyAnalyzer.h */,
 				5B1E5257226D5469002729F6 /* PropertyAnalyzer.m */,
 			);
@@ -432,6 +437,7 @@
 				5B2554811CA3B9E7004A5D74 /* Record+DDL.m in Sources */,
 				5B6B3328227FD6B300A79B68 /* NSObject+MJClass.m in Sources */,
 				5B25545E1CA3B612004A5D74 /* Person.m in Sources */,
+				5B6B333A2280063300A79B68 /* ArrayConverter.m in Sources */,
 				5B2554831CA3B9E7004A5D74 /* Record+DQL.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

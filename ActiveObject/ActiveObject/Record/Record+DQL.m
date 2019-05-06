@@ -14,6 +14,7 @@
 #import "ActiveObjectDefine.h"
 #import "PropertyAnalyzer.h"
 #import "MJExtension.h"
+#import "ArrayConverter.h"
 
 @implementation Record (DQL)
 
@@ -70,7 +71,9 @@
                 NSDictionary *rd = [self getDictionaryRecordWithRowId:value class:propertyInfo.propertyClass];
                 [associationDictionaryRecord setObject:rd forKey: propertyInfo.propertyName];
             } else if ([propertyInfo.propertyClass isKindOfClass:object_getClass([NSArray class])]) {
-                id arrayValue = [self getArrayValueWithValue:value propertyName:propertyInfo.propertyName];
+                id arrayValue = [ArrayConverter getArrayValueWithValue:value propertyName:propertyInfo.propertyName forObject:self block:^NSDictionary * _Nonnull(long long rowId, Class  _Nonnull __unsafe_unretained clazz) {
+                    return [self getDictionaryRecordWithRowId:@(rowId) class:clazz];
+                }];
                 [associationDictionaryRecord setValue:arrayValue forKeyPath:propertyInfo.propertyName];
             } else if ([propertyInfo.propertyClass isKindOfClass:object_getClass([NSDictionary class])]) {
                 NSDictionary *dictionary = [value mj_JSONObject];
@@ -93,44 +96,6 @@
     NSArray<NSDictionary *> *associationDictionaryRecords = [record getAssociationDictionaryRecordsWithArray:dictionaryRecords];
 
     return [associationDictionaryRecords firstObject];
-}
-
-- (id)getArrayValueWithValue:(id)value propertyName:(NSString *)propertyName
-{
-    id arrayValue = nil;
-    Class clazz = nil;
-    if ([[self class] respondsToSelector:@selector(mj_objectClassInArray)]) {
-        clazz = [[self class] mj_objectClassInArray][propertyName];
-        if ([clazz isKindOfClass:[NSString class]]) {
-            clazz = NSClassFromString((NSString *)clazz);
-        }
-    }
-    
-    if (clazz && [clazz isSubclassOfClass:[Record class]]) {
-        //此value是rowIds, eg.@"1,2,3"
-        arrayValue = [self getDictionaryRecordsWithRowIds:[value componentsSeparatedByString:@","] class:clazz];
-    } else {
-        arrayValue = [value mj_JSONObject];
-    }
-    
-    return arrayValue;
-}
-
-- (NSArray<NSDictionary *> *)getDictionaryRecordsWithRowIds:(NSArray *)rowIds class:(Class)class
-{
-    NSMutableArray<NSDictionary *> *dictionaryRecords = [[NSMutableArray alloc] init];
-    
-    for (NSString *rowId in rowIds) {
-        NSDictionary *dictionaryRecord = [self getDictionaryRecordWithRowId:@([rowId longLongValue]) class:class];
-        
-        if (!dictionaryRecord) {
-            continue;
-        }
-        
-        [dictionaryRecords addObject:dictionaryRecord];
-    }
-    
-    return dictionaryRecords;
 }
 
 @end

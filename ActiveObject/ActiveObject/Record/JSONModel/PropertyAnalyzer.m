@@ -9,8 +9,8 @@
 #import "PropertyAnalyzer.h"
 #import "ActiveObjectDefine.h"
 #import "MJExtension.h"
-#import "NSArray+JSON.m"
 #import "MJFoundation.h"
+#import "ArrayConverter.h"
 
 static const char * PropertyInfoListAssociatedKey;
 
@@ -82,7 +82,7 @@ static const char * PropertyInfoListAssociatedKey;
 
 @implementation PropertyAnalyzer
 
-+ (NSArray<PropertyInfo *> *)getPropertyInfoListForClass:(Class)clazz {    
++ (NSArray<PropertyInfo *> *)getPropertyInfoListForClass:(Class)clazz {
     NSMutableArray<PropertyInfo *> *propertyInfoList = objc_getAssociatedObject(clazz, &PropertyInfoListAssociatedKey);
     if (propertyInfoList) {
         return propertyInfoList;
@@ -119,9 +119,9 @@ static const char * PropertyInfoListAssociatedKey;
             [propertyValueList addObject:@""];
             continue;
         }
-
+        
         if ([value isKindOfClass:[NSArray class]]) {
-            [propertyValueList addObject:[self getValuesWithArrayValue:value propertyName:propertyName forObject:object]];
+            [propertyValueList addObject:[ArrayConverter getValuesWithArrayValue:value propertyName:propertyName forObject:object]];
         } else if ([value isKindOfClass:[NSDictionary class]]) {
             NSString *jsonString = [value mj_JSONString];
             [propertyValueList addObject:jsonString ? jsonString : @""];
@@ -131,29 +131,6 @@ static const char * PropertyInfoListAssociatedKey;
     }
     
     return propertyValueList;
-}
-
-#pragma mark - PrivateMethod
-
-+ (id)getValuesWithArrayValue:(NSArray *)arrayValue propertyName:(NSString *)propertyName forObject:(NSObject *)object
-{
-    id value = nil;
-    Class clazz = nil;
-    if ([[object class] respondsToSelector:@selector(mj_objectClassInArray)]) {
-        clazz = [[object class] mj_objectClassInArray][propertyName];
-        if ([clazz isKindOfClass:[NSString class]]) {
-            clazz = NSClassFromString((NSString *)clazz);
-        }
-    }
-    
-    if (clazz && ![MJFoundation isClassFromFoundation:clazz]) {
-        value = arrayValue; //直接返回数组
-    } else {
-        NSString *jsonString = [arrayValue JSONString];
-        value = jsonString;
-    }
-    
-    return value ? value : @"";
 }
 
 @end
